@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-['Quicksand'] mx-[120px] my-[30px] text-[#777777] font-medium
+}
+
+.brand {
+  @apply text-purple font-black text-[40px] pb-4
+}
+
+h2 {
+  @apply text-[black] font-bold text-[35px]
+}
+
+h3 {
+  @apply text-[black] font-bold text-[25px]
+}
+
+
+h4 {
+  @apply text-[black] font-bold text-[20px]
+}
