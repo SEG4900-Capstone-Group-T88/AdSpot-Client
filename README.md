@@ -21,3 +21,16 @@ AdSpot is a dynamic web platform designed for users to manage and view advertise
 - Node.js (v14.x or later)
 - npm (v6.x or later)
 
+
+## Setup and Installation
+1. Clone the repository:
+>> git clone https://github.com/SEG4900-Capstone-Group-T88/adspot_frontend.git
+
+2. Navigate to the project directory:
+>> cd adspot_frontend
+>> npm install
+>> npm run dev
+
+3. Open `http://localhost:3000` in your browser to view the application.
+
+
