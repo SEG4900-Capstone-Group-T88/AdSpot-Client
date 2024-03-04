@@ -1,0 +1,1 @@
+# adspot_frontend
