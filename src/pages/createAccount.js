@@ -15,11 +15,13 @@ function CreateAccount() {
   const [missingFieldIs, setMissingFieldIs] = useState("");
   const [successfulFields, SetSuccessfulFields] = useState(false);
   const [notification, setNotification] = useState();
+  const [termsAndConditions, setTermsAndConditions] = useState(false);
 
   const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
     password: "",
+    confirmPassword: "",
     email: "",
     phoneNumber: "",
   });
@@ -33,7 +35,13 @@ function CreateAccount() {
 
   function CheckBoolean() {
     const missing = [];
+
     // Check conditions
+
+    if (termsAndConditions === false) {
+      missing.push("Terms & Conditions");
+    }
+
     if (formValues.firstName === "") {
       missing.push("First name");
     }
@@ -55,6 +63,18 @@ function CreateAccount() {
         missing.push("Invalid phone number");
       }
     }
+
+    if (formValues.password === "" || formValues.confirmPassword === "") {
+      missing.push("Password");
+    } else if (
+      formValues.password.length < 5 ||
+      formValues.confirmPassword.length < 5
+    ) {
+      missing.push("Password must be at least 5 characters long");
+    } else if (formValues.password !== formValues.confirmPassword) {
+      missing.push("Passwords don't match");
+    }
+
     // END OF Check conditions
 
     // Check Boolean
@@ -77,90 +97,93 @@ function CreateAccount() {
     <>
       <h1>Create Account</h1>
 
-
-        <div className="grid gap-6 mb-6 md:grid-cols-2">
-          <UserInput
-            myLabel="First name"
-            value={formValues.firstName}
-            name="firstName"
-            type="text"
-            id="first_name"
-            placeholder="John"
-            onChange={handleInputChange}
-          />
-          <UserInput
-            myLabel="Last name"
-            name="lastName"
-            value={formValues.lastName}
-            type="text"
-            id="last_name"
-            placeholder="Doe"
-            onChange={handleInputChange}
-          />
-          <UserInput
-            myLabel="Company"
-            type="text"
-            id="company"
-            placeholder="Flowbite"
-            onChange={handleInputChange}
-          />
-          <UserInput
-            myLabel="Phone number"
-            type="tel"
-            id="phoneNumberInput"
-            value={formValues.phoneNumber}
-            onChange={handleInputChange}
-            name="phoneNumber"
-            placeholder="123-45-678"
-            
+      <div className="grid gap-6 mb-6 md:grid-cols-2">
+        <UserInput
+          myLabel="First name"
+          value={formValues.firstName}
+          name="firstName"
+          type="text"
+          id="first_name"
+          placeholder="John"
+          onChange={handleInputChange}
+        />
+        <UserInput
+          myLabel="Last name"
+          name="lastName"
+          value={formValues.lastName}
+          type="text"
+          id="last_name"
+          placeholder="Doe"
+          onChange={handleInputChange}
+        />
+        <UserInput
+          myLabel="Company"
+          type="text"
+          id="company"
+          placeholder="Adspot"
+          onChange={handleInputChange}
+        />
+        <UserInput
+          myLabel="Phone number"
+          type="tel"
+          id="phoneNumberInput"
+          value={formValues.phoneNumber}
+          onChange={handleInputChange}
+          name="phoneNumber"
+          placeholder="123-45-678"
+        />
+      </div>
+      <UserInput
+        myLabel="Email address"
+        value={formValues.email}
+        name="email"
+        type="email"
+        id="email"
+        placeholder="john.doe@company.com"
+        onChange={handleInputChange}
+      />
+      <UserInput
+        myLabel="Password"
+        name="password"
+        value={formValues.password}
+        type="password"
+        id="password"
+        placeholder="•••••••••"
+        onChange={handleInputChange}
+      />
+      <UserInput
+        myLabel="Confirm password"
+        name="confirmPassword"
+        value={formValues.confirmPassword}
+        type="password"
+        id="confirm_password"
+        placeholder="•••••••••"
+        onChange={handleInputChange}
+      />
+      <div className="flex items-start mb-6">
+        <div className="flex items-center h-5">
+          <input
+            id="remember"
+            type="checkbox"
+            value=""
+            className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
+            onChange={() => setTermsAndConditions(!termsAndConditions)}
           />
         </div>
-        <UserInput
-          myLabel="Email address"
-          value={formValues.email}
-          name="email"
-          type="email"
-          id="email"
-          placeholder="john.doe@company.com"
-          onChange={handleInputChange}
-        />
-        <UserInput
-          myLabel="Password"
-          type="password"
-          id="password"
-          placeholder="•••••••••"
-          onChange={handleInputChange}
-        />
-        <UserInput
-          myLabel="Confirm password"
-          type="password"
-          id="confirm_password"
-          placeholder="•••••••••"
-          // Add onChange handler if needed
-        />
-        <div className="flex items-start mb-6">
-          <div className="flex items-center h-5">
-            <input
-              id="remember"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
-              required
-            />
-          </div>
-          <label
-            htmlFor="remember"
-            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+        <label
+          htmlFor="remember"
+          className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+        >
+          I agree with the{" "}
+          <a
+            href="#"
+            className="text-blue-600 hover:underline dark:text-blue-500"
           >
-            I agree with the{" "}
-            <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">
-              terms and conditions
-            </a>
-            .
-          </label>
-        </div>
-        
-      
+            terms and conditions
+          </a>
+          .
+        </label>
+      </div>
 
       <div className="text-center my-10">
         {notification && <Notification notification={notification} />}
@@ -172,8 +195,6 @@ function CreateAccount() {
           {successfulFields && <div className="lds-dual-ring"></div>}
         </button>
       </div>
-
-      
     </>
   );
 }
