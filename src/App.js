@@ -5,18 +5,20 @@ import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import Messages from "./pages/messages";
 import Search from "./pages/search";
+import SettingsPage from "./pages/settingsPage";
 
 function App() {
   return (
     <BrowserRouter>
-    <Routes>
-        <Route exact path="/" element={<Login/>}/>
-        <Route exact path="/search" element={<Search/>}/>
-        <Route exact path="/dashboard" element={<Dashboard/>}/>
-        <Route exact path="/create-account" element={<CreateAccount/>}/>
-        <Route exact path="/messages" element={<Messages/>}/>
-    </Routes>
-  </BrowserRouter>
+      <Routes>
+        <Route exact path="/" element={<Login />} />
+        <Route exact path="/search" element={<Search />} />
+        <Route exact path="/dashboard" element={<Dashboard />} />
+        <Route exact path="/create-account" element={<CreateAccount />} />
+        <Route exact path="/messages" element={<Messages />} />
+        <Route exact path="/settings" element={<SettingsPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
