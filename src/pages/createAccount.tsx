@@ -2,8 +2,22 @@ import Notification from '../components/Notification'
 
 import {useState} from 'react'
 import UserInput from '../components/UserInput' // Import UserInput component
+import {useMutation} from '@apollo/client'
+import {gql} from '../__generated__/gql'
 
 function CreateAccount() {
+  const query = gql(`
+    mutation AddUser($input: AddUserInput!) {
+      addUser(input: $input) {
+        user {
+          email
+          password
+        }
+      }
+    }
+  `)
+  const [addUser, {data}] = useMutation(query)
+
   const [successfulFields, SetSuccessfulFields] = useState(false)
   const [notification, setNotification] = useState<{primary: string; secondary: string[]} | null>(
     null,
