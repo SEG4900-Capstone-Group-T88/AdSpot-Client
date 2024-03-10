@@ -1,36 +1,30 @@
-# AdSpot Frontend
+# React + TypeScript + Vite
 
-## Overview
-AdSpot is a dynamic web platform designed for users to manage and view advertisements efficiently. Built with React and Tailwind CSS, it offers a responsive and intuitive user interface for a seamless experience across various devices.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Key Features
-- **User Authentication**: Secure login and registration system for users to access their accounts.
-- **Dashboard**: A personalized dashboard for users to manage their advertisements and view analytics.
-- **Active Listings**: Users can view and manage their active advertisement listings.
-- **Recent Purchases**: A section dedicated to viewing recent advertisement purchases.
-- **Search Functionality**: Robust search feature to find advertisements based on keywords and filters.
+Currently, two official plugins are available:
 
-## Technology Stack
-- **React**: For building the user interface.
-- **Tailwind CSS**: For styling and designing a mobile-responsive layout.
-- **Node.js and npm**: As the runtime environment and package manager.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Getting Started
+## Expanding the ESLint configuration
 
-### Prerequisites
-- Node.js (v14.x or later)
-- npm (v6.x or later)
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
+- Configure the top-level `parserOptions` property like this:
 
-## Setup and Installation
-1. Clone the repository:
->> git clone https://github.com/SEG4900-Capstone-Group-T88/adspot_frontend.git
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
+```
 
-2. Navigate to the project directory:
->> cd adspot_frontend
->> npm install
->> npm run dev
-
-3. Open `http://localhost:3000` in your browser to view the application.
-
-
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

@@ -1,7 +1,17 @@
-import React, { useRef, useEffect } from "react";
+import React, {useRef} from 'react'
+
+interface UserInputProps {
+  myLabel: string
+  myTooltip?: string
+  type?: React.HTMLInputTypeAttribute
+  name?: string
+  placeholder?: string
+  id?: string
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
+  value?: string
+}
 
 export default function UserInput({
-  autocomplete: autocompleteProp,
   myLabel,
   myTooltip,
   type,
@@ -9,22 +19,9 @@ export default function UserInput({
   placeholder,
   id,
   onChange,
-}) {
-  const inputRef = useRef(null);
-  const autocomplete = useRef(null);
-
-  useEffect(() => {
-    if (inputRef.current && autocompleteProp && window.google) {
-      autocomplete.current = new window.google.maps.places.Autocomplete(
-        inputRef.current,
-        {
-          types: ["address"],
-          componentRestrictions: { country: ["CA"] },
-          fields: ["place_id", "formatted_address"],
-        }
-      );
-    }
-  }, [autocompleteProp, onChange, inputRef.current, window.google]);
+  value,
+}: UserInputProps) {
+  const inputRef = useRef(null)
 
   return (
     <div className="justify-start">
@@ -35,7 +32,7 @@ export default function UserInput({
         >
           <div className="flex items-center">
             <span className="mr-2">{myLabel}</span>
-            {myTooltip && myTooltip}{" "}
+            {myTooltip && myTooltip}{' '}
           </div>
           <input
             ref={inputRef}
@@ -46,10 +43,11 @@ export default function UserInput({
             bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id={id}
             onChange={onChange}
+            value={value}
             onBlur={onChange}
           />
         </label>
       </div>
     </div>
-  );
+  )
 }

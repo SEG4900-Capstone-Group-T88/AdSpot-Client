@@ -1,94 +1,83 @@
-import Footer from "../components/footer";
-import Navbar from "../components/navbar";
-import Profile from "../images/profile.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSackDollar, faStar } from "@fortawesome/free-solid-svg-icons";
-import { TooltipComponent } from "../components/TooltipComponent";
-import Notification from "../components/Notification";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import UserInput from "../components/UserInput"; // Import UserInput component
+import Notification from '../components/Notification'
+
+import {useState} from 'react'
+import UserInput from '../components/UserInput' // Import UserInput component
 
 function CreateAccount() {
-  const navigate = useNavigate();
-  const [missingFields, setMissingFields] = useState(false);
-  const [missingFieldIs, setMissingFieldIs] = useState("");
-  const [successfulFields, SetSuccessfulFields] = useState(false);
-  const [notification, setNotification] = useState();
-  const [termsAndConditions, setTermsAndConditions] = useState(false);
+  const [successfulFields, SetSuccessfulFields] = useState(false)
+  const [notification, setNotification] = useState<{primary: string; secondary: string[]} | null>(
+    null,
+  )
+  const [termsAndConditions, setTermsAndConditions] = useState(false)
 
   const [formValues, setFormValues] = useState({
-    firstName: "",
-    lastName: "",
-    password: "",
-    confirmPassword: "",
-    email: "",
-    phoneNumber: "",
-  });
+    firstName: '',
+    lastName: '',
+    password: '',
+    confirmPassword: '',
+    email: '',
+    phoneNumber: '',
+  })
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({
       ...formValues,
       [event.target.name]: event.target.value,
-    });
-  };
+    })
+  }
 
   function CheckBoolean() {
-    const missing = [];
+    const missing: string[] = []
 
     // Check conditions
 
     if (termsAndConditions === false) {
-      missing.push("Terms & Conditions");
+      missing.push('Terms & Conditions')
     }
 
-    if (formValues.firstName === "") {
-      missing.push("First name");
+    if (formValues.firstName === '') {
+      missing.push('First name')
     }
-    if (formValues.lastName === "") {
-      missing.push("Last name");
+    if (formValues.lastName === '') {
+      missing.push('Last name')
     }
-    if (formValues.email === "") {
-      missing.push("Email");
-    } else if (!formValues.email.includes("@")) {
-      missing.push("Email");
-    } else if (!formValues.email.includes(".")) {
-      missing.push("Email");
+    if (formValues.email === '') {
+      missing.push('Email')
+    } else if (!formValues.email.includes('@')) {
+      missing.push('Email')
+    } else if (!formValues.email.includes('.')) {
+      missing.push('Email')
     }
-    if (formValues.phoneNumber === "") {
-      missing.push("Phone number");
+    if (formValues.phoneNumber === '') {
+      missing.push('Phone number')
     } else {
-      const cleanPhoneNumber = formValues.phoneNumber.replace(/-/g, "");
+      const cleanPhoneNumber = formValues.phoneNumber.replace(/-/g, '')
       if (cleanPhoneNumber.length !== 10) {
-        missing.push("Invalid phone number");
+        missing.push('Invalid phone number')
       }
     }
 
-    if (formValues.password === "" || formValues.confirmPassword === "") {
-      missing.push("Password");
-    } else if (
-      formValues.password.length < 5 ||
-      formValues.confirmPassword.length < 5
-    ) {
-      missing.push("Password must be at least 5 characters long");
+    if (formValues.password === '' || formValues.confirmPassword === '') {
+      missing.push('Password')
+    } else if (formValues.password.length < 5 || formValues.confirmPassword.length < 5) {
+      missing.push('Password must be at least 5 characters long')
     } else if (formValues.password !== formValues.confirmPassword) {
-      missing.push("Passwords don't match");
+      missing.push("Passwords don't match")
     }
 
     // END OF Check conditions
 
     // Check Boolean
     if (missing.length > 0) {
-      SetSuccessfulFields(false);
-      setMissingFields(true);
+      SetSuccessfulFields(false)
+
       setNotification({
-        primary: "Oops! Missing fields",
-        secondary: missing, //.join(", "),
-      });
+        primary: 'Oops! Missing fields',
+        secondary: missing,
+      })
     } else {
-      setNotification(null);
-      setMissingFields(false);
-      SetSuccessfulFields(true);
+      setNotification(null)
+      SetSuccessfulFields(true)
       // createAccount(formValues);
     }
   }
@@ -174,7 +163,7 @@ function CreateAccount() {
           htmlFor="remember"
           className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
         >
-          I agree with the{" "}
+          I agree with the{' '}
           <a
             href="#"
             className="text-blue-600 hover:underline dark:text-blue-500"
@@ -191,12 +180,12 @@ function CreateAccount() {
           className="btn btn-orange uppercase mt-5 font-bold"
           onClick={CheckBoolean}
         >
-          {!successfulFields && "Submit Registration"}
+          {!successfulFields && 'Submit Registration'}
           {successfulFields && <div className="lds-dual-ring"></div>}
         </button>
       </div>
     </>
-  );
+  )
 }
 
-export default CreateAccount;
+export default CreateAccount

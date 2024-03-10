@@ -1,8 +1,13 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCcVisa } from "@fortawesome/free-brands-svg-icons";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faCcVisa} from '@fortawesome/free-brands-svg-icons'
 
-const PaymentMethodCard = ({ cardType, lastFourDigits, expiryDate }) => {
+interface PaymentMethodCardProps {
+  cardType: string
+  lastFourDigits: string
+  expiryDate: string
+}
+
+const PaymentMethodCard = ({cardType, lastFourDigits, expiryDate}: PaymentMethodCardProps) => {
   return (
     <div className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg mb-4">
       <div className="flex items-center">
@@ -22,7 +27,7 @@ const PaymentMethodCard = ({ cardType, lastFourDigits, expiryDate }) => {
         Default
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default PaymentMethodCard;
+export default PaymentMethodCard

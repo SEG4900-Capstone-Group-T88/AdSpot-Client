@@ -1,5 +1,3 @@
-import React from "react";
-
 const SettingsPage = () => {
   return (
     <div className="flex justify-center items-center h-screen">
@@ -44,7 +42,7 @@ const SettingsPage = () => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SettingsPage;
+export default SettingsPage
