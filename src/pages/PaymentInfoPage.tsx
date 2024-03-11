@@ -1,6 +1,5 @@
-
-import Sidebar from "../components/Sidebar";
-import PaymentMethodCard from "../components/PaymentMethodCard";
+import Sidebar from '../components/Sidebar'
+import PaymentMethodCard from '../components/PaymentMethodCard'
 
 const PaymentInfoPage = () => {
   return (
@@ -11,9 +10,7 @@ const PaymentInfoPage = () => {
 
         {/* Main Content */}
         <div className="flex flex-col w-full bg-white rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-purple mb-4">
-            Payment information
-          </h2>
+          <h2 className="text-2xl font-semibold  mb-4">Payment information</h2>
           <p className="text-sm font-semibold mb-6">Current payment methods</p>
 
           {/* Payment Method Card Component */}
@@ -23,9 +20,7 @@ const PaymentInfoPage = () => {
             expiryDate="01/2024"
           />
 
-          <button className="text-sm text-[red] transition-colors">
-            Delete
-          </button>
+          <button className="text-sm text-[red] transition-colors">Delete</button>
 
           {/* Add Payment Method Button */}
           <button className="mt-4 px-6 py-2 bg-purple text-white rounded hover:bg-myPurpleHover transition-colors">
@@ -34,7 +29,7 @@ const PaymentInfoPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PaymentInfoPage;
+export default PaymentInfoPage
