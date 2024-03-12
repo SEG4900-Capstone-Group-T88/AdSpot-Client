@@ -9,8 +9,9 @@ import PaymentInfoPage from './pages/PaymentInfoPage'
 
 import { Client, Provider, cacheExchange, fetchExchange } from 'urql';
 
+
 const client = new Client({
-  url: '',
+  url: 'http://localhost:3000/graphql',
   exchanges: [cacheExchange, fetchExchange],
   /**
   fetchOptions: () => {
