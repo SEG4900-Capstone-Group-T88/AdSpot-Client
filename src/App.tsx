@@ -7,40 +7,57 @@ import Search from './pages/search'
 import SettingsPage from './pages/settingsPage'
 import PaymentInfoPage from './pages/PaymentInfoPage'
 
+import { Client, Provider, cacheExchange, fetchExchange } from 'urql';
+
+const client = new Client({
+  url: '',
+  exchanges: [cacheExchange, fetchExchange],
+  /**
+  fetchOptions: () => {
+    const token = getToken();
+    return {
+      headers: { Authorization: token ? 'Bearer: ${token}' : ''},
+    };
+  },
+  */
+});
+
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={<Login />}
-        />
-        <Route
-          path="/search"
-          element={<Search />}
-        />
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
-        <Route
-          path="/create-account"
-          element={<CreateAccount />}
-        />
-        <Route
-          path="/messages"
-          element={<Messages />}
-        />
-        <Route
-          path="/settings"
-          element={<SettingsPage />}
-        />
-        <Route
-          path="/payment"
-          element={<PaymentInfoPage />}
-        />
-      </Routes>
-    </BrowserRouter>
+    <Provider value={client}>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<Login />}
+          />
+          <Route
+            path="/search"
+            element={<Search />}
+          />
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
+          <Route
+            path="/create-account"
+            element={<CreateAccount />}
+          />
+          <Route
+            path="/messages"
+            element={<Messages />}
+          />
+          <Route
+            path="/settings"
+            element={<SettingsPage />}
+          />
+          <Route
+            path="/payment"
+            element={<PaymentInfoPage />}
+          />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   )
 }
 
