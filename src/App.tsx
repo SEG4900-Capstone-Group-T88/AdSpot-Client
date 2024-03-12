@@ -6,22 +6,8 @@ import Messages from './pages/messages'
 import Search from './pages/search'
 import SettingsPage from './pages/settingsPage'
 import PaymentInfoPage from './pages/PaymentInfoPage'
-
-import { Client, Provider, cacheExchange, fetchExchange } from 'urql';
-
-
-const client = new Client({
-  url: 'http://localhost:3000/graphql',
-  exchanges: [cacheExchange, fetchExchange],
-  /**
-  fetchOptions: () => {
-    const token = getToken();
-    return {
-      headers: { Authorization: token ? 'Bearer: ${token}' : ''},
-    };
-  },
-  */
-});
+import { Provider } from 'urql'
+import client from './urqlClient'
 
 function App() {
   return (
