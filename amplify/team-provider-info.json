@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifya42e9937e84d4-staging-165541-authRole",
+      "UnauthRoleArn": "arn:aws:iam::339713021277:role/amplify-amplifya42e9937e84d4-staging-165541-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::339713021277:role/amplify-amplifya42e9937e84d4-staging-165541-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-amplifya42e9937e84d4-staging-165541-deployment",
+      "UnauthRoleName": "amplify-amplifya42e9937e84d4-staging-165541-unauthRole",
+      "StackName": "amplify-amplifya42e9937e84d4-staging-165541",
+      "StackId": "arn:aws:cloudformation:us-east-2:339713021277:stack/amplify-amplifya42e9937e84d4-staging-165541/074fef90-deff-11ee-8181-0a02d973b1c7",
+      "AmplifyAppId": "d2i55swvkk956a"
+    },
+    "categories": {
+      "api": {
+        "adspotfrontendtest": {}
+      }
+    }
+  }
+}
