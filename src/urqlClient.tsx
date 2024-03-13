@@ -1,7 +1,7 @@
 import { Client, cacheExchange, fetchExchange } from 'urql';
 
 const client = new Client({
-  url: 'http://localhost:3000/graphql',
+  url: 'http://localhost:8080/graphql',
   exchanges: [cacheExchange, fetchExchange],
   /**
   fetchOptions: () => {
