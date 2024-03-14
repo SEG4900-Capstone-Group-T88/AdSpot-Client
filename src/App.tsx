@@ -1,10 +1,10 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import CreateAccount from './pages/createAccount'
-import Dashboard from './pages/dashboard'
-import Login from './pages/login'
-import Messages from './pages/messages'
-import Search from './pages/search'
-import SettingsPage from './pages/settingsPage'
+import CreateAccount from './pages/CreateAccount'
+import Dashboard from './pages/Dashboard'
+import Login from './pages/Login'
+import Messages from './pages/Messages'
+import Search from './pages/Search'
+import SettingsPage from './pages/SettingsPage'
 import PaymentInfoPage from './pages/PaymentInfoPage'
 
 function App() {

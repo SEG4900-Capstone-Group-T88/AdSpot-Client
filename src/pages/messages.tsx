@@ -1,12 +1,12 @@
-import Navbar from "../components/navbar";
+import Navbar from '../components/Navbar'
 
 function Messages() {
-    return(
-        <div>
-            <Navbar/>
-            Messages...
-        </div>
-    )
+  return (
+    <div>
+      <Navbar />
+      Messages...
+    </div>
+  )
 }
 
-export default Messages;
+export default Messages
