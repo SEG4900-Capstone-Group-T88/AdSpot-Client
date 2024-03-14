@@ -12,6 +12,8 @@ interface Listing {
   niche: string[]
   followerCount: number
   price: number
+  ratings: number
+  reviews: number
   // Add other properties as needed...
 }
 
@@ -62,6 +64,8 @@ function Search() {
       niche: ['art', 'christianity'],
       followerCount: 35000,
       price: 300,
+      ratings: 5,
+      reviews: 25,
     },
     {
       name: 'Cools Wife',
@@ -71,6 +75,8 @@ function Search() {
       niche: ['health'],
       followerCount: 5000,
       price: 100,
+      ratings: 3.5,
+      reviews: 15,
     },
     {
       name: 'Based Masculinity',
@@ -80,6 +86,8 @@ function Search() {
       niche: ['motivational'],
       followerCount: 100000,
       price: 500,
+      ratings: 4.5,
+      reviews: 5,
     },
     // Add more mock listings as necessary
   ]
