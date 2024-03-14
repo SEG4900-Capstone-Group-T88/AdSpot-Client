@@ -2,20 +2,8 @@
 import React, {useState} from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import ActiveListings from '../components/ActiveListings'
-
-interface Listing {
-  name: string
-  handle: string
-  title: string
-  platform: string
-  niche: string[]
-  followerCount: number
-  price: number
-  ratings: number
-  reviews: number
-  // Add other properties as needed...
-}
+import ActiveListings, {Listing} from '../components/ActiveListings'
+import mockListings from '../components/mockListings.json'
 
 function Search() {
   const [viewMore, setViewMore] = useState(false)
@@ -55,42 +43,7 @@ function Search() {
     setSelectedPlatform(value === 'All' ? '' : value) // If "All" is selected, reset the filter
   }
 
-  const listings: Listing[] = [
-    {
-      name: 'Cool Christian Engineer',
-      handle: 'imcoolchristian',
-      title: 'Retweet on X',
-      platform: 'Instagram',
-      niche: ['art', 'christianity'],
-      followerCount: 35000,
-      price: 300,
-      ratings: 5,
-      reviews: 25,
-    },
-    {
-      name: 'Cools Wife',
-      handle: 'coolswife',
-      title: 'Retweet on X',
-      platform: 'X',
-      niche: ['health'],
-      followerCount: 5000,
-      price: 100,
-      ratings: 3.5,
-      reviews: 15,
-    },
-    {
-      name: 'Based Masculinity',
-      handle: 'BasedMasculine',
-      title: 'Retweet on Youtube',
-      platform: 'YouTube',
-      niche: ['motivational'],
-      followerCount: 100000,
-      price: 500,
-      ratings: 4.5,
-      reviews: 5,
-    },
-    // Add more mock listings as necessary
-  ]
+  const listings: Listing[] = mockListings
 
   // Then update your filteredListings logic
   const filteredListings = listings.filter((listing) => {

@@ -3,7 +3,7 @@ import {useState} from 'react'
 import Profile from '../images/profile.png'
 import UserInput from './UserInput'
 
-interface Listing {
+export interface Listing {
   name: string
   handle: string
   title: string
