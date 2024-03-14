@@ -1,5 +1,6 @@
 // ActiveListings.tsx
 import Profile from '../images/profile.png'
+
 interface Listing {
   name: string
   handle: string
@@ -28,37 +29,39 @@ const ActiveListings: React.FC<ActiveListingsProps> = ({listings}) => {
     }
   }
   return (
-    <div>
-      <h2>Active listings</h2>
+    <div className="max-w-4xl mx-auto">
+      <h2 className="text-3xl font-bold text-center my-8">Active Listings</h2>
       {listings.map((listing, index) => (
         <div
           key={index}
-          className="listing rounded-lg border-2 border-[#B9B8B8] px-6 py-2 my-3"
+          className="listing bg-white rounded-lg shadow-md p-6 my-4"
         >
-          <h3>Retweet on {listing.platform}</h3>
-          <div className="flex gap-36">
-            <div className="flex gap-4 items-center ">
+          <h3 className="text-lg font-semibold text-indigo-600 mb-4">
+            Retweet on {listing.platform}
+          </h3>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
               <img
                 src={Profile}
-                className="h-12 w-12"
+                className="h-12 w-12 rounded-full mr-4"
                 alt={`${listing.name}`}
               />
               <div>
-                <h4>
+                <h4 className="text-xl font-semibold">
                   {listing.name} - 1 Retweet for ${listing.price}
                 </h4>
-                <p className="text-[red] text-[20px]">{formatNiche(listing.niche)}</p>
-                <p className="text-purple text-[20px]">@{listing.handle}</p>
+                <p className="text-[black] text-base">{formatNiche(listing.niche)}</p>
+                <p className="text-purple text-base">@{listing.handle}</p>
               </div>
             </div>
-            <p className="text-[20px]">{formatFollowerCount(listing.followerCount)} followers</p>
+            <p className="text-base">{formatFollowerCount(listing.followerCount)} followers</p>
           </div>
         </div>
       ))}
-      <div className="text-center mt-6 mb-12">
+      <div className="text-center mt-6">
         <a
           href="/view-all"
-          className="text-purple underline text-[20px]"
+          className="text-purple-600 underline text-base"
         >
           View all
         </a>
