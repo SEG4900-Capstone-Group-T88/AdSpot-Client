@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faSackDollar, faStar} from '@fortawesome/free-solid-svg-icons'
-import ActiveListings from '../components/ActiveListings'
+// import ActiveListings from '../components/ActiveListings'
 import RecentPurchases from '../components/RecentPurchases'
 
 function Dashboard() {
@@ -36,7 +36,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <ActiveListings />
+      {/* <ActiveListings /> */}
       <RecentPurchases />
       <Footer />
     </div>

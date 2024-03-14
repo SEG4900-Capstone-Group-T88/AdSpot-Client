@@ -2,12 +2,14 @@
 import React, {useState} from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import SearchingActiveListings from '../components/SearchingActivelyListings'
+import ActiveListings from '../components/ActiveListings'
 
 interface Listing {
+  name: string
+  handle: string
   title: string
   platform: string
-  niche: string
+  niche: string[]
   followerCount: number
   price: number
   // Add other properties as needed...
@@ -53,23 +55,29 @@ function Search() {
 
   const listings: Listing[] = [
     {
-      title: 'Sponsored Post by Influencer A',
+      name: 'Cool Christian Engineer',
+      handle: 'imcoolchristian',
+      title: 'Retweet on X',
       platform: 'Instagram',
-      niche: 'art',
+      niche: ['art', 'christianity'],
       followerCount: 35000,
       price: 300,
     },
     {
-      title: 'Sponsored Tweet by Influencer B',
+      name: 'Cools Wife',
+      handle: 'coolswife',
+      title: 'Retweet on X',
       platform: 'X',
-      niche: 'health',
+      niche: ['health'],
       followerCount: 5000,
       price: 100,
     },
     {
-      title: 'Video Endorsement by Influencer C',
+      name: 'Based Masculinity',
+      handle: 'BasedMasculine',
+      title: 'Retweet on Youtube',
       platform: 'YouTube',
-      niche: 'motivational',
+      niche: ['motivational'],
       followerCount: 100000,
       price: 500,
     },
@@ -84,7 +92,8 @@ function Search() {
       : true // No follower count range is selected, so don't filter on this criterion
 
     return (
-      (selectedNiche.length === 0 || selectedNiche.includes(listing.niche)) &&
+      (selectedNiche.length === 0 ||
+        selectedNiche.some((niche) => listing.niche.includes(niche))) &&
       followerCountInRange &&
       (!selectedPlatform || listing.platform === selectedPlatform) &&
       listing.price <= price
@@ -186,8 +195,7 @@ function Search() {
           </div>
         </div>
         <div className="col-span-3">
-          <h1>Filtered Listings:</h1>
-          <SearchingActiveListings listings={filteredListings} />
+          <ActiveListings listings={filteredListings} />
         </div>
       </div>
       <Footer />
