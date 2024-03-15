@@ -1,4 +1,4 @@
-import { Client, cacheExchange, fetchExchange } from 'urql';
+import {Client, cacheExchange, fetchExchange} from 'urql'
 
 const client = new Client({
   url: 'http://localhost:8080',
@@ -11,6 +11,6 @@ const client = new Client({
     };
   },
   */
-});
+})
 
-export default client;
+export default client

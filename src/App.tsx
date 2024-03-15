@@ -6,7 +6,7 @@ import Messages from './pages/Messages'
 import Search from './pages/Search'
 import SettingsPage from './pages/SettingsPage'
 import PaymentInfoPage from './pages/PaymentInfoPage'
-import { Provider } from 'urql'
+import {Provider} from 'urql'
 import client from './urqlClient'
 
 function App() {
