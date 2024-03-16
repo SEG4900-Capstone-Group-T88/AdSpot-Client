@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+const colors = require('tailwindcss/colors')
+
 export default {
   content: [
     "./index.html",
@@ -6,6 +9,7 @@ export default {
   ],
   theme: {
     colors: {
+      ...colors,
       purple: "#7855FF",
       myPurpleHover: "#6742E6",
     },

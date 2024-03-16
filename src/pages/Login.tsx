@@ -16,7 +16,7 @@ function Login() {
   const [{data}] = useQuery({
     query: testQuery,
     variables: {
-      orderId: 1,
+      orderId: 5,
     },
   })
   console.log(typeof data?.orderById)
@@ -24,7 +24,7 @@ function Login() {
 
   return (
     <>
-      {data && <OrderSummary order={data!.orderById!} />}
+      {data?.orderById && <OrderSummary order={data.orderById} />}
       <div className="xl:grid xl:grid-cols-2 xl:items-center gap-[200px] text-center text-[black] text-[25px] font-semibold">
         <div>
           <h1 className="brand">AdSpot</h1>
