@@ -3,9 +3,9 @@ import {graphql} from '../gql'
 import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faXmarkCircle, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
-import {OrderStatusEnum} from '../gql/graphql'
+import {OrderStatusEnum, OrderSummaryFragment} from '../gql/graphql'
 
-export const OrderSummaryFragment = graphql(`
+export const OrderSummaryFragmentDocument = graphql(`
   fragment OrderSummary on Order {
     orderId
     orderDate
@@ -29,8 +29,11 @@ export const OrderSummaryFragment = graphql(`
   }
 `)
 
-function getOrderStatusBgColor(status: OrderStatusEnum) {
-  switch (status) {
+function getOrderStatusBgColor(order: OrderSummaryFragment) {
+  if (order == undefined) {
+    return ''
+  }
+  switch (order!.orderStatusId) {
     case OrderStatusEnum.Pending:
       return 'bg-orange-500'
     case OrderStatusEnum.Rejected:
@@ -39,15 +42,17 @@ function getOrderStatusBgColor(status: OrderStatusEnum) {
       return 'bg-yellow-500'
     case OrderStatusEnum.Completed:
       return 'bg-green-500'
+    default:
+      return ''
   }
 }
 
-function isActionable(status: OrderStatusEnum) {
-  return status === OrderStatusEnum.Pending
+function isActionable(order: OrderSummaryFragment) {
+  return order.orderStatusId === OrderStatusEnum.Pending
 }
 
-function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragment>}) {
-  const order = useFragment(OrderSummaryFragment, props.order)
+function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragmentDocument>}) {
+  const order = useFragment(OrderSummaryFragmentDocument, props.order)
   const orderDate = new Date(order.orderDate)
 
   return (
@@ -75,12 +80,10 @@ function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragment>})
             </div>
           </div>
           <div className="flex gap-4">
-            <span
-              className={`rounded p-4 ${getOrderStatusBgColor(order.orderStatusId)} text-white`}
-            >
+            <span className={`rounded p-4 ${getOrderStatusBgColor(order)} text-white`}>
               {order.orderStatusId}
             </span>
-            {isActionable(order.orderStatusId) && (
+            {isActionable(order) && (
               <div className="flex flex-col justify-between">
                 <button>
                   <FontAwesomeIcon
