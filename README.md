@@ -1,3 +1,5 @@
+![](https://github.com/SEG4900-Capstone-Group-T88/adspot_frontend/actions/workflows/node.js.yml/badge.svg)
+
 # AdSpot Frontend
 
 ## Overview
