@@ -62,6 +62,11 @@ export enum ApplyPolicy {
     Validation = 'VALIDATION',
 }
 
+export type CannotOrderOwnListingError = Error & {
+    __typename?: 'CannotOrderOwnListingError'
+    message: Scalars['String']['output']
+}
+
 export type Connection = {
     __typename?: 'Connection'
     handle: Scalars['String']['output']
@@ -81,6 +86,15 @@ export type ConnectionFilterInput = {
     token?: InputMaybe<StringOperationFilterInput>
     user?: InputMaybe<UserFilterInput>
     userId?: InputMaybe<IntOperationFilterInput>
+}
+
+export type ConnectionSortInput = {
+    handle?: InputMaybe<SortEnumType>
+    platform?: InputMaybe<PlatformSortInput>
+    platformId?: InputMaybe<SortEnumType>
+    token?: InputMaybe<SortEnumType>
+    user?: InputMaybe<UserSortInput>
+    userId?: InputMaybe<SortEnumType>
 }
 
 export type DateTimeOperationFilterInput = {
@@ -126,6 +140,21 @@ export type Error = {
     message: Scalars['String']['output']
 }
 
+export type FloatOperationFilterInput = {
+    eq?: InputMaybe<Scalars['Float']['input']>
+    gt?: InputMaybe<Scalars['Float']['input']>
+    gte?: InputMaybe<Scalars['Float']['input']>
+    in?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>
+    lt?: InputMaybe<Scalars['Float']['input']>
+    lte?: InputMaybe<Scalars['Float']['input']>
+    neq?: InputMaybe<Scalars['Float']['input']>
+    ngt?: InputMaybe<Scalars['Float']['input']>
+    ngte?: InputMaybe<Scalars['Float']['input']>
+    nin?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>
+    nlt?: InputMaybe<Scalars['Float']['input']>
+    nlte?: InputMaybe<Scalars['Float']['input']>
+}
+
 export type IntOperationFilterInput = {
     eq?: InputMaybe<Scalars['Int']['input']>
     gt?: InputMaybe<Scalars['Int']['input']>
@@ -139,6 +168,11 @@ export type IntOperationFilterInput = {
     nin?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>
     nlt?: InputMaybe<Scalars['Int']['input']>
     nlte?: InputMaybe<Scalars['Int']['input']>
+}
+
+export type InvalidListingIdError = Error & {
+    __typename?: 'InvalidListingIdError'
+    message: Scalars['String']['output']
 }
 
 export type ListFilterInputTypeOfConnectionFilterInput = {
@@ -198,6 +232,23 @@ export type ListingFilterInput = {
     userId?: InputMaybe<IntOperationFilterInput>
 }
 
+export type ListingPriceHasChangedError = Error & {
+    __typename?: 'ListingPriceHasChangedError'
+    message: Scalars['String']['output']
+}
+
+export type ListingSortInput = {
+    connection?: InputMaybe<ConnectionSortInput>
+    listingId?: InputMaybe<SortEnumType>
+    listingType?: InputMaybe<ListingTypeSortInput>
+    listingTypeId?: InputMaybe<SortEnumType>
+    platform?: InputMaybe<PlatformSortInput>
+    platformId?: InputMaybe<SortEnumType>
+    price?: InputMaybe<SortEnumType>
+    user?: InputMaybe<UserSortInput>
+    userId?: InputMaybe<SortEnumType>
+}
+
 export type ListingType = {
     __typename?: 'ListingType'
     listingTypeId: Scalars['Int']['output']
@@ -215,6 +266,13 @@ export type ListingTypeFilterInput = {
     or?: InputMaybe<Array<ListingTypeFilterInput>>
     platform?: InputMaybe<PlatformFilterInput>
     platformId?: InputMaybe<IntOperationFilterInput>
+}
+
+export type ListingTypeSortInput = {
+    listingTypeId?: InputMaybe<SortEnumType>
+    name?: InputMaybe<SortEnumType>
+    platform?: InputMaybe<PlatformSortInput>
+    platformId?: InputMaybe<SortEnumType>
 }
 
 export type LoginError = UserInvalidCredentialsError | UserNotFoundError
@@ -238,6 +296,7 @@ export type Mutation = {
     addUser: AddUserPayload
     deleteUser: DeleteUserPayload
     login: LoginPayload
+    orderListing: OrderListingPayload
     updatePassword: UpdatePasswordPayload
 }
 
@@ -261,6 +320,10 @@ export type MutationLoginArgs = {
     input: LoginInput
 }
 
+export type MutationOrderListingArgs = {
+    input: OrderListingInput
+}
+
 export type MutationUpdatePasswordArgs = {
     input: UpdatePasswordInput
 }
@@ -276,6 +339,7 @@ export type Order = {
     orderStatus: OrderStatus
     orderStatusId: OrderStatusEnum
     price: Scalars['Decimal']['output']
+    rating?: Maybe<Scalars['Float']['output']>
     user: User
     userId: Scalars['Int']['output']
 }
@@ -292,8 +356,42 @@ export type OrderFilterInput = {
     orderStatus?: InputMaybe<OrderStatusFilterInput>
     orderStatusId?: InputMaybe<OrderStatusEnumOperationFilterInput>
     price?: InputMaybe<DecimalOperationFilterInput>
+    rating?: InputMaybe<FloatOperationFilterInput>
     user?: InputMaybe<UserFilterInput>
     userId?: InputMaybe<IntOperationFilterInput>
+}
+
+export type OrderListingError =
+    | CannotOrderOwnListingError
+    | InvalidListingIdError
+    | ListingPriceHasChangedError
+
+export type OrderListingInput = {
+    description: Scalars['String']['input']
+    listingId: Scalars['Int']['input']
+    price: Scalars['Decimal']['input']
+    userId: Scalars['Int']['input']
+}
+
+export type OrderListingPayload = {
+    __typename?: 'OrderListingPayload'
+    errors?: Maybe<Array<OrderListingError>>
+    order?: Maybe<Order>
+}
+
+export type OrderSortInput = {
+    deliverable?: InputMaybe<SortEnumType>
+    description?: InputMaybe<SortEnumType>
+    listing?: InputMaybe<ListingSortInput>
+    listingId?: InputMaybe<SortEnumType>
+    orderDate?: InputMaybe<SortEnumType>
+    orderId?: InputMaybe<SortEnumType>
+    orderStatus?: InputMaybe<OrderStatusSortInput>
+    orderStatusId?: InputMaybe<SortEnumType>
+    price?: InputMaybe<SortEnumType>
+    rating?: InputMaybe<SortEnumType>
+    user?: InputMaybe<UserSortInput>
+    userId?: InputMaybe<SortEnumType>
 }
 
 export type OrderStatus = {
@@ -325,6 +423,11 @@ export type OrderStatusFilterInput = {
     orders?: InputMaybe<ListFilterInputTypeOfOrderFilterInput>
 }
 
+export type OrderStatusSortInput = {
+    name?: InputMaybe<SortEnumType>
+    orderStatusId?: InputMaybe<SortEnumType>
+}
+
 export type Platform = {
     __typename?: 'Platform'
     listingTypes: Array<ListingType>
@@ -340,13 +443,34 @@ export type PlatformFilterInput = {
     platformId?: InputMaybe<IntOperationFilterInput>
 }
 
+export type PlatformSortInput = {
+    name?: InputMaybe<SortEnumType>
+    platformId?: InputMaybe<SortEnumType>
+}
+
 export type Query = {
     __typename?: 'Query'
+    acceptedOrders: Array<Order>
+    acceptedRequests: Array<Order>
     orderById?: Maybe<Order>
     orders: Array<Order>
+    pendingOrders: Array<Order>
+    pendingRequests: Array<Order>
     platforms: Array<Platform>
+    rejectedOrders: Array<Order>
+    rejectedRequests: Array<Order>
     userById?: Maybe<User>
     users: Array<User>
+}
+
+export type QueryAcceptedOrdersArgs = {
+    order?: InputMaybe<Array<OrderSortInput>>
+    userId: Scalars['Int']['input']
+}
+
+export type QueryAcceptedRequestsArgs = {
+    order?: InputMaybe<Array<OrderSortInput>>
+    userId: Scalars['Int']['input']
 }
 
 export type QueryOrderByIdArgs = {
@@ -357,12 +481,37 @@ export type QueryOrdersArgs = {
     where?: InputMaybe<OrderFilterInput>
 }
 
+export type QueryPendingOrdersArgs = {
+    order?: InputMaybe<Array<OrderSortInput>>
+    userId: Scalars['Int']['input']
+}
+
+export type QueryPendingRequestsArgs = {
+    order?: InputMaybe<Array<OrderSortInput>>
+    userId: Scalars['Int']['input']
+}
+
+export type QueryRejectedOrdersArgs = {
+    order?: InputMaybe<Array<OrderSortInput>>
+    userId: Scalars['Int']['input']
+}
+
+export type QueryRejectedRequestsArgs = {
+    order?: InputMaybe<Array<OrderSortInput>>
+    userId: Scalars['Int']['input']
+}
+
 export type QueryUserByIdArgs = {
     userId: Scalars['Int']['input']
 }
 
 export type QueryUsersArgs = {
     where?: InputMaybe<UserFilterInput>
+}
+
+export enum SortEnumType {
+    Asc = 'ASC',
+    Desc = 'DESC',
 }
 
 export type StringOperationFilterInput = {
@@ -394,22 +543,20 @@ export type User = {
     __typename?: 'User'
     connections: Array<Connection>
     email: Scalars['String']['output']
+    firstName: Scalars['String']['output']
+    lastName: Scalars['String']['output']
     listings: Array<Listing>
     orders: Array<Order>
     password: Scalars['String']['output']
-    pendingRequests: Array<Order>
-    purchases: Array<Order>
     userId: Scalars['Int']['output']
-}
-
-export type UserPurchasesArgs = {
-    where?: InputMaybe<OrderFilterInput>
 }
 
 export type UserFilterInput = {
     and?: InputMaybe<Array<UserFilterInput>>
     connections?: InputMaybe<ListFilterInputTypeOfConnectionFilterInput>
     email?: InputMaybe<StringOperationFilterInput>
+    firstName?: InputMaybe<StringOperationFilterInput>
+    lastName?: InputMaybe<StringOperationFilterInput>
     listings?: InputMaybe<ListFilterInputTypeOfListingFilterInput>
     or?: InputMaybe<Array<UserFilterInput>>
     orders?: InputMaybe<ListFilterInputTypeOfOrderFilterInput>
@@ -425,6 +572,14 @@ export type UserInvalidCredentialsError = Error & {
 export type UserNotFoundError = Error & {
     __typename?: 'UserNotFoundError'
     message: Scalars['String']['output']
+}
+
+export type UserSortInput = {
+    email?: InputMaybe<SortEnumType>
+    firstName?: InputMaybe<SortEnumType>
+    lastName?: InputMaybe<SortEnumType>
+    password?: InputMaybe<SortEnumType>
+    userId?: InputMaybe<SortEnumType>
 }
 
 export type OrderSummaryFragment = {
@@ -445,6 +600,14 @@ export type OrderSummaryFragment = {
     }
 } & {' $fragmentName'?: 'OrderSummaryFragment'}
 
+export type UserBasicInfoFragment = {
+    __typename?: 'User'
+    userId: number
+    email: string
+    firstName: string
+    lastName: string
+} & {' $fragmentName'?: 'UserBasicInfoFragment'}
+
 export type TestQueryQueryVariables = Exact<{
     orderId: Scalars['Int']['input']
 }>
@@ -456,6 +619,24 @@ export type TestQueryQuery = {
               ' $fragmentRefs'?: {OrderSummaryFragment: OrderSummaryFragment}
           })
         | null
+}
+
+export type LoginMutationVariables = Exact<{
+    input: LoginInput
+}>
+
+export type LoginMutation = {
+    __typename?: 'Mutation'
+    login: {
+        __typename?: 'LoginPayload'
+        user?: {
+            __typename?: 'User'
+            userId: number
+            email: string
+            firstName: string
+            lastName: string
+        } | null
+    }
 }
 
 export const OrderSummaryFragmentDoc = {
@@ -530,6 +711,25 @@ export const OrderSummaryFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<OrderSummaryFragment, unknown>
+export const UserBasicInfoFragmentDoc = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'UserBasicInfo'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'User'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<UserBasicInfoFragment, unknown>
 export const TestQueryDocument = {
     kind: 'Document',
     definitions: [
@@ -642,3 +842,63 @@ export const TestQueryDocument = {
         },
     ],
 } as unknown as DocumentNode<TestQueryQuery, TestQueryQueryVariables>
+export const LoginDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'Login'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'LoginInput'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'login'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'user'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                            {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'firstName'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'lastName'},
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>
