@@ -10,42 +10,42 @@ import {Provider} from 'urql'
 import client from './urqlClient'
 
 function App() {
-  return (
-    <Provider value={client}>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={<Login />}
-          />
-          <Route
-            path="/search"
-            element={<Search />}
-          />
-          <Route
-            path="/dashboard"
-            element={<Dashboard />}
-          />
-          <Route
-            path="/create-account"
-            element={<CreateAccount />}
-          />
-          <Route
-            path="/messages"
-            element={<Messages />}
-          />
-          <Route
-            path="/settings"
-            element={<SettingsPage />}
-          />
-          <Route
-            path="/payment"
-            element={<PaymentInfoPage />}
-          />
-        </Routes>
-      </BrowserRouter>
-    </Provider>
-  )
+    return (
+        <Provider value={client}>
+            <BrowserRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<Login />}
+                    />
+                    <Route
+                        path="/search"
+                        element={<Search />}
+                    />
+                    <Route
+                        path="/dashboard"
+                        element={<Dashboard />}
+                    />
+                    <Route
+                        path="/create-account"
+                        element={<CreateAccount />}
+                    />
+                    <Route
+                        path="/messages"
+                        element={<Messages />}
+                    />
+                    <Route
+                        path="/settings"
+                        element={<SettingsPage />}
+                    />
+                    <Route
+                        path="/payment"
+                        element={<PaymentInfoPage />}
+                    />
+                </Routes>
+            </BrowserRouter>
+        </Provider>
+    )
 }
 
 export default App

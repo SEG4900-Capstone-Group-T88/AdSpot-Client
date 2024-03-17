@@ -3,94 +3,94 @@
 @tailwind utilities;
 
 body {
-  @apply font-['Quicksand'] mx-[20px] md:mx-[120px] my-[30px] text-[#777777] font-medium;
+    @apply font-['Quicksand'] mx-[20px] md:mx-[120px] my-[30px] text-[#777777] font-medium;
 }
 
 label {
-  margin-left: 0.3em; /* Adjust '1em' to the actual margin you want */
+    margin-left: 0.3em; /* Adjust '1em' to the actual margin you want */
 }
 
 .brand {
-  @apply text-purple font-black text-[40px] pb-4;
+    @apply text-purple font-black text-[40px] pb-4;
 }
 
 h2 {
-  @apply text-[black] font-bold text-[35px];
+    @apply text-[black] font-bold text-[35px];
 }
 
 h3 {
-  @apply text-[black] font-bold text-[25px];
+    @apply text-[black] font-bold text-[25px];
 }
 
 h4 {
-  @apply text-[black] font-bold text-[20px];
+    @apply text-[black] font-bold text-[20px];
 }
 
 /* Button Style*/
 .btn {
-  @apply font-semibold py-2 px-4 rounded-xl md:text-2xl md:px-6 md:py-4 uppercase;
+    @apply font-semibold py-2 px-4 rounded-xl md:text-2xl md:px-6 md:py-4 uppercase;
 }
 
 .btn-orange {
-  @apply bg-purple text-white;
+    @apply bg-purple text-white;
 }
 .btn-orange:hover {
-  @apply bg-myPurpleHover;
+    @apply bg-myPurpleHover;
 }
 .btn-purple {
-  @apply bg-myDarkPurple text-white;
+    @apply bg-myDarkPurple text-white;
 }
 .lds-dual-ring {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
 }
 .lds-dual-ring:after {
-  content: ' ';
-  display: block;
-  width: 32px;
-  height: 32px;
-  margin: 4px;
-  border-radius: 50%;
-  border: 3px solid #fff;
-  border-color: #fff transparent #fff transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
+    content: ' ';
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin: 4px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    border-color: #fff transparent #fff transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
 }
 @keyframes lds-dual-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 .hidden {
-  animation: 1s linear 4s 1 forwards;
+    animation: 1s linear 4s 1 forwards;
 }
 
 @keyframes hide {
-  to {
-    opacity: 0;
-  }
+    to {
+        opacity: 0;
+    }
 }
 
 .modal-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
 }
 
 .modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
 }
