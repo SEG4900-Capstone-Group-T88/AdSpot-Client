@@ -22,6 +22,50 @@ export type Scalars = {
     Decimal: {input: any; output: any}
 }
 
+/** A connection to a list of items. */
+export type AcceptedOrdersConnection = {
+    __typename?: 'AcceptedOrdersConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<AcceptedOrdersEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type AcceptedOrdersEdge = {
+    __typename?: 'AcceptedOrdersEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
+/** A connection to a list of items. */
+export type AcceptedRequestsConnection = {
+    __typename?: 'AcceptedRequestsConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<AcceptedRequestsEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type AcceptedRequestsEdge = {
+    __typename?: 'AcceptedRequestsEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
 export type AddConnectionInput = {
     accountHandle: Scalars['String']['input']
     apiToken: Scalars['String']['input']
@@ -65,6 +109,50 @@ export enum ApplyPolicy {
 export type CannotOrderOwnListingError = Error & {
     __typename?: 'CannotOrderOwnListingError'
     message: Scalars['String']['output']
+}
+
+/** A connection to a list of items. */
+export type CompletedOrdersConnection = {
+    __typename?: 'CompletedOrdersConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<CompletedOrdersEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type CompletedOrdersEdge = {
+    __typename?: 'CompletedOrdersEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
+/** A connection to a list of items. */
+export type CompletedRequestsConnection = {
+    __typename?: 'CompletedRequestsConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<CompletedRequestsEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type CompletedRequestsEdge = {
+    __typename?: 'CompletedRequestsEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
 }
 
 export type Connection = {
@@ -428,6 +516,85 @@ export type OrderStatusSortInput = {
     orderStatusId?: InputMaybe<SortEnumType>
 }
 
+/** A connection to a list of items. */
+export type OrdersByStatusConnection = {
+    __typename?: 'OrdersByStatusConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<OrdersByStatusEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type OrdersByStatusEdge = {
+    __typename?: 'OrdersByStatusEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
+/** Information about pagination in a connection. */
+export type PageInfo = {
+    __typename?: 'PageInfo'
+    /** When paginating forwards, the cursor to continue. */
+    endCursor?: Maybe<Scalars['String']['output']>
+    /** Indicates whether more edges exist following the set defined by the clients arguments. */
+    hasNextPage: Scalars['Boolean']['output']
+    /** Indicates whether more edges exist prior the set defined by the clients arguments. */
+    hasPreviousPage: Scalars['Boolean']['output']
+    /** When paginating backwards, the cursor to continue. */
+    startCursor?: Maybe<Scalars['String']['output']>
+}
+
+/** A connection to a list of items. */
+export type PendingOrdersConnection = {
+    __typename?: 'PendingOrdersConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<PendingOrdersEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type PendingOrdersEdge = {
+    __typename?: 'PendingOrdersEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
+/** A connection to a list of items. */
+export type PendingRequestsConnection = {
+    __typename?: 'PendingRequestsConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<PendingRequestsEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type PendingRequestsEdge = {
+    __typename?: 'PendingRequestsEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
 export type Platform = {
     __typename?: 'Platform'
     listingTypes: Array<ListingType>
@@ -450,25 +617,55 @@ export type PlatformSortInput = {
 
 export type Query = {
     __typename?: 'Query'
-    acceptedOrders: Array<Order>
-    acceptedRequests: Array<Order>
+    acceptedOrders?: Maybe<AcceptedOrdersConnection>
+    acceptedRequests?: Maybe<AcceptedRequestsConnection>
+    completedOrders?: Maybe<CompletedOrdersConnection>
+    completedRequests?: Maybe<CompletedRequestsConnection>
     orderById?: Maybe<Order>
     orders: Array<Order>
-    pendingOrders: Array<Order>
-    pendingRequests: Array<Order>
+    ordersByStatus?: Maybe<OrdersByStatusConnection>
+    pendingOrders?: Maybe<PendingOrdersConnection>
+    pendingRequests?: Maybe<PendingRequestsConnection>
     platforms: Array<Platform>
-    rejectedOrders: Array<Order>
-    rejectedRequests: Array<Order>
+    rejectedOrders?: Maybe<RejectedOrdersConnection>
+    rejectedRequests?: Maybe<RejectedRequestsConnection>
+    requestsByStatus?: Maybe<RequestsByStatusConnection>
     userById?: Maybe<User>
     users: Array<User>
 }
 
 export type QueryAcceptedOrdersArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
     order?: InputMaybe<Array<OrderSortInput>>
     userId: Scalars['Int']['input']
 }
 
 export type QueryAcceptedRequestsArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    order?: InputMaybe<Array<OrderSortInput>>
+    userId: Scalars['Int']['input']
+}
+
+export type QueryCompletedOrdersArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    order?: InputMaybe<Array<OrderSortInput>>
+    userId: Scalars['Int']['input']
+}
+
+export type QueryCompletedRequestsArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
     order?: InputMaybe<Array<OrderSortInput>>
     userId: Scalars['Int']['input']
 }
@@ -481,23 +678,59 @@ export type QueryOrdersArgs = {
     where?: InputMaybe<OrderFilterInput>
 }
 
+export type QueryOrdersByStatusArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    order?: InputMaybe<Array<OrderSortInput>>
+    status: OrderStatusEnum
+    userId: Scalars['Int']['input']
+}
+
 export type QueryPendingOrdersArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
     order?: InputMaybe<Array<OrderSortInput>>
     userId: Scalars['Int']['input']
 }
 
 export type QueryPendingRequestsArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
     order?: InputMaybe<Array<OrderSortInput>>
     userId: Scalars['Int']['input']
 }
 
 export type QueryRejectedOrdersArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
     order?: InputMaybe<Array<OrderSortInput>>
     userId: Scalars['Int']['input']
 }
 
 export type QueryRejectedRequestsArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
     order?: InputMaybe<Array<OrderSortInput>>
+    userId: Scalars['Int']['input']
+}
+
+export type QueryRequestsByStatusArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    order?: InputMaybe<Array<OrderSortInput>>
+    status: OrderStatusEnum
     userId: Scalars['Int']['input']
 }
 
@@ -507,6 +740,72 @@ export type QueryUserByIdArgs = {
 
 export type QueryUsersArgs = {
     where?: InputMaybe<UserFilterInput>
+}
+
+/** A connection to a list of items. */
+export type RejectedOrdersConnection = {
+    __typename?: 'RejectedOrdersConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<RejectedOrdersEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type RejectedOrdersEdge = {
+    __typename?: 'RejectedOrdersEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
+/** A connection to a list of items. */
+export type RejectedRequestsConnection = {
+    __typename?: 'RejectedRequestsConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<RejectedRequestsEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type RejectedRequestsEdge = {
+    __typename?: 'RejectedRequestsEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
+/** A connection to a list of items. */
+export type RequestsByStatusConnection = {
+    __typename?: 'RequestsByStatusConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<RequestsByStatusEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type RequestsByStatusEdge = {
+    __typename?: 'RequestsByStatusEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
 }
 
 export enum SortEnumType {
@@ -600,6 +899,60 @@ export type OrderSummaryFragment = {
     }
 } & {' $fragmentName'?: 'OrderSummaryFragment'}
 
+export type GetOrdersByStatusQueryVariables = Exact<{
+    userId: Scalars['Int']['input']
+    status: OrderStatusEnum
+}>
+
+export type GetOrdersByStatusQuery = {
+    __typename?: 'Query'
+    ordersByStatus?: {
+        __typename?: 'OrdersByStatusConnection'
+        totalCount: number
+        pageInfo: {
+            __typename?: 'PageInfo'
+            hasPreviousPage: boolean
+            hasNextPage: boolean
+            startCursor?: string | null
+            endCursor?: string | null
+        }
+        edges?: Array<{
+            __typename?: 'OrdersByStatusEdge'
+            cursor: string
+            node: {__typename?: 'Order'} & {
+                ' $fragmentRefs'?: {OrderSummaryFragment: OrderSummaryFragment}
+            }
+        }> | null
+    } | null
+}
+
+export type GetRequestsByStatusQueryVariables = Exact<{
+    userId: Scalars['Int']['input']
+    status: OrderStatusEnum
+}>
+
+export type GetRequestsByStatusQuery = {
+    __typename?: 'Query'
+    requestsByStatus?: {
+        __typename?: 'RequestsByStatusConnection'
+        totalCount: number
+        pageInfo: {
+            __typename?: 'PageInfo'
+            hasPreviousPage: boolean
+            hasNextPage: boolean
+            startCursor?: string | null
+            endCursor?: string | null
+        }
+        edges?: Array<{
+            __typename?: 'RequestsByStatusEdge'
+            cursor: string
+            node: {__typename?: 'Order'} & {
+                ' $fragmentRefs'?: {OrderSummaryFragment: OrderSummaryFragment}
+            }
+        }> | null
+    } | null
+}
+
 export type UserBasicInfoFragment = {
     __typename?: 'User'
     userId: number
@@ -607,19 +960,6 @@ export type UserBasicInfoFragment = {
     firstName: string
     lastName: string
 } & {' $fragmentName'?: 'UserBasicInfoFragment'}
-
-export type TestQueryQueryVariables = Exact<{
-    orderId: Scalars['Int']['input']
-}>
-
-export type TestQueryQuery = {
-    __typename?: 'Query'
-    orderById?:
-        | ({__typename?: 'Order'} & {
-              ' $fragmentRefs'?: {OrderSummaryFragment: OrderSummaryFragment}
-          })
-        | null
-}
 
 export type LoginMutationVariables = Exact<{
     input: LoginInput
@@ -730,20 +1070,28 @@ export const UserBasicInfoFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<UserBasicInfoFragment, unknown>
-export const TestQueryDocument = {
+export const GetOrdersByStatusDocument = {
     kind: 'Document',
     definitions: [
         {
             kind: 'OperationDefinition',
             operation: 'query',
-            name: {kind: 'Name', value: 'TestQuery'},
+            name: {kind: 'Name', value: 'GetOrdersByStatus'},
             variableDefinitions: [
                 {
                     kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'orderId'}},
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
                     type: {
                         kind: 'NonNullType',
                         type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'status'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'OrderStatusEnum'}},
                     },
                 },
             ],
@@ -752,20 +1100,73 @@ export const TestQueryDocument = {
                 selections: [
                     {
                         kind: 'Field',
-                        name: {kind: 'Name', value: 'orderById'},
+                        name: {kind: 'Name', value: 'ordersByStatus'},
                         arguments: [
                             {
                                 kind: 'Argument',
-                                name: {kind: 'Name', value: 'orderId'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'orderId'}},
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'status'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'status'}},
                             },
                         ],
                         selectionSet: {
                             kind: 'SelectionSet',
                             selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'totalCount'}},
                                 {
-                                    kind: 'FragmentSpread',
-                                    name: {kind: 'Name', value: 'OrderSummary'},
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'pageInfo'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'hasPreviousPage'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'hasNextPage'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'startCursor'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'endCursor'},
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'edges'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'cursor'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'node'},
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'FragmentSpread',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'OrderSummary',
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
                                 },
                             ],
                         },
@@ -841,7 +1242,180 @@ export const TestQueryDocument = {
             },
         },
     ],
-} as unknown as DocumentNode<TestQueryQuery, TestQueryQueryVariables>
+} as unknown as DocumentNode<GetOrdersByStatusQuery, GetOrdersByStatusQueryVariables>
+export const GetRequestsByStatusDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetRequestsByStatus'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'status'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'OrderStatusEnum'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'requestsByStatus'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'status'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'status'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'totalCount'}},
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'pageInfo'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'hasPreviousPage'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'hasNextPage'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'startCursor'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'endCursor'},
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'edges'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'cursor'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'node'},
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'FragmentSpread',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'OrderSummary',
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'OrderSummary'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Order'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'orderDate'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'orderStatusId'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'listing'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'price'}},
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'user'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                            {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'listingType'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'platform'},
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'name'},
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'connection'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'handle'}},
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetRequestsByStatusQuery, GetRequestsByStatusQueryVariables>
 export const LoginDocument = {
     kind: 'Document',
     definitions: [

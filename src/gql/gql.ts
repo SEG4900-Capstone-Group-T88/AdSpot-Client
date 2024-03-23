@@ -15,10 +15,12 @@ import {TypedDocumentNode as DocumentNode} from '@graphql-typed-document-node/co
 const documents = {
     '\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        listing {\n            price\n            user {\n                userId\n                email\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n':
         types.OrderSummaryFragmentDoc,
+    '\n    query GetOrdersByStatus($userId: Int!, $status: OrderStatusEnum!) {\n        ordersByStatus(userId: $userId, status: $status) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n':
+        types.GetOrdersByStatusDocument,
+    '\n    query GetRequestsByStatus($userId: Int!, $status: OrderStatusEnum!) {\n        requestsByStatus(userId: $userId, status: $status) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n':
+        types.GetRequestsByStatusDocument,
     '\n    fragment UserBasicInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n':
         types.UserBasicInfoFragmentDoc,
-    '\n    query TestQuery($orderId: Int!) {\n        orderById(orderId: $orderId) {\n            ...OrderSummary\n        }\n    }\n':
-        types.TestQueryDocument,
     '\n    mutation Login($input: LoginInput!) {\n        login(input: $input) {\n            user {\n                userId\n                email\n                firstName\n                lastName\n            }\n        }\n    }\n':
         types.LoginDocument,
 }
@@ -47,14 +49,20 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    fragment UserBasicInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n',
-): (typeof documents)['\n    fragment UserBasicInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n']
+    source: '\n    query GetOrdersByStatus($userId: Int!, $status: OrderStatusEnum!) {\n        ordersByStatus(userId: $userId, status: $status) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    query GetOrdersByStatus($userId: Int!, $status: OrderStatusEnum!) {\n        ordersByStatus(userId: $userId, status: $status) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    query TestQuery($orderId: Int!) {\n        orderById(orderId: $orderId) {\n            ...OrderSummary\n        }\n    }\n',
-): (typeof documents)['\n    query TestQuery($orderId: Int!) {\n        orderById(orderId: $orderId) {\n            ...OrderSummary\n        }\n    }\n']
+    source: '\n    query GetRequestsByStatus($userId: Int!, $status: OrderStatusEnum!) {\n        requestsByStatus(userId: $userId, status: $status) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    query GetRequestsByStatus($userId: Int!, $status: OrderStatusEnum!) {\n        requestsByStatus(userId: $userId, status: $status) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    fragment UserBasicInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n',
+): (typeof documents)['\n    fragment UserBasicInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
