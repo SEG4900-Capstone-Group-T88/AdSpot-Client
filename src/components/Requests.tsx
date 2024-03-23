@@ -3,6 +3,8 @@ import {OrderStatusEnum} from '../gql/graphql'
 import {Tabs, TabsHeader, Tab, TabsBody, TabPanel} from '@material-tailwind/react'
 
 function Requests() {
+    const statusesToShow = [OrderStatusEnum.Pending, OrderStatusEnum.Accepted]
+
     return (
         /*
         placeholder fuckery
@@ -13,34 +15,25 @@ function Requests() {
         // https://www.material-tailwind.com/docs/react/tabs
         <Tabs value={OrderStatusEnum.Pending}>
             <TabsHeader placeholder="">
-                <Tab
-                    placeholder=""
-                    key={OrderStatusEnum.Pending}
-                    value={OrderStatusEnum.Pending}
-                >
-                    Pending
-                </Tab>
-                <Tab
-                    placeholder=""
-                    key={OrderStatusEnum.Accepted}
-                    value={OrderStatusEnum.Accepted}
-                >
-                    Accepted
-                </Tab>
+                {statusesToShow.map((status) => (
+                    <Tab
+                        placeholder=""
+                        key={status}
+                        value={status}
+                    >
+                        {status}
+                    </Tab>
+                ))}
             </TabsHeader>
             <TabsBody placeholder="">
-                <TabPanel
-                    key={OrderStatusEnum.Pending}
-                    value={OrderStatusEnum.Pending}
-                >
-                    <RequestsByStatus status={OrderStatusEnum.Pending} />
-                </TabPanel>
-                <TabPanel
-                    key={OrderStatusEnum.Accepted}
-                    value={OrderStatusEnum.Accepted}
-                >
-                    <RequestsByStatus status={OrderStatusEnum.Accepted} />
-                </TabPanel>
+                {statusesToShow.map((status) => (
+                    <TabPanel
+                        key={status}
+                        value={status}
+                    >
+                        <RequestsByStatus status={status} />
+                    </TabPanel>
+                ))}
             </TabsBody>
         </Tabs>
     )
