@@ -120,10 +120,10 @@ function Navbar() {
                             &times;
                         </button>
                         <h2 className='text-3xl font-semibold'>Create listing</h2>
-                        <Card color="transparent" shadow={false}>
+                        <Card color="transparent" placeholder="">
                             <form className="mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-4">
                                 <div className="mb-1 my-6 flex flex-col gap-6">
-                                <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                <Typography variant="h6" color="blue-gray" className="-mb-3" placeholder="">
                                     Listing Type
                                 </Typography>
                                 <Select
@@ -155,7 +155,7 @@ function Navbar() {
                                         Twitter Re-Tweet
                                     </Option>
                                 </Select>
-                                <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                <Typography variant="h6" color="blue-gray" className="-mb-3" placeholder="">
                                     Price
                                 </Typography>
                                 <Input
@@ -165,6 +165,7 @@ function Navbar() {
                                     labelProps={{
                                         className: "before:content-none after:content-none",
                                     }}
+                                    crossOrigin={undefined}
                                 />
                                 </div>
                                 <Checkbox
@@ -173,6 +174,7 @@ function Navbar() {
                                     variant="small"
                                     color="gray"
                                     className="flex items-center font-normal"
+                                    placeholder=""
                                     >
                                     I agree to the
                                     <a
@@ -184,6 +186,8 @@ function Navbar() {
                                     </Typography>
                                 }
                                 containerProps={{ className: "-ml-2.5" }}
+                                placeholder=""
+                                crossOrigin={undefined}
                                 />
                                 <button
                                     className="bg-purple text-white rounded-lg px-4 py-2 mt-2 shadow-lg"
