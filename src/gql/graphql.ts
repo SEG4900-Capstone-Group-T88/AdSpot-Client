@@ -46,13 +46,19 @@ export type AddListingPayload = {
     listing?: Maybe<Array<Listing>>
 }
 
+export type AddUserError = UserNotFoundError
+
 export type AddUserInput = {
     email: Scalars['String']['input']
+    firstName: Scalars['String']['input']
+    lastName: Scalars['String']['input']
     password: Scalars['String']['input']
 }
 
 export type AddUserPayload = {
     __typename?: 'AddUserPayload'
+    errors?: Maybe<Array<AddUserError>>
+    token?: Maybe<Scalars['String']['output']>
     user?: Maybe<User>
 }
 
@@ -705,13 +711,13 @@ export type GetRequestsByStatusQuery = {
     } | null
 }
 
-export type UserBasicInfoFragment = {
+export type UserContextInfoFragment = {
     __typename?: 'User'
     userId: number
     email: string
     firstName: string
     lastName: string
-} & {' $fragmentName'?: 'UserBasicInfoFragment'}
+} & {' $fragmentName'?: 'UserContextInfoFragment'}
 
 export type LoginMutationVariables = Exact<{
     input: LoginInput
@@ -721,13 +727,34 @@ export type LoginMutation = {
     __typename?: 'Mutation'
     login: {
         __typename?: 'LoginPayload'
-        user?: {
-            __typename?: 'User'
-            userId: number
-            email: string
-            firstName: string
-            lastName: string
-        } | null
+        token?: string | null
+        user?:
+            | ({__typename?: 'User'} & {
+                  ' $fragmentRefs'?: {UserContextInfoFragment: UserContextInfoFragment}
+              })
+            | null
+        errors?: Array<
+            | {__typename?: 'UserInvalidCredentialsError'; message: string}
+            | {__typename?: 'UserNotFoundError'; message: string}
+        > | null
+    }
+}
+
+export type RegisterUserMutationVariables = Exact<{
+    input: AddUserInput
+}>
+
+export type RegisterUserMutation = {
+    __typename?: 'Mutation'
+    addUser: {
+        __typename?: 'AddUserPayload'
+        token?: string | null
+        user?:
+            | ({__typename?: 'User'} & {
+                  ' $fragmentRefs'?: {UserContextInfoFragment: UserContextInfoFragment}
+              })
+            | null
+        errors?: Array<{__typename?: 'UserNotFoundError'; message: string}> | null
     }
 }
 
@@ -803,12 +830,12 @@ export const OrderSummaryFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<OrderSummaryFragment, unknown>
-export const UserBasicInfoFragmentDoc = {
+export const UserContextInfoFragmentDoc = {
     kind: 'Document',
     definitions: [
         {
             kind: 'FragmentDefinition',
-            name: {kind: 'Name', value: 'UserBasicInfo'},
+            name: {kind: 'Name', value: 'UserContextInfo'},
             typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'User'}},
             selectionSet: {
                 kind: 'SelectionSet',
@@ -821,7 +848,7 @@ export const UserBasicInfoFragmentDoc = {
             },
         },
     ],
-} as unknown as DocumentNode<UserBasicInfoFragment, unknown>
+} as unknown as DocumentNode<UserContextInfoFragment, unknown>
 export const GetOrdersByStatusDocument = {
     kind: 'Document',
     definitions: [
@@ -1325,15 +1352,35 @@ export const LoginDocument = {
                                     selectionSet: {
                                         kind: 'SelectionSet',
                                         selections: [
-                                            {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
-                                            {kind: 'Field', name: {kind: 'Name', value: 'email'}},
                                             {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'firstName'},
+                                                kind: 'FragmentSpread',
+                                                name: {kind: 'Name', value: 'UserContextInfo'},
                                             },
+                                        ],
+                                    },
+                                },
+                                {kind: 'Field', name: {kind: 'Name', value: 'token'}},
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
                                             {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'lastName'},
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'message'},
+                                                        },
+                                                    ],
+                                                },
                                             },
                                         ],
                                     },
@@ -1344,5 +1391,113 @@ export const LoginDocument = {
                 ],
             },
         },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'UserContextInfo'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'User'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                ],
+            },
+        },
     ],
 } as unknown as DocumentNode<LoginMutation, LoginMutationVariables>
+export const RegisterUserDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'RegisterUser'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'AddUserInput'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'addUser'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'user'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'FragmentSpread',
+                                                name: {kind: 'Name', value: 'UserContextInfo'},
+                                            },
+                                        ],
+                                    },
+                                },
+                                {kind: 'Field', name: {kind: 'Name', value: 'token'}},
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'message'},
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'UserContextInfo'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'User'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<RegisterUserMutation, RegisterUserMutationVariables>
