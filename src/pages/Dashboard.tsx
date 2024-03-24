@@ -3,32 +3,13 @@ import Navbar from '../components/Navbar'
 import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faSackDollar, faStar} from '@fortawesome/free-solid-svg-icons'
-// import ActiveListings from '../components/ActiveListings'
-import RecentPurchases from '../components/RecentPurchases'
-import {graphql} from '../gql'
-import {useQuery} from 'urql'
-import OrderSummary from '../components/OrderSummary'
-
-const testQuery = graphql(`
-    query TestQuery($orderId: Int!) {
-        orderById(orderId: $orderId) {
-            ...OrderSummary
-        }
-    }
-`)
+import Requests from '../components/Requests'
+import Orders from '../components/Orders'
 
 function Dashboard() {
-    const [{data}] = useQuery({
-        query: testQuery,
-        variables: {
-            orderId: 5,
-        },
-    })
-
     return (
         <div>
             <Navbar />
-            {data?.orderById && <OrderSummary order={data.orderById} />}
             <div className="flex gap-16 items-center my-16">
                 <img
                     src={Profile}
@@ -55,8 +36,13 @@ function Dashboard() {
                     </div>
                 </div>
             </div>
+
             {/* <ActiveListings /> */}
-            <RecentPurchases />
+            {/* <RecentPurchases /> */}
+
+            <Requests />
+            <Orders />
+
             <Footer />
         </div>
     )
