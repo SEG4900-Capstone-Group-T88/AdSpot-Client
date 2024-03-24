@@ -1,11 +1,10 @@
-import {graphql} from '../gql'
-import {useMutation} from 'urql'
+import {useMutation, gql} from 'urql'
 import {useCallback, useContext} from 'react'
 import {UserContext} from '../components/UserContext'
 import Navbar from '../components/Navbar'
 import { Input, Typography } from '@material-tailwind/react'
 
-const LoginMutationDocument = graphql(`
+const LoginMutationDocument = gql(`
     mutation Login($input: LoginInput!) {
         login(input: $input) {
             user {
