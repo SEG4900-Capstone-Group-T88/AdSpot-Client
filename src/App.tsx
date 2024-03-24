@@ -12,6 +12,7 @@ import {UserContext} from './components/UserContext'
 import {useState} from 'react'
 import {UserBasicInfoFragment} from './gql/graphql'
 import {ThemeProvider} from '@material-tailwind/react'
+import SignUp from './pages/SignUp'
 
 function App() {
     const [user, setUser] = useState<UserBasicInfoFragment | null>(null)
@@ -23,8 +24,12 @@ function App() {
                     <BrowserRouter>
                         <Routes>
                             <Route
-                                path="/"
+                                path="/login"
                                 element={<Login />}
+                            />
+                            <Route
+                                path="/signup"
+                                element={<SignUp />}
                             />
                             <Route
                                 path="/search"
