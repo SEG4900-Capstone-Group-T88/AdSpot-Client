@@ -3,14 +3,7 @@ import {useNavigate, NavLink} from 'react-router-dom'
 import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGear} from '@fortawesome/free-solid-svg-icons'
-import {
-    Card,
-    Input,
-    Checkbox,
-    Typography,
-    Select,
-    Option
-} from '@material-tailwind/react';
+import {Card, Input, Checkbox, Typography, Select, Option} from '@material-tailwind/react'
 
 function Navbar() {
     const navigate = useNavigate()
@@ -79,8 +72,8 @@ function Navbar() {
                 <button
                     className="bg-purple text-[white] rounded-lg px-6 py-1 m-1"
                     onClick={() => openModal()}
-                    >
-                        Post +
+                >
+                    Post +
                 </button>
                 <div className="relative">
                     <img
@@ -119,75 +112,109 @@ function Navbar() {
                         >
                             &times;
                         </button>
-                        <h2 className='text-3xl font-semibold'>Create listing</h2>
-                        <Card color="transparent" placeholder="">
+                        <h2 className="text-3xl font-semibold">Create listing</h2>
+                        <Card
+                            color="transparent"
+                            placeholder=""
+                        >
                             <form className="mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-4">
                                 <div className="mb-1 my-6 flex flex-col gap-6">
-                                <Typography variant="h6" color="blue-gray" className="-mb-3" placeholder="">
-                                    Listing Type
-                                </Typography>
-                                <Select
-                                    placeholder="@handle"
-                                    className="!border-t-blue-gray-200 focus:!border-t-gray-900 flex items-center"
-                                    labelProps={{
-                                        className: "before:content-none after:content-none",
-                                    }}
-                                >
-                                    <Option key="test1" value="test1">
-                                        Facebook Post
-                                    </Option>
-                                    <Option key="test2" value="test2">
-                                        Facebook Share to Feed
-                                    </Option>
-                                    <Option key="test3" value="test3">
-                                        Facebook Live Promotion
-                                    </Option>
-                                    <Option key="test4" value="test4">
-                                        Instagram Post
-                                    </Option>
-                                    <Option key="test5" value="test5">
-                                        Instagram Live Promotion
-                                    </Option>
-                                    <Option key="test4" value="test4">
-                                        Twitter Tweet
-                                    </Option>
-                                    <Option key="test5" value="test5">
-                                        Twitter Re-Tweet
-                                    </Option>
-                                </Select>
-                                <Typography variant="h6" color="blue-gray" className="-mb-3" placeholder="">
-                                    Price
-                                </Typography>
-                                <Input
-                                    size="lg"
-                                    placeholder="$"
-                                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-                                    labelProps={{
-                                        className: "before:content-none after:content-none",
-                                    }}
-                                    crossOrigin={undefined}
-                                />
+                                    <Typography
+                                        variant="h6"
+                                        color="blue-gray"
+                                        className="-mb-3"
+                                        placeholder=""
+                                    >
+                                        Listing Type
+                                    </Typography>
+                                    <Select
+                                        placeholder="@handle"
+                                        className="!border-t-blue-gray-200 focus:!border-t-gray-900 flex items-center"
+                                        labelProps={{
+                                            className: 'before:content-none after:content-none',
+                                        }}
+                                    >
+                                        <Option
+                                            key="test1"
+                                            value="test1"
+                                        >
+                                            Facebook Post
+                                        </Option>
+                                        <Option
+                                            key="test2"
+                                            value="test2"
+                                        >
+                                            Facebook Share to Feed
+                                        </Option>
+                                        <Option
+                                            key="test3"
+                                            value="test3"
+                                        >
+                                            Facebook Live Promotion
+                                        </Option>
+                                        <Option
+                                            key="test4"
+                                            value="test4"
+                                        >
+                                            Instagram Post
+                                        </Option>
+                                        <Option
+                                            key="test5"
+                                            value="test5"
+                                        >
+                                            Instagram Live Promotion
+                                        </Option>
+                                        <Option
+                                            key="test4"
+                                            value="test4"
+                                        >
+                                            Twitter Tweet
+                                        </Option>
+                                        <Option
+                                            key="test5"
+                                            value="test5"
+                                        >
+                                            Twitter Re-Tweet
+                                        </Option>
+                                    </Select>
+                                    <Typography
+                                        variant="h6"
+                                        color="blue-gray"
+                                        className="-mb-3"
+                                        placeholder=""
+                                    >
+                                        Price
+                                    </Typography>
+                                    <Input
+                                        size="lg"
+                                        placeholder="$"
+                                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                                        labelProps={{
+                                            className: 'before:content-none after:content-none',
+                                        }}
+                                        crossOrigin={undefined}
+                                    />
                                 </div>
                                 <Checkbox
-                                label={
-                                    <Typography
-                                    variant="small"
-                                    color="gray"
-                                    className="flex items-center font-normal"
+                                    label={
+                                        <Typography
+                                            variant="small"
+                                            color="gray"
+                                            className="flex items-center font-normal"
+                                            placeholder=""
+                                        >
+                                            I agree to the
+                                            <a
+                                                href="#"
+                                                className="font-medium transition-colors hover:text-gray-900"
+                                            >
+                                                &nbsp;Terms and Conditions
+                                            </a>
+                                        </Typography>
+                                    }
+                                    containerProps={{className: '-ml-2.5'}}
                                     placeholder=""
-                                    >
-                                    I agree to the
-                                    <a
-                                        href="#"
-                                        className="font-medium transition-colors hover:text-gray-900"
-                                    >
-                                        &nbsp;Terms and Conditions
-                                    </a>
-                                    </Typography>
-                                }
-                                containerProps={{ className: "-ml-2.5" }}
-                                placeholder=""
-                                crossOrigin={undefined}
+                                    crossOrigin={undefined}
                                 />
                                 <button
                                     className="bg-purple text-white rounded-lg px-4 py-2 mt-2 shadow-lg"
