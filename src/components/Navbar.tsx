@@ -28,7 +28,9 @@ function Navbar() {
     return (
         <div className="flex justify-between text-[25px] mx-[-80px]">
             <div className="flex space-x-12 items-center">
-                <h1 className="brand">AdSpot</h1>
+                <NavLink to="/">
+                    <h1 className="brand">AdSpot</h1>
+                </NavLink>
                 <p>
                     <NavLink
                         to="/dashboard"

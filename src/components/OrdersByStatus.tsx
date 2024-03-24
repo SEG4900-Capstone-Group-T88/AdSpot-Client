@@ -2,6 +2,8 @@ import {graphql} from '../gql'
 import {useQuery} from 'urql'
 import {OrderStatusEnum} from '../gql/graphql'
 import OrderSummary from './OrderSummary'
+import {UserContext} from './UserContext'
+import {useContext} from 'react'
 
 export const GetOrdersByStatusDocument = graphql(`
     query GetOrdersByStatus($userId: Int!, $status: OrderStatusEnum!) {
@@ -24,10 +26,13 @@ export const GetOrdersByStatusDocument = graphql(`
 `)
 
 function RequestsByStatus(props: {status: OrderStatusEnum}) {
+    const userContext = useContext(UserContext)
+    console.log(userContext.user)
+
     const [{data}] = useQuery({
         query: GetOrdersByStatusDocument,
         variables: {
-            userId: 1,
+            userId: userContext.user?.userId ?? 0,
             status: props.status,
         },
     })
