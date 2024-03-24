@@ -5,8 +5,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faSackDollar, faStar} from '@fortawesome/free-solid-svg-icons'
 import Requests from '../components/Requests'
 import Orders from '../components/Orders'
+import {useContext} from 'react'
+import {UserContext} from '../components/UserContext'
 
 function Dashboard() {
+    const {user} = useContext(UserContext)
+
     return (
         <div>
             <Navbar />
@@ -16,7 +20,7 @@ function Dashboard() {
                     className="h-30 w-30"
                 />
                 <div>
-                    <h2>Hello John,</h2>
+                    <h2>Hello {user?.firstName},</h2>
                     <h4>Welcome back to AdSpot!</h4>
                     <div className="flex gap-16 text-purple text-[25px]">
                         <div className="flex gap-2">

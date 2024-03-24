@@ -1,9 +1,9 @@
 import {createContext} from 'react'
 import {graphql} from '../gql'
-import {UserBasicInfoFragment} from '../gql/graphql'
+import {UserContextInfoFragment} from '../gql/graphql'
 
-export const UserBasicInfoFragmentDocument = graphql(`
-    fragment UserBasicInfo on User {
+export const UserContextInfoFragmentDocument = graphql(`
+    fragment UserContextInfo on User {
         userId
         email
         firstName
@@ -12,8 +12,8 @@ export const UserBasicInfoFragmentDocument = graphql(`
 `)
 
 export type UserContextType = {
-    user: UserBasicInfoFragment | null
-    setUser: React.Dispatch<React.SetStateAction<UserBasicInfoFragment | null>>
+    user: UserContextInfoFragment | null
+    setUser: React.Dispatch<React.SetStateAction<UserContextInfoFragment | null>>
 }
 
 export const UserContext = createContext<UserContextType>({
