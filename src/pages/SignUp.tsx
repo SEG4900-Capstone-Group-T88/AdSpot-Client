@@ -5,7 +5,7 @@ import {Checkbox, Input, Typography} from '@material-tailwind/react'
 import {saveAuthData} from '../authStore'
 import {UserContext, UserContextInfoFragmentDocument} from '../components/UserContext'
 import {useContext} from 'react'
-import {redirect, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 const REGISTER_MUTATION = graphql(`
     mutation RegisterUser($input: AddUserInput!) {
@@ -25,7 +25,7 @@ const REGISTER_MUTATION = graphql(`
 
 function SignUp() {
     const [registerResult, register] = useMutation(REGISTER_MUTATION)
-    const {user, setUser} = useContext(UserContext)
+    const {setUser} = useContext(UserContext)
 
     const navigate = useNavigate()
 

@@ -1,6 +1,6 @@
 import {graphql, useFragment} from '../gql'
 import {useMutation} from 'urql'
-import {useCallback, useContext} from 'react'
+import {useContext} from 'react'
 import {UserContext, UserContextInfoFragmentDocument} from '../components/UserContext'
 import Navbar from '../components/Navbar'
 import {Input, Typography} from '@material-tailwind/react'
@@ -24,8 +24,8 @@ const LoginMutationDocument = graphql(`
 `)
 
 function Login() {
-    const [state, login] = useMutation(LoginMutationDocument)
-    const {user, setUser} = useContext(UserContext)
+    const [_, login] = useMutation(LoginMutationDocument)
+    const {setUser} = useContext(UserContext)
 
     const navigate = useNavigate()
 
