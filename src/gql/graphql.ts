@@ -22,50 +22,6 @@ export type Scalars = {
     Decimal: {input: any; output: any}
 }
 
-/** A connection to a list of items. */
-export type AcceptedOrdersConnection = {
-    __typename?: 'AcceptedOrdersConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<AcceptedOrdersEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type AcceptedOrdersEdge = {
-    __typename?: 'AcceptedOrdersEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
-}
-
-/** A connection to a list of items. */
-export type AcceptedRequestsConnection = {
-    __typename?: 'AcceptedRequestsConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<AcceptedRequestsEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type AcceptedRequestsEdge = {
-    __typename?: 'AcceptedRequestsEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
-}
-
 export type AddConnectionInput = {
     accountHandle: Scalars['String']['input']
     apiToken: Scalars['String']['input']
@@ -109,50 +65,6 @@ export enum ApplyPolicy {
 export type CannotOrderOwnListingError = Error & {
     __typename?: 'CannotOrderOwnListingError'
     message: Scalars['String']['output']
-}
-
-/** A connection to a list of items. */
-export type CompletedOrdersConnection = {
-    __typename?: 'CompletedOrdersConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<CompletedOrdersEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type CompletedOrdersEdge = {
-    __typename?: 'CompletedOrdersEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
-}
-
-/** A connection to a list of items. */
-export type CompletedRequestsConnection = {
-    __typename?: 'CompletedRequestsConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<CompletedRequestsEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type CompletedRequestsEdge = {
-    __typename?: 'CompletedRequestsEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
 }
 
 export type Connection = {
@@ -551,50 +463,6 @@ export type PageInfo = {
     startCursor?: Maybe<Scalars['String']['output']>
 }
 
-/** A connection to a list of items. */
-export type PendingOrdersConnection = {
-    __typename?: 'PendingOrdersConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<PendingOrdersEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type PendingOrdersEdge = {
-    __typename?: 'PendingOrdersEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
-}
-
-/** A connection to a list of items. */
-export type PendingRequestsConnection = {
-    __typename?: 'PendingRequestsConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<PendingRequestsEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type PendingRequestsEdge = {
-    __typename?: 'PendingRequestsEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
-}
-
 export type Platform = {
     __typename?: 'Platform'
     listingTypes: Array<ListingType>
@@ -617,57 +485,13 @@ export type PlatformSortInput = {
 
 export type Query = {
     __typename?: 'Query'
-    acceptedOrders?: Maybe<AcceptedOrdersConnection>
-    acceptedRequests?: Maybe<AcceptedRequestsConnection>
-    completedOrders?: Maybe<CompletedOrdersConnection>
-    completedRequests?: Maybe<CompletedRequestsConnection>
     orderById?: Maybe<Order>
     orders: Array<Order>
     ordersByStatus?: Maybe<OrdersByStatusConnection>
-    pendingOrders?: Maybe<PendingOrdersConnection>
-    pendingRequests?: Maybe<PendingRequestsConnection>
     platforms: Array<Platform>
-    rejectedOrders?: Maybe<RejectedOrdersConnection>
-    rejectedRequests?: Maybe<RejectedRequestsConnection>
     requestsByStatus?: Maybe<RequestsByStatusConnection>
     userById?: Maybe<User>
     users: Array<User>
-}
-
-export type QueryAcceptedOrdersArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    userId: Scalars['Int']['input']
-}
-
-export type QueryAcceptedRequestsArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    userId: Scalars['Int']['input']
-}
-
-export type QueryCompletedOrdersArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    userId: Scalars['Int']['input']
-}
-
-export type QueryCompletedRequestsArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    userId: Scalars['Int']['input']
 }
 
 export type QueryOrderByIdArgs = {
@@ -688,42 +512,6 @@ export type QueryOrdersByStatusArgs = {
     userId: Scalars['Int']['input']
 }
 
-export type QueryPendingOrdersArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    userId: Scalars['Int']['input']
-}
-
-export type QueryPendingRequestsArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    userId: Scalars['Int']['input']
-}
-
-export type QueryRejectedOrdersArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    userId: Scalars['Int']['input']
-}
-
-export type QueryRejectedRequestsArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    userId: Scalars['Int']['input']
-}
-
 export type QueryRequestsByStatusArgs = {
     after?: InputMaybe<Scalars['String']['input']>
     before?: InputMaybe<Scalars['String']['input']>
@@ -740,50 +528,6 @@ export type QueryUserByIdArgs = {
 
 export type QueryUsersArgs = {
     where?: InputMaybe<UserFilterInput>
-}
-
-/** A connection to a list of items. */
-export type RejectedOrdersConnection = {
-    __typename?: 'RejectedOrdersConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<RejectedOrdersEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type RejectedOrdersEdge = {
-    __typename?: 'RejectedOrdersEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
-}
-
-/** A connection to a list of items. */
-export type RejectedRequestsConnection = {
-    __typename?: 'RejectedRequestsConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<RejectedRequestsEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type RejectedRequestsEdge = {
-    __typename?: 'RejectedRequestsEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
 }
 
 /** A connection to a list of items. */
@@ -902,6 +646,10 @@ export type OrderSummaryFragment = {
 export type GetOrdersByStatusQueryVariables = Exact<{
     userId: Scalars['Int']['input']
     status: OrderStatusEnum
+    first?: InputMaybe<Scalars['Int']['input']>
+    after?: InputMaybe<Scalars['String']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type GetOrdersByStatusQuery = {
@@ -929,6 +677,10 @@ export type GetOrdersByStatusQuery = {
 export type GetRequestsByStatusQueryVariables = Exact<{
     userId: Scalars['Int']['input']
     status: OrderStatusEnum
+    first?: InputMaybe<Scalars['Int']['input']>
+    after?: InputMaybe<Scalars['String']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type GetRequestsByStatusQuery = {
@@ -1094,6 +846,26 @@ export const GetOrdersByStatusDocument = {
                         type: {kind: 'NamedType', name: {kind: 'Name', value: 'OrderStatusEnum'}},
                     },
                 },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+                },
             ],
             selectionSet: {
                 kind: 'SelectionSet',
@@ -1111,6 +883,45 @@ export const GetOrdersByStatusDocument = {
                                 kind: 'Argument',
                                 name: {kind: 'Name', value: 'status'},
                                 value: {kind: 'Variable', name: {kind: 'Name', value: 'status'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'first'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'after'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'last'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'before'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'order'},
+                                value: {
+                                    kind: 'ListValue',
+                                    values: [
+                                        {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                                {
+                                                    kind: 'ObjectField',
+                                                    name: {kind: 'Name', value: 'orderDate'},
+                                                    value: {kind: 'EnumValue', value: 'ASC'},
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
                             },
                         ],
                         selectionSet: {
@@ -1267,6 +1078,26 @@ export const GetRequestsByStatusDocument = {
                         type: {kind: 'NamedType', name: {kind: 'Name', value: 'OrderStatusEnum'}},
                     },
                 },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+                },
             ],
             selectionSet: {
                 kind: 'SelectionSet',
@@ -1284,6 +1115,45 @@ export const GetRequestsByStatusDocument = {
                                 kind: 'Argument',
                                 name: {kind: 'Name', value: 'status'},
                                 value: {kind: 'Variable', name: {kind: 'Name', value: 'status'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'first'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'after'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'last'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'before'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'order'},
+                                value: {
+                                    kind: 'ListValue',
+                                    values: [
+                                        {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                                {
+                                                    kind: 'ObjectField',
+                                                    name: {kind: 'Name', value: 'orderDate'},
+                                                    value: {kind: 'EnumValue', value: 'ASC'},
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
                             },
                         ],
                         selectionSet: {
