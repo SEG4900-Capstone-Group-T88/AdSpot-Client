@@ -37,10 +37,10 @@ function Dashboard() {
                 </div>
             </div>
 
-            {/* <ActiveListings /> */}
-            {/* <RecentPurchases /> */}
-
+            <h3>Requests</h3>
             <Requests />
+
+            <h3>Orders</h3>
             <Orders />
 
             <Footer />

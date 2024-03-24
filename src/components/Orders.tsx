@@ -3,7 +3,12 @@ import {Tabs, TabsHeader, Tab, TabsBody, TabPanel} from '@material-tailwind/reac
 import OrdersByStatus from './OrdersByStatus'
 
 function Orders() {
-    const statusesToShow = [OrderStatusEnum.Pending, OrderStatusEnum.Accepted]
+    const statusesToShow = [
+        OrderStatusEnum.Pending,
+        OrderStatusEnum.Accepted,
+        OrderStatusEnum.Completed,
+        OrderStatusEnum.Rejected,
+    ]
 
     return (
         /*
@@ -13,7 +18,7 @@ function Orders() {
 
         // ACTIVE TAB NOT WORKING???
         // https://www.material-tailwind.com/docs/react/tabs
-        <Tabs value={OrderStatusEnum.Accepted}>
+        <Tabs value={OrderStatusEnum.Pending}>
             <TabsHeader placeholder="">
                 {statusesToShow.map((status) => (
                     <Tab
