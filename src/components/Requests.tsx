@@ -1,9 +1,14 @@
-import RequestsByStatus from '../components/RequestsByStatus'
+import RequestsByStatus from './RequestsByStatus'
 import {OrderStatusEnum} from '../gql/graphql'
 import {Tabs, TabsHeader, Tab, TabsBody, TabPanel} from '@material-tailwind/react'
 
 function Requests() {
-    const statusesToShow = [OrderStatusEnum.Pending, OrderStatusEnum.Accepted]
+    const statusesToShow = [
+        OrderStatusEnum.Pending,
+        OrderStatusEnum.Accepted,
+        OrderStatusEnum.Completed,
+        OrderStatusEnum.Rejected,
+    ]
 
     return (
         /*

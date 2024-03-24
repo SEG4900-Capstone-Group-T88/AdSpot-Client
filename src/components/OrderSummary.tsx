@@ -35,20 +35,16 @@ function getOrderStatusBgColor(order: OrderSummaryFragment) {
     }
     switch (order!.orderStatusId) {
         case OrderStatusEnum.Pending:
-            return 'bg-orange-500'
+            return 'bg-orange-500 text-[white]'
         case OrderStatusEnum.Rejected:
-            return 'bg-red-500'
+            return 'bg-red-500 text-[white]'
         case OrderStatusEnum.Accepted:
-            return 'bg-yellow-500'
+            return 'bg-yellow-500 text-[black]'
         case OrderStatusEnum.Completed:
-            return 'bg-green-500'
+            return 'bg-green-500 text-[white]'
         default:
             return ''
     }
-}
-
-function isActionable(order: OrderSummaryFragment) {
-    return order.orderStatusId === OrderStatusEnum.Pending
 }
 
 function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragmentDocument>}) {
@@ -58,6 +54,7 @@ function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragmentDoc
     return (
         <div>
             <div className="rounded-lg border-2 border-[#B9B8B8] px-6 py-2 my-3">
+                <span>#{order.orderId}</span>
                 <div className="flex items-center gap-4">
                     <h3>
                         {order.listing.listingType.platform.name} {order.listing.listingType.name}
@@ -83,10 +80,10 @@ function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragmentDoc
                         </div>
                     </div>
                     <div className="flex gap-4">
-                        <span className={`rounded p-4 ${getOrderStatusBgColor(order)} text-white`}>
+                        <span className={`rounded p-4 ${getOrderStatusBgColor(order)}`}>
                             {order.orderStatusId}
                         </span>
-                        {isActionable(order) && (
+                        {order.orderStatusId === OrderStatusEnum.Pending && (
                             <div className="flex flex-col justify-between">
                                 <button>
                                     <FontAwesomeIcon
@@ -103,6 +100,10 @@ function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragmentDoc
                                     />
                                 </button>
                             </div>
+                        )}
+                        {(order.orderStatusId === OrderStatusEnum.Accepted ||
+                            order.orderStatusId === OrderStatusEnum.Completed) && (
+                            <button className="btn underline">Deliverable</button>
                         )}
                     </div>
                 </div>
