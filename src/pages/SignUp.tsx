@@ -1,11 +1,12 @@
-import {graphql, useFragment} from '../gql'
+import {graphql} from '../gql'
 import {useMutation} from 'urql'
 import Navbar from '../components/Navbar'
 import {Checkbox, Input, Typography} from '@material-tailwind/react'
 import {saveAuthData} from '../authStore'
-import {UserContext, UserContextInfoFragmentDocument} from '../components/UserContext'
+import {UserContext} from '../components/UserContext'
 import {useContext} from 'react'
 import {useNavigate} from 'react-router-dom'
+import {UserContextInfoFragment} from '../gql/graphql'
 
 const REGISTER_MUTATION = graphql(`
     mutation RegisterUser($input: AddUserInput!) {
@@ -29,9 +30,9 @@ function SignUp() {
 
     const navigate = useNavigate()
 
-    const onSubmitRegister = (event: any) => {
+    const onSubmitRegister = (event: React.FormEvent) => {
         event.preventDefault()
-        const data = new FormData(event.target)
+        const data = new FormData(event.target as HTMLFormElement)
         const firstName = data.get('firstName')?.toString() ?? ''
         const lastName = data.get('lastName')?.toString() ?? ''
         const email = data.get('email')?.toString() ?? ''
@@ -42,11 +43,7 @@ function SignUp() {
                 saveAuthData(result.data.addUser.token ?? '')
 
                 if (result.data?.addUser.user) {
-                    const userFragment = useFragment(
-                        UserContextInfoFragmentDocument,
-                        result?.data?.addUser.user,
-                    )
-                    setUser(userFragment)
+                    setUser(result.data.addUser.user as UserContextInfoFragment)
                 }
             }
         })
