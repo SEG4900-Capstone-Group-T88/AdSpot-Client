@@ -1,11 +1,12 @@
-import {graphql, useFragment} from '../gql'
+import {graphql} from '../gql'
 import {useMutation} from 'urql'
 import {useContext} from 'react'
-import {UserContext, UserContextInfoFragmentDocument} from '../components/UserContext'
+import {UserContext} from '../components/UserContext'
 import Navbar from '../components/Navbar'
 import {Input, Typography} from '@material-tailwind/react'
 import {useNavigate} from 'react-router-dom'
 import {saveAuthData} from '../authStore'
+import {UserContextInfoFragment} from '../gql/graphql'
 
 const LoginMutationDocument = graphql(`
     mutation Login($input: LoginInput!) {
@@ -24,14 +25,14 @@ const LoginMutationDocument = graphql(`
 `)
 
 function Login() {
-    const [_, login] = useMutation(LoginMutationDocument)
+    const [, login] = useMutation(LoginMutationDocument)
     const {setUser} = useContext(UserContext)
 
     const navigate = useNavigate()
 
-    const onSubmitLogin = (event: any) => {
+    const onSubmitLogin = (event: React.FormEvent) => {
         event.preventDefault()
-        const data = new FormData(event.target)
+        const data = new FormData(event.target as HTMLFormElement)
         const email = data.get('email')?.toString() ?? ''
         const password = data.get('password')?.toString() ?? ''
 
@@ -40,11 +41,7 @@ function Login() {
                 saveAuthData(result.data.login.token ?? '')
 
                 if (result.data?.login.user) {
-                    const userFragment = useFragment(
-                        UserContextInfoFragmentDocument,
-                        result?.data?.login.user,
-                    )
-                    setUser(userFragment)
+                    setUser(result.data.login.user as UserContextInfoFragment)
                 }
             }
         })
