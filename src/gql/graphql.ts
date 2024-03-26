@@ -20,6 +20,13 @@ export type Scalars = {
     DateTime: {input: any; output: any}
     /** The built-in `Decimal` scalar type. */
     Decimal: {input: any; output: any}
+    /** The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1. */
+    Long: {input: any; output: any}
+}
+
+export type AccountWithEmailAlreadyExistsError = Error & {
+    __typename?: 'AccountWithEmailAlreadyExistsError'
+    message: Scalars['String']['output']
 }
 
 export type AddConnectionInput = {
@@ -46,7 +53,7 @@ export type AddListingPayload = {
     listing?: Maybe<Array<Listing>>
 }
 
-export type AddUserError = UserNotFoundError
+export type AddUserError = AccountWithEmailAlreadyExistsError
 
 export type AddUserInput = {
     email: Scalars['String']['input']
@@ -146,6 +153,19 @@ export type Error = {
     message: Scalars['String']['output']
 }
 
+export type ExchangeInstagramAuthCodeForTokenError = InstagramOauthError
+
+export type ExchangeInstagramAuthCodeForTokenInput = {
+    authCode: Scalars['String']['input']
+}
+
+export type ExchangeInstagramAuthCodeForTokenPayload = {
+    __typename?: 'ExchangeInstagramAuthCodeForTokenPayload'
+    accessToken?: Maybe<Scalars['String']['output']>
+    errors?: Maybe<Array<ExchangeInstagramAuthCodeForTokenError>>
+    userId?: Maybe<Scalars['Long']['output']>
+}
+
 export type FloatOperationFilterInput = {
     eq?: InputMaybe<Scalars['Float']['input']>
     gt?: InputMaybe<Scalars['Float']['input']>
@@ -159,6 +179,11 @@ export type FloatOperationFilterInput = {
     nin?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>
     nlt?: InputMaybe<Scalars['Float']['input']>
     nlte?: InputMaybe<Scalars['Float']['input']>
+}
+
+export type InstagramOauthError = Error & {
+    __typename?: 'InstagramOauthError'
+    message: Scalars['String']['output']
 }
 
 export type IntOperationFilterInput = {
@@ -301,6 +326,7 @@ export type Mutation = {
     addListing: AddListingPayload
     addUser: AddUserPayload
     deleteUser: DeleteUserPayload
+    exchangeInstagramAuthCodeForToken: ExchangeInstagramAuthCodeForTokenPayload
     login: LoginPayload
     orderListing: OrderListingPayload
     updatePassword: UpdatePasswordPayload
@@ -320,6 +346,10 @@ export type MutationAddUserArgs = {
 
 export type MutationDeleteUserArgs = {
     input: DeleteUserInput
+}
+
+export type MutationExchangeInstagramAuthCodeForTokenArgs = {
+    input: ExchangeInstagramAuthCodeForTokenInput
 }
 
 export type MutationLoginArgs = {
@@ -719,6 +749,20 @@ export type UserContextInfoFragment = {
     lastName: string
 } & {' $fragmentName'?: 'UserContextInfoFragment'}
 
+export type ExchangeInstagramAuthCodeForTokenMutationVariables = Exact<{
+    input: ExchangeInstagramAuthCodeForTokenInput
+}>
+
+export type ExchangeInstagramAuthCodeForTokenMutation = {
+    __typename?: 'Mutation'
+    exchangeInstagramAuthCodeForToken: {
+        __typename?: 'ExchangeInstagramAuthCodeForTokenPayload'
+        userId?: any | null
+        accessToken?: string | null
+        errors?: Array<{__typename?: 'InstagramOauthError'; message: string}> | null
+    }
+}
+
 export type LoginMutationVariables = Exact<{
     input: LoginInput
 }>
@@ -754,7 +798,7 @@ export type RegisterUserMutation = {
                   ' $fragmentRefs'?: {UserContextInfoFragment: UserContextInfoFragment}
               })
             | null
-        errors?: Array<{__typename?: 'UserNotFoundError'; message: string}> | null
+        errors?: Array<{__typename?: 'AccountWithEmailAlreadyExistsError'; message: string}> | null
     }
 }
 
@@ -1313,6 +1357,80 @@ export const GetRequestsByStatusDocument = {
         },
     ],
 } as unknown as DocumentNode<GetRequestsByStatusQuery, GetRequestsByStatusQueryVariables>
+export const ExchangeInstagramAuthCodeForTokenDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'ExchangeInstagramAuthCodeForToken'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: {kind: 'Name', value: 'ExchangeInstagramAuthCodeForTokenInput'},
+                        },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'exchangeInstagramAuthCodeForToken'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'accessToken'}},
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'message'},
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<
+    ExchangeInstagramAuthCodeForTokenMutation,
+    ExchangeInstagramAuthCodeForTokenMutationVariables
+>
 export const LoginDocument = {
     kind: 'Document',
     definitions: [
