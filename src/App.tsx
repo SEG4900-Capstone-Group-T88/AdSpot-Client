@@ -13,6 +13,7 @@ import {useState} from 'react'
 import {UserContextInfoFragment} from './gql/graphql'
 import {ThemeProvider} from '@material-tailwind/react'
 import SignUp from './pages/SignUp'
+import ConnectedAccounts from './pages/ConnectedAccounts'
 
 function App() {
     const [user, setUser] = useState<UserContextInfoFragment | null>(null)
@@ -50,6 +51,10 @@ function App() {
                             <Route
                                 path="/settings"
                                 element={<SettingsPage />}
+                            />
+                            <Route
+                                path="/settings/connectedAccounts"
+                                element={<ConnectedAccounts />}
                             />
                             <Route
                                 path="/payment"
