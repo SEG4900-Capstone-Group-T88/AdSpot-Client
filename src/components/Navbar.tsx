@@ -1,22 +1,23 @@
-import {useState} from 'react'
-import {useNavigate, NavLink} from 'react-router-dom'
+import {useContext, useState} from 'react'
+import {useNavigate, NavLink, Link} from 'react-router-dom'
 import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGear} from '@fortawesome/free-solid-svg-icons'
 import {Card, Input, Checkbox, Typography, Select, Option} from '@material-tailwind/react'
+import {UserContext} from './UserContext'
 
 function Navbar() {
     const navigate = useNavigate()
     const [showPopup, setShowPopup] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const {user, setUser} = useContext(UserContext)
 
     const togglePopup = () => {
         setShowPopup(!showPopup)
     }
 
     const handleLogout = () => {
-        // Handle logout logic here
-        console.log('Logout')
+        setUser(null)
     }
 
     const handleSettings = () => {
@@ -93,12 +94,19 @@ function Navbar() {
                                 />
                                 Settings
                             </button>
-                            <button
-                                className="block mx-auto bg-purple text-[white] rounded-lg px-6 py-1 m-1"
-                                onClick={handleLogout}
-                            >
-                                Logout
-                            </button>
+                            {!user && (
+                                <button className="block mx-auto bg-purple text-[white] rounded-lg px-6 py-1 m-1">
+                                    <Link to="/login">Login</Link>
+                                </button>
+                            )}
+                            {user && (
+                                <button
+                                    className="block mx-auto bg-purple text-[white] rounded-lg px-6 py-1 m-1"
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
