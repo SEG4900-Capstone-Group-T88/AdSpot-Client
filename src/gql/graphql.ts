@@ -20,8 +20,6 @@ export type Scalars = {
     DateTime: {input: any; output: any}
     /** The built-in `Decimal` scalar type. */
     Decimal: {input: any; output: any}
-    /** The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1. */
-    Long: {input: any; output: any}
 }
 
 export type AccountWithEmailAlreadyExistsError = Error & {
@@ -157,13 +155,14 @@ export type ExchangeInstagramAuthCodeForTokenError = InstagramOauthError
 
 export type ExchangeInstagramAuthCodeForTokenInput = {
     authCode: Scalars['String']['input']
+    platformId: Scalars['Int']['input']
+    userId: Scalars['Int']['input']
 }
 
 export type ExchangeInstagramAuthCodeForTokenPayload = {
     __typename?: 'ExchangeInstagramAuthCodeForTokenPayload'
-    accessToken?: Maybe<Scalars['String']['output']>
+    connection?: Maybe<Connection>
     errors?: Maybe<Array<ExchangeInstagramAuthCodeForTokenError>>
-    userId?: Maybe<Scalars['Long']['output']>
 }
 
 export type FloatOperationFilterInput = {
@@ -757,8 +756,12 @@ export type ExchangeInstagramAuthCodeForTokenMutation = {
     __typename?: 'Mutation'
     exchangeInstagramAuthCodeForToken: {
         __typename?: 'ExchangeInstagramAuthCodeForTokenPayload'
-        userId?: any | null
-        accessToken?: string | null
+        connection?: {
+            __typename?: 'Connection'
+            userId: number
+            platformId: number
+            token: string
+        } | null
         errors?: Array<{__typename?: 'InstagramOauthError'; message: string}> | null
     }
 }
@@ -1393,8 +1396,21 @@ export const ExchangeInstagramAuthCodeForTokenDocument = {
                         selectionSet: {
                             kind: 'SelectionSet',
                             selections: [
-                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
-                                {kind: 'Field', name: {kind: 'Name', value: 'accessToken'}},
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'connection'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'platformId'},
+                                            },
+                                            {kind: 'Field', name: {kind: 'Name', value: 'token'}},
+                                        ],
+                                    },
+                                },
                                 {
                                     kind: 'Field',
                                     name: {kind: 'Name', value: 'errors'},

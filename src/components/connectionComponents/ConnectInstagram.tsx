@@ -1,14 +1,18 @@
 import {useSearchParams} from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
-import {useEffect} from 'react'
+import {useContext, useEffect} from 'react'
 import {graphql} from '../../gql'
 import {useMutation} from 'urql'
+import {UserContext} from '../UserContext'
 
 export const ExchangeInstagramAuthCodeForTokenDocument = graphql(`
     mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {
         exchangeInstagramAuthCodeForToken(input: $input) {
-            userId
-            accessToken
+            connection {
+                userId
+                platformId
+                token
+            }
             errors {
                 ... on Error {
                     message
@@ -21,12 +25,16 @@ export const ExchangeInstagramAuthCodeForTokenDocument = graphql(`
 function ConnectInstagram() {
     const [, executeMutation] = useMutation(ExchangeInstagramAuthCodeForTokenDocument)
     const [searchParams] = useSearchParams()
+    const {user} = useContext(UserContext)
+    console.log(user)
 
     useEffect(() => {
         const authCode = searchParams.get('code')
         if (authCode) {
             executeMutation({
                 input: {
+                    userId: 1, // hardcoded for now
+                    platformId: 3, // hardcoded for now
                     authCode,
                 },
             }).then((result) => console.log(result))

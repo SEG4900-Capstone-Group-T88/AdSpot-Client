@@ -1,4 +1,5 @@
 import Navbar from '../components/Navbar'
+import {Link} from 'react-router-dom'
 
 const SettingsPage = () => {
     return (
@@ -41,13 +42,18 @@ const SettingsPage = () => {
                         </li>
                         <hr />
                         <li>
-                            <a
+                            {/* <a
                                 href="/settings/connectedAccounts"
+                                className="flex justify-between items-center p-3 hover:bg-gray-100 rounded text-lg transition duration-150 ease-in-out"
+                            > */}
+                            <Link
+                                to="/settings/connectedAccounts"
                                 className="flex justify-between items-center p-3 hover:bg-gray-100 rounded text-lg transition duration-150 ease-in-out"
                             >
                                 Connected Accounts
                                 <span className="text-[gray] text-xl">&gt;</span>
-                            </a>
+                            </Link>
+                            {/* </a> */}
                         </li>
                         <hr />
                     </ul>
