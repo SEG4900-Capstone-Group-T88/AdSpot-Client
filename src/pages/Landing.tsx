@@ -2,7 +2,8 @@ import landingImage from '../images/landingImage.png'
 import textBubble from '../images/textBubble.png'
 import promoIcon from '../images/promoIcon.png'
 import postIcon from '../images/postIcon.png'
-import Footer from './components/Footer'
+import Footer from '../components/Footer'
+import {Link} from 'react-router-dom'
 
 function Landing() {
     return (
@@ -22,13 +23,15 @@ function Landing() {
                         className="mx-auto w-[35rem] xl:w-[42rem] xl:mx-none"
                         src={textBubble}
                     />
-                    <div className="absolute inset-0 flex items-center justify-center mb-20 mr-6">
-                        <img
-                            className="w-28 border-black rounded-full border-[12px] mr-4"
-                            src={promoIcon}
-                        />
-                        <h2 className="xl:text-[2.7rem]">Search promotions</h2>
-                    </div>
+                    <Link to="/search">
+                        <div className="absolute inset-0 flex items-center justify-center mb-20 mr-6">
+                            <img
+                                className="w-28 border-black rounded-full border-[12px] mr-4"
+                                src={promoIcon}
+                            />
+                            <h2 className="xl:text-[2.7rem]">Search promotions</h2>
+                        </div>
+                    </Link>
                 </div>
                 <div className="relative mx-auto">
                     <img
