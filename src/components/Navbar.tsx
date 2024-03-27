@@ -18,6 +18,8 @@ function Navbar() {
 
     const handleLogout = () => {
         setUser(null)
+        localStorage.removeItem("token")
+        navigate('/search')
     }
 
     const handleSettings = () => {
