@@ -18,6 +18,8 @@ function Navbar() {
 
     const handleLogout = () => {
         setUser(null)
+        localStorage.removeItem('token')
+        navigate('/search')
     }
 
     const handleSettings = () => {
@@ -42,26 +44,30 @@ function Navbar() {
                 <NavLink to="/">
                     <h1 className="brand">AdSpot</h1>
                 </NavLink>
-                <p>
-                    <NavLink
-                        to="/dashboard"
-                        className={({isActive}) =>
-                            isActive ? 'text-[black]' : 'hover:text-[black]'
-                        }
-                    >
-                        Dashboard
-                    </NavLink>
-                </p>
-                <p>
-                    <NavLink
-                        to="/messages"
-                        className={({isActive}) =>
-                            isActive ? 'text-[black]' : ' hover:text-[black]'
-                        }
-                    >
-                        Messages
-                    </NavLink>
-                </p>
+                {user && (
+                    <p>
+                        <NavLink
+                            to="/dashboard"
+                            className={({isActive}) =>
+                                isActive ? 'text-[black]' : 'hover:text-[black]'
+                            }
+                        >
+                            Dashboard
+                        </NavLink>
+                    </p>
+                )}
+                {user && (
+                    <p>
+                        <NavLink
+                            to="/messages"
+                            className={({isActive}) =>
+                                isActive ? 'text-[black]' : ' hover:text-[black]'
+                            }
+                        >
+                            Messages
+                        </NavLink>
+                    </p>
+                )}
             </div>
             <div className="flex space-x-6 items-center">
                 <button
@@ -70,12 +76,14 @@ function Navbar() {
                 >
                     Search
                 </button>
-                <button
-                    className="bg-purple text-[white] rounded-lg px-6 py-1 m-1"
-                    onClick={() => openModal()}
-                >
-                    Post +
-                </button>
+                {user && (
+                    <button
+                        className="bg-purple text-[white] rounded-lg px-6 py-1 m-1"
+                        onClick={() => openModal()}
+                    >
+                        Post +
+                    </button>
+                )}
                 <div className="relative">
                     <img
                         src={Profile}
@@ -84,16 +92,18 @@ function Navbar() {
                     />
                     {showPopup && (
                         <div className="absolute bg-white border rounded-lg shadow-lg py-2 w-40 right-0 mt-2">
-                            <button
-                                className="block mx-auto px-4 py-1 hover:bg-gray-100"
-                                onClick={handleSettings}
-                            >
-                                <FontAwesomeIcon
-                                    className="pr-1"
-                                    icon={faGear}
-                                />
-                                Settings
-                            </button>
+                            {user && (
+                                <button
+                                    className="block mx-auto px-4 py-1 hover:bg-gray-100"
+                                    onClick={handleSettings}
+                                >
+                                    <FontAwesomeIcon
+                                        className="pr-1"
+                                        icon={faGear}
+                                    />
+                                    Settings
+                                </button>
+                            )}
                             {!user && (
                                 <button className="block mx-auto bg-purple text-[white] rounded-lg px-6 py-1 m-1">
                                     <Link to="/login">Login</Link>
