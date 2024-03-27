@@ -3,6 +3,7 @@ import textBubble from '../src/images/textBubble.png'
 import promoIcon from '../src/images/promoIcon.png'
 import postIcon from '../src/images/postIcon.png'
 import Footer from './components/Footer'
+import ConvertKitForm from 'convertkit-react'
 
 function Landing() {
     return (
@@ -70,7 +71,8 @@ function Landing() {
                     </div>
                 </div>
                 <div className="mt-10 max-w-xl mx-auto">
-                    <div className="flex items-center justify-center gap-4">
+                    <ConvertKitForm formId={6384000} />
+                    {/* <div className="flex items-center justify-center gap-4">
                         <input
                             id="email"
                             type="email"
@@ -81,7 +83,9 @@ function Landing() {
                         <button className=" bg-purple text-white text-lg font-semibold py-3 px-6 rounded-r-md hover:bg-purple-700 transition-colors whitespace-nowrap">
                             Join Beta
                         </button>
-                    </div>
+                        
+                        
+                    </div> */}
                 </div>
             </div>
 
