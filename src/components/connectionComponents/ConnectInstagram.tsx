@@ -11,7 +11,9 @@ export const ExchangeInstagramAuthCodeForTokenDocument = graphql(`
             connection {
                 userId
                 platformId
-                token
+                handle
+                # token
+                # tokenExpiration
             }
             errors {
                 ... on Error {

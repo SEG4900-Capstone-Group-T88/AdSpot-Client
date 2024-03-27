@@ -84,6 +84,7 @@ export type Connection = {
     platform: Platform
     platformId: Scalars['Int']['output']
     token: Scalars['String']['output']
+    tokenExpiration: Scalars['DateTime']['output']
     user: User
     userId: Scalars['Int']['output']
 }
@@ -95,6 +96,7 @@ export type ConnectionFilterInput = {
     platform?: InputMaybe<PlatformFilterInput>
     platformId?: InputMaybe<IntOperationFilterInput>
     token?: InputMaybe<StringOperationFilterInput>
+    tokenExpiration?: InputMaybe<DateTimeOperationFilterInput>
     user?: InputMaybe<UserFilterInput>
     userId?: InputMaybe<IntOperationFilterInput>
 }
@@ -104,6 +106,7 @@ export type ConnectionSortInput = {
     platform?: InputMaybe<PlatformSortInput>
     platformId?: InputMaybe<SortEnumType>
     token?: InputMaybe<SortEnumType>
+    tokenExpiration?: InputMaybe<SortEnumType>
     user?: InputMaybe<UserSortInput>
     userId?: InputMaybe<SortEnumType>
 }
@@ -520,6 +523,7 @@ export type PlatformSortInput = {
 
 export type Query = {
     __typename?: 'Query'
+    connection: Array<Connection>
     orderById?: Maybe<Order>
     orders: Array<Order>
     ordersByStatus?: Maybe<OrdersByStatusConnection>
@@ -527,6 +531,11 @@ export type Query = {
     requestsByStatus?: Maybe<RequestsByStatusConnection>
     userById?: Maybe<User>
     users: Array<User>
+}
+
+export type QueryConnectionArgs = {
+    platformId: Scalars['Int']['input']
+    userId: Scalars['Int']['input']
 }
 
 export type QueryOrderByIdArgs = {
@@ -760,7 +769,7 @@ export type ExchangeInstagramAuthCodeForTokenMutation = {
             __typename?: 'Connection'
             userId: number
             platformId: number
-            token: string
+            handle: string
         } | null
         errors?: Array<{__typename?: 'InstagramOauthError'; message: string}> | null
     }
@@ -1407,7 +1416,7 @@ export const ExchangeInstagramAuthCodeForTokenDocument = {
                                                 kind: 'Field',
                                                 name: {kind: 'Name', value: 'platformId'},
                                             },
-                                            {kind: 'Field', name: {kind: 'Name', value: 'token'}},
+                                            {kind: 'Field', name: {kind: 'Name', value: 'handle'}},
                                         ],
                                     },
                                 },
