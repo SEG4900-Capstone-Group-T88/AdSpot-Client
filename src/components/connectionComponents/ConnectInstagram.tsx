@@ -55,7 +55,7 @@ function ConnectInstagram() {
             // }
             // fetch( accessTokenRequestURL, requestOptions ).then(response => console.log(response))
         }
-    }, [searchParams])
+    }, [searchParams, executeMutation])
 
     return (
         <>
