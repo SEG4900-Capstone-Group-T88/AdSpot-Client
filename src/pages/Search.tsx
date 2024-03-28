@@ -1,67 +1,100 @@
-// Search.tsx
 import React, {useState} from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import ActiveListings, {Listing} from '../components/ActiveListings'
-import mockListings from '../components/mockListings.json'
+import {graphql, useFragment} from '../gql'
+import {useQuery} from 'urql'
+import UserSummary, {UserSummaryFragmentDocument} from '../components/UserSummary'
+import {UserFilterInput} from '../gql/graphql'
+
+export const GetUsersQuery = graphql(`
+    query GetUsers($filter: UserFilterInput) {
+        users(where: $filter) {
+            ...UserSummary
+        }
+    }
+`)
+
+export const GetPlatformsQuery = graphql(`
+    query GetPlatforms {
+        platforms {
+            platformId
+            name
+        }
+    }
+`)
 
 function Search() {
-    const [viewMore, setViewMore] = useState(false)
+    const [selectedPlatformId, setSelectedPlatformId] = useState(-1)
     const [price, setPrice] = useState<number>(1000)
-    const [selectedNiche, setSelectedNiche] = useState<string[]>([])
-    const [selectedFollowerRange, setSelectedFollowerRange] = useState<[number, number] | null>(
-        null,
-    )
-    const [selectedPlatform, setSelectedPlatform] = useState('')
+    // const [selectedNiche, setSelectedNiche] = useState<string[]>([])
+    // const [selectedFollowerRange, setSelectedFollowerRange] = useState<[number, number] | null>(
+    //     null,
+    // )
+    // const [viewMore, setViewMore] = useState(false)
 
-    const handleViewMore = () => {
-        setViewMore(!viewMore)
+    const [{data: platformsData}] = useQuery({query: GetPlatformsQuery})
+
+    const atLeastOneListingFilter = {
+        listings: {any: true},
     }
+    const platformFilter = {
+        listings: {
+            some: {
+                platform: {platformId: {eq: selectedPlatformId}},
+            },
+        },
+    }
+    const priceFilter = {
+        listings: {
+            some: {
+                and: [{price: {gte: 0}}, {price: {lte: price}}],
+            },
+        },
+    }
+
+    const filters: UserFilterInput[] = [atLeastOneListingFilter, priceFilter]
+    if (selectedPlatformId !== -1) {
+        filters.push(platformFilter)
+    }
+    const combinedFilter = {
+        and: filters,
+    }
+
+    const [{data: usersData}] = useQuery({
+        query: GetUsersQuery,
+        variables: {filter: combinedFilter},
+    })
+    const users = useFragment(UserSummaryFragmentDocument, usersData?.users)
 
     const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPrice(parseInt(event.target.value))
     }
 
-    const handleNicheChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.checked) {
-            setSelectedNiche((prev) => [...prev, event.target.value])
-        } else {
-            setSelectedNiche((prev) => prev.filter((item) => item !== event.target.value))
-        }
-    }
-    const handleFollowerCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value
-        if (value === 'All') {
-            setSelectedFollowerRange(null) // Clear the filter
-        } else {
-            // Parse the selected range and set the state
-            const range = value.split('-').map((x) => parseInt(x.replace(/k/g, '000')))
-            setSelectedFollowerRange(range as [number, number])
-        }
-    }
-
     const handlePlatformChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value
-        setSelectedPlatform(value === 'All' ? '' : value) // If "All" is selected, reset the filter
+        setSelectedPlatformId(parseInt(event.target.value)) // If "All" is selected, reset the filter
     }
 
-    const listings: Listing[] = mockListings
+    // const handleNicheChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (event.target.checked) {
+    //         setSelectedNiche((prev) => [...prev, event.target.value])
+    //     } else {
+    //         setSelectedNiche((prev) => prev.filter((item) => item !== event.target.value))
+    //     }
+    // }
+    // const handleFollowerCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const value = event.target.value
+    //     if (value === 'All') {
+    //         setSelectedFollowerRange(null) // Clear the filter
+    //     } else {
+    //         // Parse the selected range and set the state
+    //         const range = value.split('-').map((x) => parseInt(x.replace(/k/g, '000')))
+    //         setSelectedFollowerRange(range as [number, number])
+    //     }
+    // }
 
-    // Then update your filteredListings logic
-    const filteredListings = listings.filter((listing) => {
-        const followerCountInRange = selectedFollowerRange
-            ? listing.followerCount >= selectedFollowerRange[0] &&
-              listing.followerCount <= selectedFollowerRange[1]
-            : true // No follower count range is selected, so don't filter on this criterion
-
-        return (
-            (selectedNiche.length === 0 ||
-                selectedNiche.some((niche) => listing.niche.includes(niche))) &&
-            followerCountInRange &&
-            (!selectedPlatform || listing.platform === selectedPlatform) &&
-            listing.price <= price
-        )
-    })
+    // const handleViewMore = () => {
+    //     setViewMore(!viewMore)
+    // }
 
     return (
         <div>
@@ -84,7 +117,33 @@ function Search() {
                             />
                             <span>${price}</span>
                         </div>
-                        <div className="niche">
+                        <div className="platform">
+                            <h4>Platform</h4>
+                            <input
+                                type="radio"
+                                name="platform"
+                                value={-1}
+                                id="platform-All"
+                                onChange={handlePlatformChange}
+                            />
+                            <label htmlFor="platform-All">All</label>
+                            {platformsData?.platforms.map((platform, index) => (
+                                <div key={index}>
+                                    <input
+                                        type="radio"
+                                        name="platform"
+                                        value={platform.platformId}
+                                        id={`platform-${platform.name}`}
+                                        // checked={selectedPlatform === platform}
+                                        onChange={handlePlatformChange}
+                                    />
+                                    <label htmlFor={`platform-${platform.name}`}>
+                                        {platform.name}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                        {/* <div className="niche">
                             <h4>Niche</h4>
                             {[
                                 'Art',
@@ -100,7 +159,7 @@ function Search() {
                                         name="niche"
                                         value={niche.toLowerCase()}
                                         id={`niche-${niche.toLowerCase()}`}
-                                        onChange={handleNicheChange}
+                                        // onChange={handleNicheChange}
                                     />
                                     <label htmlFor={`niche-${niche.toLowerCase()}`}>{niche}</label>
                                 </div>
@@ -119,7 +178,7 @@ function Search() {
                                 name="followerCount"
                                 value="All" // Use "All" directly
                                 id="followerCount-All"
-                                onChange={handleFollowerCountChange}
+                                // onChange={handleFollowerCountChange}
                             />
                             <label htmlFor="followerCount-All">All</label>
                             {['1k - 10k', '10k - 50k', '50k - 200k', '200k - 1M', '1M +'].map(
@@ -130,7 +189,7 @@ function Search() {
                                             name="followerCount"
                                             value={range.replace(/\s/g, '')}
                                             id={`followerCount-${range.replace(/\s/g, '')}`}
-                                            onChange={handleFollowerCountChange}
+                                            // onChange={handleFollowerCountChange}
                                         />
                                         <label
                                             htmlFor={`followerCount-${range.replace(/\s/g, '')}`}
@@ -140,36 +199,19 @@ function Search() {
                                     </div>
                                 ),
                             )}
-                        </div>
-                        <div className="platform">
-                            <h4>Platform</h4>
-                            <input
-                                type="radio"
-                                name="platform"
-                                value="All"
-                                id="platform-All"
-                                checked={selectedPlatform === ''}
-                                onChange={handlePlatformChange}
-                            />
-                            <label htmlFor="platform-All">All</label>
-                            {['Instagram', 'X', 'YouTube'].map((platform, index) => (
-                                <div key={index}>
-                                    <input
-                                        type="radio"
-                                        name="platform"
-                                        value={platform}
-                                        id={`platform-${platform}`}
-                                        checked={selectedPlatform === platform}
-                                        onChange={handlePlatformChange}
-                                    />
-                                    <label htmlFor={`platform-${platform}`}>{platform}</label>
-                                </div>
-                            ))}
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className="col-span-3">
-                    <ActiveListings listings={filteredListings} />
+                    <div className="grid grid-cols-2 gap-4">
+                        {users &&
+                            users.map((user) => (
+                                <UserSummary
+                                    key={user.userId}
+                                    user={user}
+                                />
+                            ))}
+                    </div>
                 </div>
             </div>
             <Footer />

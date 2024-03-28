@@ -556,6 +556,10 @@ export type QueryOrdersByStatusArgs = {
     userId: Scalars['Int']['input']
 }
 
+export type QueryPlatformsArgs = {
+    where?: InputMaybe<PlatformFilterInput>
+}
+
 export type QueryRequestsByStatusArgs = {
     after?: InputMaybe<Scalars['String']['input']>
     before?: InputMaybe<Scalars['String']['input']>
@@ -757,6 +761,19 @@ export type UserContextInfoFragment = {
     lastName: string
 } & {' $fragmentName'?: 'UserContextInfoFragment'}
 
+export type UserSummaryFragment = {
+    __typename?: 'User'
+    userId: number
+    firstName: string
+    lastName: string
+    listings: Array<{
+        __typename?: 'Listing'
+        price: any
+        platform: {__typename?: 'Platform'; name: string}
+        listingType: {__typename?: 'ListingType'; name: string}
+    }>
+} & {' $fragmentName'?: 'UserSummaryFragment'}
+
 export type ExchangeInstagramAuthCodeForTokenMutationVariables = Exact<{
     input: ExchangeInstagramAuthCodeForTokenInput
 }>
@@ -794,6 +811,24 @@ export type LoginMutation = {
             | {__typename?: 'UserNotFoundError'; message: string}
         > | null
     }
+}
+
+export type GetUsersQueryVariables = Exact<{
+    filter?: InputMaybe<UserFilterInput>
+}>
+
+export type GetUsersQuery = {
+    __typename?: 'Query'
+    users: Array<
+        {__typename?: 'User'} & {' $fragmentRefs'?: {UserSummaryFragment: UserSummaryFragment}}
+    >
+}
+
+export type GetPlatformsQueryVariables = Exact<{[key: string]: never}>
+
+export type GetPlatformsQuery = {
+    __typename?: 'Query'
+    platforms: Array<{__typename?: 'Platform'; platformId: number; name: string}>
 }
 
 export type RegisterUserMutationVariables = Exact<{
@@ -905,6 +940,54 @@ export const UserContextInfoFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<UserContextInfoFragment, unknown>
+export const UserSummaryFragmentDoc = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'UserSummary'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'User'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'listings'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'platform'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'listingType'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                        ],
+                                    },
+                                },
+                                {kind: 'Field', name: {kind: 'Name', value: 'price'}},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<UserSummaryFragment, unknown>
 export const GetOrdersByStatusDocument = {
     kind: 'Document',
     definitions: [
@@ -1550,6 +1633,117 @@ export const LoginDocument = {
         },
     ],
 } as unknown as DocumentNode<LoginMutation, LoginMutationVariables>
+export const GetUsersDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetUsers'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'filter'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'UserFilterInput'}},
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'users'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'where'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'filter'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'FragmentSpread',
+                                    name: {kind: 'Name', value: 'UserSummary'},
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'UserSummary'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'User'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'listings'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'platform'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'listingType'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                        ],
+                                    },
+                                },
+                                {kind: 'Field', name: {kind: 'Name', value: 'price'}},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetUsersQuery, GetUsersQueryVariables>
+export const GetPlatformsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetPlatforms'},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'platforms'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'platformId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetPlatformsQuery, GetPlatformsQueryVariables>
 export const RegisterUserDocument = {
     kind: 'Document',
     definitions: [
