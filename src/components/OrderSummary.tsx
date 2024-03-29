@@ -4,17 +4,26 @@ import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faXmarkCircle, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
 import {OrderStatusEnum, OrderSummaryFragment} from '../gql/graphql'
+import {OrderContextEnum} from '../OrderContextEnum'
 
 export const OrderSummaryFragmentDocument = graphql(`
     fragment OrderSummary on Order {
         orderId
         orderDate
         orderStatusId
+        description
+        user {
+            userId
+            firstName
+            lastName
+            email
+        }
         listing {
             price
             user {
                 userId
-                email
+                firstName
+                lastName
             }
             listingType {
                 name
@@ -47,7 +56,10 @@ function getOrderStatusBgColor(order: OrderSummaryFragment) {
     }
 }
 
-function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragmentDocument>}) {
+function OrderSummary(props: {
+    order: FragmentType<typeof OrderSummaryFragmentDocument>
+    orderContext: OrderContextEnum
+}) {
     const order = useFragment(OrderSummaryFragmentDocument, props.order)
     const orderDate = new Date(order.orderDate)
 
@@ -63,7 +75,7 @@ function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragmentDoc
                         {orderDate.toLocaleString()}
                     </span>
                 </div>
-                <div className="flex gap-36">
+                <div className="grid grid-cols-3">
                     <div className="flex gap-4 items-center">
                         <img
                             src={Profile}
@@ -71,39 +83,53 @@ function OrderSummary(props: {order: FragmentType<typeof OrderSummaryFragmentDoc
                         />
                         <div>
                             <h4>
-                                Joe Smith - 1 {order.listing.listingType.name} for $
-                                {order.listing.price}
+                                {props.orderContext === OrderContextEnum.Order
+                                    ? order.listing.user.firstName
+                                    : order.user.firstName}{' '}
+                                {props.orderContext === OrderContextEnum.Order
+                                    ? order.listing.user.lastName
+                                    : order.user.lastName}{' '}
+                                - 1 {order.listing.listingType.name} for ${order.listing.price}
                             </h4>
                             <p className="text-purple text-[20px]">
-                                @{order.listing.connection.handle}
+                                {props.orderContext === OrderContextEnum.Order
+                                    ? `@${order.listing.connection.handle}`
+                                    : order.user.email}
                             </p>
                         </div>
                     </div>
-                    <div className="flex gap-4">
+                    <div>
+                        <p>{order.description.split(' ').slice(0, 30).join(' ')} ...</p>
+                    </div>
+                    <div className="flex gap-4 justify-self-end h-fit">
                         <span className={`rounded p-4 ${getOrderStatusBgColor(order)}`}>
                             {order.orderStatusId}
                         </span>
-                        {order.orderStatusId === OrderStatusEnum.Pending && (
-                            <div className="flex flex-col justify-between">
-                                <button>
-                                    <FontAwesomeIcon
-                                        icon={faCheckCircle}
-                                        size="xl"
-                                        color="green"
-                                    />
-                                </button>
-                                <button>
-                                    <FontAwesomeIcon
-                                        icon={faXmarkCircle}
-                                        size="xl"
-                                        color="red"
-                                    />
-                                </button>
-                            </div>
-                        )}
-                        {(order.orderStatusId === OrderStatusEnum.Accepted ||
-                            order.orderStatusId === OrderStatusEnum.Completed) && (
-                            <button className="btn underline">Deliverable</button>
+                        {order.orderStatusId === OrderStatusEnum.Pending &&
+                            props.orderContext === OrderContextEnum.Request && (
+                                <div className="flex flex-col justify-between">
+                                    <button>
+                                        <FontAwesomeIcon
+                                            icon={faCheckCircle}
+                                            size="xl"
+                                            color="green"
+                                        />
+                                    </button>
+                                    <button>
+                                        <FontAwesomeIcon
+                                            icon={faXmarkCircle}
+                                            size="xl"
+                                            color="red"
+                                        />
+                                    </button>
+                                </div>
+                            )}
+                        {order.orderStatusId === OrderStatusEnum.Accepted &&
+                            props.orderContext === OrderContextEnum.Request && (
+                                <button className="underline">Submit Deliverable</button>
+                            )}
+                        {order.orderStatusId === OrderStatusEnum.Completed && (
+                            <button className="underline">View Deliverable</button>
                         )}
                     </div>
                 </div>

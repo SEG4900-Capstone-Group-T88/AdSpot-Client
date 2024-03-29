@@ -168,21 +168,6 @@ export type ExchangeInstagramAuthCodeForTokenPayload = {
     errors?: Maybe<Array<ExchangeInstagramAuthCodeForTokenError>>
 }
 
-export type FloatOperationFilterInput = {
-    eq?: InputMaybe<Scalars['Float']['input']>
-    gt?: InputMaybe<Scalars['Float']['input']>
-    gte?: InputMaybe<Scalars['Float']['input']>
-    in?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>
-    lt?: InputMaybe<Scalars['Float']['input']>
-    lte?: InputMaybe<Scalars['Float']['input']>
-    neq?: InputMaybe<Scalars['Float']['input']>
-    ngt?: InputMaybe<Scalars['Float']['input']>
-    ngte?: InputMaybe<Scalars['Float']['input']>
-    nin?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>
-    nlt?: InputMaybe<Scalars['Float']['input']>
-    nlte?: InputMaybe<Scalars['Float']['input']>
-}
-
 export type InstagramOauthError = Error & {
     __typename?: 'InstagramOauthError'
     message: Scalars['String']['output']
@@ -368,7 +353,6 @@ export type MutationUpdatePasswordArgs = {
 
 export type Order = {
     __typename?: 'Order'
-    deliverable?: Maybe<Scalars['String']['output']>
     description: Scalars['String']['output']
     listing: Listing
     listingId: Scalars['Int']['output']
@@ -377,14 +361,12 @@ export type Order = {
     orderStatus: OrderStatus
     orderStatusId: OrderStatusEnum
     price: Scalars['Decimal']['output']
-    rating?: Maybe<Scalars['Float']['output']>
     user: User
     userId: Scalars['Int']['output']
 }
 
 export type OrderFilterInput = {
     and?: InputMaybe<Array<OrderFilterInput>>
-    deliverable?: InputMaybe<StringOperationFilterInput>
     description?: InputMaybe<StringOperationFilterInput>
     listing?: InputMaybe<ListingFilterInput>
     listingId?: InputMaybe<IntOperationFilterInput>
@@ -394,7 +376,6 @@ export type OrderFilterInput = {
     orderStatus?: InputMaybe<OrderStatusFilterInput>
     orderStatusId?: InputMaybe<OrderStatusEnumOperationFilterInput>
     price?: InputMaybe<DecimalOperationFilterInput>
-    rating?: InputMaybe<FloatOperationFilterInput>
     user?: InputMaybe<UserFilterInput>
     userId?: InputMaybe<IntOperationFilterInput>
 }
@@ -418,7 +399,6 @@ export type OrderListingPayload = {
 }
 
 export type OrderSortInput = {
-    deliverable?: InputMaybe<SortEnumType>
     description?: InputMaybe<SortEnumType>
     listing?: InputMaybe<ListingSortInput>
     listingId?: InputMaybe<SortEnumType>
@@ -427,7 +407,6 @@ export type OrderSortInput = {
     orderStatus?: InputMaybe<OrderStatusSortInput>
     orderStatusId?: InputMaybe<SortEnumType>
     price?: InputMaybe<SortEnumType>
-    rating?: InputMaybe<SortEnumType>
     user?: InputMaybe<UserSortInput>
     userId?: InputMaybe<SortEnumType>
 }
@@ -530,7 +509,7 @@ export type Query = {
     platforms: Array<Platform>
     requestsByStatus?: Maybe<RequestsByStatusConnection>
     userById?: Maybe<User>
-    users: Array<User>
+    users?: Maybe<UsersConnection>
 }
 
 export type QueryConnectionArgs = {
@@ -556,10 +535,6 @@ export type QueryOrdersByStatusArgs = {
     userId: Scalars['Int']['input']
 }
 
-export type QueryPlatformsArgs = {
-    where?: InputMaybe<PlatformFilterInput>
-}
-
 export type QueryRequestsByStatusArgs = {
     after?: InputMaybe<Scalars['String']['input']>
     before?: InputMaybe<Scalars['String']['input']>
@@ -575,6 +550,11 @@ export type QueryUserByIdArgs = {
 }
 
 export type QueryUsersArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    order?: InputMaybe<Array<UserSortInput>>
     where?: InputMaybe<UserFilterInput>
 }
 
@@ -673,15 +653,39 @@ export type UserSortInput = {
     userId?: InputMaybe<SortEnumType>
 }
 
+/** A connection to a list of items. */
+export type UsersConnection = {
+    __typename?: 'UsersConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<UsersEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<User>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type UsersEdge = {
+    __typename?: 'UsersEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: User
+}
+
 export type OrderSummaryFragment = {
     __typename?: 'Order'
     orderId: number
     orderDate: any
     orderStatusId: OrderStatusEnum
+    description: string
+    user: {__typename?: 'User'; userId: number; firstName: string; lastName: string; email: string}
     listing: {
         __typename?: 'Listing'
         price: any
-        user: {__typename?: 'User'; userId: number; email: string}
+        user: {__typename?: 'User'; userId: number; firstName: string; lastName: string}
         listingType: {
             __typename?: 'ListingType'
             name: string
@@ -815,13 +819,32 @@ export type LoginMutation = {
 
 export type GetUsersQueryVariables = Exact<{
     filter?: InputMaybe<UserFilterInput>
+    first?: InputMaybe<Scalars['Int']['input']>
+    after?: InputMaybe<Scalars['String']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type GetUsersQuery = {
     __typename?: 'Query'
-    users: Array<
-        {__typename?: 'User'} & {' $fragmentRefs'?: {UserSummaryFragment: UserSummaryFragment}}
-    >
+    users?: {
+        __typename?: 'UsersConnection'
+        totalCount: number
+        pageInfo: {
+            __typename?: 'PageInfo'
+            hasPreviousPage: boolean
+            hasNextPage: boolean
+            startCursor?: string | null
+            endCursor?: string | null
+        }
+        edges?: Array<{
+            __typename?: 'UsersEdge'
+            cursor: string
+            node: {__typename?: 'User'} & {
+                ' $fragmentRefs'?: {UserSummaryFragment: UserSummaryFragment}
+            }
+        }> | null
+    } | null
 }
 
 export type GetPlatformsQueryVariables = Exact<{[key: string]: never}>
@@ -862,6 +885,20 @@ export const OrderSummaryFragmentDoc = {
                     {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'orderDate'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'orderStatusId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'description'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'user'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                            ],
+                        },
+                    },
                     {
                         kind: 'Field',
                         name: {kind: 'Name', value: 'listing'},
@@ -876,7 +913,14 @@ export const OrderSummaryFragmentDoc = {
                                         kind: 'SelectionSet',
                                         selections: [
                                             {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
-                                            {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'firstName'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'lastName'},
+                                            },
                                         ],
                                     },
                                 },
@@ -1161,6 +1205,20 @@ export const GetOrdersByStatusDocument = {
                     {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'orderDate'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'orderStatusId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'description'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'user'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                            ],
+                        },
+                    },
                     {
                         kind: 'Field',
                         name: {kind: 'Name', value: 'listing'},
@@ -1175,7 +1233,14 @@ export const GetOrdersByStatusDocument = {
                                         kind: 'SelectionSet',
                                         selections: [
                                             {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
-                                            {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'firstName'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'lastName'},
+                                            },
                                         ],
                                     },
                                 },
@@ -1393,6 +1458,20 @@ export const GetRequestsByStatusDocument = {
                     {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'orderDate'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'orderStatusId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'description'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'user'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                            ],
+                        },
+                    },
                     {
                         kind: 'Field',
                         name: {kind: 'Name', value: 'listing'},
@@ -1407,7 +1486,14 @@ export const GetRequestsByStatusDocument = {
                                         kind: 'SelectionSet',
                                         selections: [
                                             {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
-                                            {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'firstName'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'lastName'},
+                                            },
                                         ],
                                     },
                                 },
@@ -1646,6 +1732,26 @@ export const GetUsersDocument = {
                     variable: {kind: 'Variable', name: {kind: 'Name', value: 'filter'}},
                     type: {kind: 'NamedType', name: {kind: 'Name', value: 'UserFilterInput'}},
                 },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
+                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+                },
             ],
             selectionSet: {
                 kind: 'SelectionSet',
@@ -1659,13 +1765,100 @@ export const GetUsersDocument = {
                                 name: {kind: 'Name', value: 'where'},
                                 value: {kind: 'Variable', name: {kind: 'Name', value: 'filter'}},
                             },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'first'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'after'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'last'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'before'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'order'},
+                                value: {
+                                    kind: 'ListValue',
+                                    values: [
+                                        {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                                {
+                                                    kind: 'ObjectField',
+                                                    name: {kind: 'Name', value: 'userId'},
+                                                    value: {kind: 'EnumValue', value: 'ASC'},
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            },
                         ],
                         selectionSet: {
                             kind: 'SelectionSet',
                             selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'totalCount'}},
                                 {
-                                    kind: 'FragmentSpread',
-                                    name: {kind: 'Name', value: 'UserSummary'},
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'pageInfo'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'hasPreviousPage'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'hasNextPage'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'startCursor'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'endCursor'},
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'edges'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'cursor'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'node'},
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'FragmentSpread',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'UserSummary',
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
                                 },
                             ],
                         },

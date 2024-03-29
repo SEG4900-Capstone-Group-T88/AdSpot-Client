@@ -5,11 +5,38 @@ import {graphql, useFragment} from '../gql'
 import {useQuery} from 'urql'
 import UserSummary, {UserSummaryFragmentDocument} from '../components/UserSummary'
 import {UserFilterInput} from '../gql/graphql'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faArrowLeft, faArrowRight} from '@fortawesome/free-solid-svg-icons'
 
 export const GetUsersQuery = graphql(`
-    query GetUsers($filter: UserFilterInput) {
-        users(where: $filter) {
-            ...UserSummary
+    query GetUsers(
+        $filter: UserFilterInput
+        $first: Int
+        $after: String
+        $last: Int
+        $before: String
+    ) {
+        users(
+            where: $filter
+            first: $first
+            after: $after
+            last: $last
+            before: $before
+            order: [{userId: ASC}]
+        ) {
+            totalCount
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+            edges {
+                cursor
+                node {
+                    ...UserSummary
+                }
+            }
         }
     }
 `)
@@ -60,11 +87,33 @@ function Search() {
         and: filters,
     }
 
+    const pageSize = 12
+    const [pagingVariables, setPagingVariables] = useState<{
+        first: number | null
+        after: string | null
+        last: number | null
+        before: string | null
+    }>({
+        first: pageSize,
+        after: null,
+        last: null,
+        before: null,
+    })
+
     const [{data: usersData}] = useQuery({
         query: GetUsersQuery,
-        variables: {filter: combinedFilter},
+        variables: {
+            filter: combinedFilter,
+            first: pagingVariables.first,
+            after: pagingVariables.after,
+            last: pagingVariables.last,
+            before: pagingVariables.before,
+        },
     })
-    const users = useFragment(UserSummaryFragmentDocument, usersData?.users)
+    const users = useFragment(
+        UserSummaryFragmentDocument,
+        usersData?.users?.edges?.map((edge) => edge.node),
+    )
 
     const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPrice(parseInt(event.target.value))
@@ -99,7 +148,7 @@ function Search() {
     return (
         <div>
             <Navbar />
-            <div className="grid grid-cols-4">
+            <div className="grid grid-cols-4 mt-4">
                 <div className="col-span-1">
                     <div className="filter-container">
                         <h3>Filter</h3>
@@ -203,7 +252,7 @@ function Search() {
                     </div>
                 </div>
                 <div className="col-span-3">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         {users &&
                             users.map((user) => (
                                 <UserSummary
@@ -211,6 +260,70 @@ function Search() {
                                     user={user}
                                 />
                             ))}
+                    </div>
+                    <div className="flex justify-between text-center mt-4">
+                        <div className="flex gap-2">
+                            <button
+                                disabled={!usersData?.users?.pageInfo.hasPreviousPage}
+                                onClick={() => {
+                                    setPagingVariables({
+                                        first: pageSize,
+                                        after: null,
+                                        last: null,
+                                        before: null,
+                                    })
+                                }}
+                            >
+                                <span>First</span>
+                            </button>
+                            <button
+                                disabled={!usersData?.users?.pageInfo.hasPreviousPage}
+                                onClick={() => {
+                                    setPagingVariables({
+                                        first: null,
+                                        after: null,
+                                        last: pageSize,
+                                        before: usersData?.users?.pageInfo.startCursor ?? null,
+                                    })
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faArrowLeft}
+                                    size="xl"
+                                />
+                            </button>
+                        </div>
+                        <div className="flex gap-2">
+                            <button
+                                disabled={!usersData?.users?.pageInfo.hasNextPage}
+                                onClick={() => {
+                                    setPagingVariables({
+                                        first: pageSize,
+                                        after: usersData?.users?.pageInfo.endCursor ?? null,
+                                        last: null,
+                                        before: null,
+                                    })
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faArrowRight}
+                                    size="xl"
+                                />
+                            </button>
+                            <button
+                                disabled={!usersData?.users?.pageInfo.hasNextPage}
+                                onClick={() => {
+                                    setPagingVariables({
+                                        first: null,
+                                        after: null,
+                                        last: pageSize,
+                                        before: null,
+                                    })
+                                }}
+                            >
+                                <span>Last</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

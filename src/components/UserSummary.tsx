@@ -27,7 +27,7 @@ function UserSummary(props: {user: UserSummaryFragment}) {
     const prices = user.listings.map((listing) => Number(listing.price))
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 my-4">
+        <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center py-2">
                 <img
                     src={Profile}
