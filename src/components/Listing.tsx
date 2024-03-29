@@ -23,6 +23,11 @@ export const OrderListingDocument = graphql(`
             order {
                 orderId
             }
+            errors {
+                ... on Error {
+                    message
+                }
+            }
         }
     }
 `)
@@ -44,6 +49,9 @@ function Listing(props: {listing: FragmentType<typeof ListingFragmentDocument>})
                     price: listing.price,
                     description: description,
                 },
+            }).then((result) => {
+                console.log(result.data?.orderListing.order)
+                console.log(result.data?.orderListing.errors)
             })
         } else {
             alert('You must be logged in to buy a listing.')

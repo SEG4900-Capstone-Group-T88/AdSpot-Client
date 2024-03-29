@@ -15,7 +15,7 @@ import {TypedDocumentNode as DocumentNode} from '@graphql-typed-document-node/co
 const documents = {
     '\n    fragment Listing on Listing {\n        listingId\n        listingType {\n            platform {\n                platformId\n                name\n            }\n            name\n        }\n        price\n    }\n':
         types.ListingFragmentDoc,
-    '\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n        }\n    }\n':
+    '\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.OrderListingDocument,
     '\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        description\n        user {\n            userId\n            firstName\n            lastName\n            email\n        }\n        listing {\n            price\n            user {\n                userId\n                firstName\n                lastName\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n':
         types.OrderSummaryFragmentDoc,
@@ -67,8 +67,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n        }\n    }\n',
-): (typeof documents)['\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n        }\n    }\n']
+    source: '\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

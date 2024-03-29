@@ -695,6 +695,11 @@ export type OrderListingMutation = {
     orderListing: {
         __typename?: 'OrderListingPayload'
         order?: {__typename?: 'Order'; orderId: number} | null
+        errors?: Array<
+            | {__typename?: 'CannotOrderOwnListingError'; message: string}
+            | {__typename?: 'InvalidListingIdError'; message: string}
+            | {__typename?: 'ListingPriceHasChangedError'; message: string}
+        > | null
     }
 }
 
@@ -1221,6 +1226,31 @@ export const OrderListingDocument = {
                                         kind: 'SelectionSet',
                                         selections: [
                                             {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'message'},
+                                                        },
+                                                    ],
+                                                },
+                                            },
                                         ],
                                     },
                                 },
