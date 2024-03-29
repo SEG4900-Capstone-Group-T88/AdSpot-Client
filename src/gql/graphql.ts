@@ -796,6 +796,18 @@ export type ExchangeInstagramAuthCodeForTokenMutation = {
     }
 }
 
+export type GetUserConnectionsQueryVariables = Exact<{
+    input: Scalars['Int']['input']
+}>
+
+export type GetUserConnectionsQuery = {
+    __typename?: 'Query'
+    userById?: {
+        __typename?: 'User'
+        connections: Array<{__typename?: 'Connection'; platformId: number; handle: string}>
+    } | null
+}
+
 export type LoginMutationVariables = Exact<{
     input: LoginInput
 }>
@@ -1625,6 +1637,61 @@ export const ExchangeInstagramAuthCodeForTokenDocument = {
     ExchangeInstagramAuthCodeForTokenMutation,
     ExchangeInstagramAuthCodeForTokenMutationVariables
 >
+export const GetUserConnectionsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetUserConnections'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'userById'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'connections'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'platformId'},
+                                            },
+                                            {kind: 'Field', name: {kind: 'Name', value: 'handle'}},
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetUserConnectionsQuery, GetUserConnectionsQueryVariables>
 export const LoginDocument = {
     kind: 'Document',
     definitions: [

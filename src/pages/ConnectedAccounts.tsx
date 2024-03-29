@@ -17,17 +17,27 @@ export const GetUserConnections = graphql(`
 `)
 
 function ConnectedAccounts() {
-    const [result] = useQuery(GetUserConnections)
-    const { data, fetching, error } = result;
     const {user} = useContext(UserContext)
-
-    useEffect(() => {
-        //const connectedAccounts: Map<number, string> = new Map()
-
-        if (!fetching && !error) {
-            
-        }
+    const [result] = useQuery({
+        query: GetUserConnections,
+        variables: {input: user?.userId ?? -1},
     })
+
+    var facebookHandle, twitterHandle, instagramHandle, youtubeHandle
+
+    useEffect(() => {})
+    const connectedAccounts: Map<number, string> = new Map()
+
+    result.data?.userById?.connections.forEach((element: any) => {
+        connectedAccounts.set(element.platformId, element.handle)
+    })
+
+    console.log(connectedAccounts)
+
+    facebookHandle = connectedAccounts.get(1)
+    twitterHandle = connectedAccounts.get(2)
+    instagramHandle = connectedAccounts.get(3)
+    youtubeHandle = connectedAccounts.get(4)
 
     return (
         <>
@@ -35,30 +45,67 @@ function ConnectedAccounts() {
             <div className="flex items-center my-16">
                 <div>
                     <h2>Your Connected Accounts</h2>
+                    <div className="flex items-center my-3">
+                        {facebookHandle && (
+                            <SocialIcon
+                                className="mx-5"
+                                network="facebook"
+                            />
+                        )}
+                        {twitterHandle && (
+                            <SocialIcon
+                                className="mx-5"
+                                network="twitter"
+                            />
+                        )}
+                        {instagramHandle && (
+                            <div className="flex flex-col">
+                                <SocialIcon
+                                    className="mx-5"
+                                    network="instagram"
+                                />
+                                <p className="mt-4">{instagramHandle}</p>
+                            </div>
+                        )}
+                        {youtubeHandle && (
+                            <SocialIcon
+                                className="mx-5"
+                                network="youtube"
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
             <div className="flex items-center my-16">
                 <div>
                     <h2>Connect a Social Media Account</h2>
                     <div className="flex items-center my-3">
-                        <SocialIcon
-                            className="mx-5"
-                            network="instagram"
-                            url="https://api.instagram.com/oauth/authorize?client_id=3649610268617265&redirect_uri=https://localhost:5173/settings/connectInstagramAccount&scope=user_profile,user_media&response_type=code"
-                        />
-                        <SocialIcon
-                            className="mx-5"
-                            network="twitter"
-                        />
-                        <SocialIcon
-                            className="mx-5"
-                            network="youtube"
-                        />
-                        <SocialIcon
-                            className="mx-5"
-                            network="facebook"
-                            url="https://www.facebook.com/v19.0/dialog/oauth?client_id=948021529632543&redirect_uri=https://localhost:5173"
-                        />
+                        {!facebookHandle && (
+                            <SocialIcon
+                                className="mx-5"
+                                network="facebook"
+                                url="https://www.facebook.com/v19.0/dialog/oauth?client_id=948021529632543&redirect_uri=https://localhost:5173"
+                            />
+                        )}
+                        {!twitterHandle && (
+                            <SocialIcon
+                                className="mx-5"
+                                network="twitter"
+                            />
+                        )}
+                        {!instagramHandle && (
+                            <SocialIcon
+                                className="mx-5"
+                                network="instagram"
+                                url="https://api.instagram.com/oauth/authorize?client_id=3649610268617265&redirect_uri=https://localhost:5173/settings/connectInstagramAccount&scope=user_profile,user_media&response_type=code"
+                            />
+                        )}
+                        {!youtubeHandle && (
+                            <SocialIcon
+                                className="mx-5"
+                                network="youtube"
+                            />
+                        )}
                     </div>
                 </div>
             </div>
