@@ -1,6 +1,6 @@
 import {useNavigate, useSearchParams} from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
-import {useContext, useEffect} from 'react'
+import {useContext} from 'react'
 import {graphql} from '../../gql'
 import {useMutation} from 'urql'
 import {UserContext} from '../UserContext'
@@ -32,36 +32,34 @@ function ConnectInstagram() {
 
     const navigate = useNavigate()
 
-    useEffect(() => {
-        const authCode = searchParams.get('code')
+    const authCode = searchParams.get('code')
 
-        // Reconstruct userContext from local storage
-        var userId = localStorage.getItem('userId')
-        var userEmail = localStorage.getItem('userEmail')
-        const userFName = localStorage.getItem('userFName')
-        const userLName = localStorage.getItem('userLName')
+    // Reconstruct userContext from local storage
+    var userId = localStorage.getItem('userId')
+    var userEmail = localStorage.getItem('userEmail')
+    const userFName = localStorage.getItem('userFName')
+    const userLName = localStorage.getItem('userLName')
 
-        const user: UserContextInfoFragment = {
-            userId: parseInt(userId ?? ''),
-            email: userEmail ?? '',
-            firstName: userFName ?? '',
-            lastName: userLName ?? '',
-        }
+    const user: UserContextInfoFragment = {
+        userId: parseInt(userId ?? ''),
+        email: userEmail ?? '',
+        firstName: userFName ?? '',
+        lastName: userLName ?? '',
+    }
 
-        setUser(user)
+    setUser(user)
 
-        if (authCode) {
-            executeMutation({
-                input: {
-                    userId: parseInt(userId ?? ''),
-                    platformId: 3, // Hardcoded to Instagram platform ID from our backend
-                    authCode,
-                },
-            }).then((result: any) => console.log(result))
-        }
+    if (authCode) {
+        executeMutation({
+            input: {
+                userId: parseInt(userId ?? ''),
+                platformId: 3, // Hardcoded to Instagram platform ID from our backend
+                authCode,
+            },
+        }).then((result: any) => console.log(result))
+    }
 
-        navigate('/settings/connectedAccounts')
-    }, [searchParams, executeMutation])
+    navigate('/settings/connectedAccounts')
 
     return (
         <>
