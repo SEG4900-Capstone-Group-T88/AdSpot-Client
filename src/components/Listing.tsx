@@ -77,13 +77,18 @@ function Listing(props: {listing: FragmentType<typeof ListingFragmentDocument>})
                             onSubmit={buyListing}
                         >
                             <div className="flex flex-col">
-                                <label htmlFor="description" className="text-black mb-2">Description</label>
+                                <label
+                                    htmlFor="description"
+                                    className="text-black mb-2"
+                                >
+                                    Description
+                                </label>
                                 <textarea
                                     id="description"
                                     name="description"
                                     className="border rounded text-black p-4"
                                     autoFocus={true}
-                                    placeholder='Enter a description of your order here.'
+                                    placeholder="Enter a description of your order here."
                                     rows={8}
                                     maxLength={500}
                                 ></textarea>
