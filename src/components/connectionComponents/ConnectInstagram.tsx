@@ -53,27 +53,11 @@ function ConnectInstagram() {
         if (authCode) {
             executeMutation({
                 input: {
-                    userId: parseInt(userId ?? ''), // hardcoded for now
-                    platformId: 3, // hardcoded for now
+                    userId: parseInt(userId ?? ''),
+                    platformId: 3, // Hardcoded to Instagram platform ID from our backend
                     authCode,
                 },
             }).then((result: any) => console.log(result))
-            // const accessTokenRequestURL = "https://api.instagram.com/oauth/access_token"
-            // const requestParams = {
-            //     client_id: "3649610268617265",
-            //     client_secret: "f3e68e552fad3d31536f85a39c85b7c7",
-            //     code: {authCode},
-            //     grant_type: "authorization_code",
-            //     redirect_uri: "https://localhost:5173/settings/connectInstagramAccount",
-            // }
-            // const requestOptions = {
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     method: 'POST',
-            //     body: JSON.stringify( requestParams )
-            // }
-            // fetch( accessTokenRequestURL, requestOptions ).then(response => console.log(response))
         }
 
         navigate('/settings/connectedAccounts')
