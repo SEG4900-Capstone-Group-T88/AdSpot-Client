@@ -35,8 +35,8 @@ function ConnectInstagram() {
     const authCode = searchParams.get('code')
 
     // Reconstruct userContext from local storage
-    var userId = localStorage.getItem('userId')
-    var userEmail = localStorage.getItem('userEmail')
+    const userId = localStorage.getItem('userId')
+    const userEmail = localStorage.getItem('userEmail')
     const userFName = localStorage.getItem('userFName')
     const userLName = localStorage.getItem('userLName')
 
@@ -56,7 +56,7 @@ function ConnectInstagram() {
                 platformId: 3, // Hardcoded to Instagram platform ID from our backend
                 authCode,
             },
-        }).then((result: any) => console.log(result))
+        }).then((result) => console.log(result))
     }
 
     navigate('/settings/connectedAccounts')

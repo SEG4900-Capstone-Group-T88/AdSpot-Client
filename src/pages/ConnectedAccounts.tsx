@@ -23,21 +23,19 @@ function ConnectedAccounts() {
         variables: {input: user?.userId ?? -1},
     })
 
-    var facebookHandle, twitterHandle, instagramHandle, youtubeHandle
-
     useEffect(() => {})
     const connectedAccounts: Map<number, string> = new Map()
 
-    result.data?.userById?.connections.forEach((element: any) => {
+    result.data?.userById?.connections.forEach((element) => {
         connectedAccounts.set(element.platformId, element.handle)
     })
 
     console.log(connectedAccounts)
 
-    facebookHandle = connectedAccounts.get(1)
-    twitterHandle = connectedAccounts.get(2)
-    instagramHandle = connectedAccounts.get(3)
-    youtubeHandle = connectedAccounts.get(4)
+    const facebookHandle = connectedAccounts.get(1)
+    const twitterHandle = connectedAccounts.get(2)
+    const instagramHandle = connectedAccounts.get(3)
+    const youtubeHandle = connectedAccounts.get(4)
 
     return (
         <>
