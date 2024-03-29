@@ -1,7 +1,34 @@
 import Navbar from '../components/Navbar'
 import {SocialIcon} from 'react-social-icons'
+import {graphql} from '../gql'
+import {useQuery} from 'urql'
+import {useContext, useEffect} from 'react'
+import {UserContext} from '../components/UserContext'
+
+export const GetUserConnections = graphql(`
+    query GetUserConnections($input: Int!) {
+        userById(userId: $input) {
+            connections {
+                platformId
+                handle
+            }
+        }
+    }
+`)
 
 function ConnectedAccounts() {
+    const [result] = useQuery(GetUserConnections)
+    const { data, fetching, error } = result;
+    const {user} = useContext(UserContext)
+
+    useEffect(() => {
+        //const connectedAccounts: Map<number, string> = new Map()
+
+        if (!fetching && !error) {
+            
+        }
+    })
+
     return (
         <>
             <Navbar />
