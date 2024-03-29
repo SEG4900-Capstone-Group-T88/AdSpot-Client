@@ -45,8 +45,10 @@ function Listing(props: {listing: FragmentType<typeof ListingFragmentDocument>})
                     description: description,
                 },
             })
-            setShowPopup(false)
+        } else {
+            alert('You must be logged in to buy a listing.')
         }
+        setShowPopup(false)
     }
 
     return (
@@ -75,12 +77,15 @@ function Listing(props: {listing: FragmentType<typeof ListingFragmentDocument>})
                             onSubmit={buyListing}
                         >
                             <div className="flex flex-col">
-                                <label htmlFor="description">Description</label>
+                                <label htmlFor="description" className="text-black mb-2">Description</label>
                                 <textarea
                                     id="description"
                                     name="description"
-                                    className="border"
+                                    className="border rounded text-black p-4"
+                                    autoFocus={true}
+                                    placeholder='Enter a description of your order here.'
                                     rows={8}
+                                    maxLength={500}
                                 ></textarea>
                             </div>
                             <button
