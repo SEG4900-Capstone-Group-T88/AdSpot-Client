@@ -4,6 +4,7 @@ import Profile from '../images/profile.png'
 import {useParams} from 'react-router-dom'
 import Listing from '../components/Listing'
 import Navbar from '../components/Navbar'
+import {ListingFragment} from '../gql/graphql'
 
 export const UserProfileFragmentDocument = graphql(`
     fragment UserProfile on User {
@@ -53,13 +54,21 @@ function UserProfile() {
                     </p>
                     <h3 className="mt-4 mb-2">Select a promotion type</h3>
                     <div className="flex flex-wrap gap-4">
-                        {user.listings.map((listing) => (
-                            <Listing listing={listing} />
-                        ))}
+                        {user.listings.map((listing) => {
+                            return (
+                                <Listing
+                                    key={(listing as ListingFragment).listingId}
+                                    listing={listing}
+                                />
+                            )
+                        })}
                     </div>
                     <div className="grid grid-cols-4 mt-8 gap-4">
-                        {videoLinks.map((link) => (
-                            <video controls>
+                        {videoLinks.map((link, idx) => (
+                            <video
+                                controls
+                                key={idx}
+                            >
                                 <source src={link} />
                             </video>
                         ))}
