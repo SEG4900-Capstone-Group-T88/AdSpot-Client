@@ -1933,7 +1933,7 @@ export const GetUsersDocument = {
                                             fields: [
                                                 {
                                                     kind: 'ObjectField',
-                                                    name: {kind: 'Name', value: 'userId'},
+                                                    name: {kind: 'Name', value: 'firstName'},
                                                     value: {kind: 'EnumValue', value: 'ASC'},
                                                 },
                                             ],
