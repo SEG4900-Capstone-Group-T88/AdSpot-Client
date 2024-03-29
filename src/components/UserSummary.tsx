@@ -1,3 +1,4 @@
+import {useNavigate} from 'react-router-dom'
 import {FragmentType, graphql, useFragment} from '../gql'
 import Profile from '../images/profile.png'
 
@@ -24,9 +25,13 @@ function UserSummary(props: {user: FragmentType<typeof UserSummaryFragmentDocume
         .map((listing) => listing.platform.name)
         .filter((val, idx, arr) => arr.indexOf(val) === idx)
     const prices = user.listings.map((listing) => Number(listing.price))
+    const navigate = useNavigate()
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div
+            className="bg-white rounded-lg shadow-md p-6 cursor-pointer"
+            onClick={() => navigate(`/user/${user.userId}`)}
+        >
             <div className="flex items-center py-2">
                 <img
                     src={Profile}
