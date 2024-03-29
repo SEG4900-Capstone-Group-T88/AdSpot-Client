@@ -675,6 +675,17 @@ export type UsersEdge = {
     node: User
 }
 
+export type ListingFragment = {
+    __typename?: 'Listing'
+    listingId: number
+    price: any
+    listingType: {
+        __typename?: 'ListingType'
+        name: string
+        platform: {__typename?: 'Platform'; platformId: number; name: string}
+    }
+} & {' $fragmentName'?: 'ListingFragment'}
+
 export type OrderSummaryFragment = {
     __typename?: 'Order'
     orderId: number
@@ -872,6 +883,27 @@ export type RegisterUserMutation = {
     }
 }
 
+export type UserProfileFragment = {
+    __typename?: 'User'
+    userId: number
+    firstName: string
+    lastName: string
+    listings: Array<
+        {__typename?: 'Listing'} & {' $fragmentRefs'?: {ListingFragment: ListingFragment}}
+    >
+} & {' $fragmentName'?: 'UserProfileFragment'}
+
+export type GetUserByIdQueryVariables = Exact<{
+    userId: Scalars['Int']['input']
+}>
+
+export type GetUserByIdQuery = {
+    __typename?: 'Query'
+    userById?:
+        | ({__typename?: 'User'} & {' $fragmentRefs'?: {UserProfileFragment: UserProfileFragment}})
+        | null
+}
+
 export const OrderSummaryFragmentDoc = {
     kind: 'Document',
     definitions: [
@@ -1032,6 +1064,111 @@ export const UserSummaryFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<UserSummaryFragment, unknown>
+export const ListingFragmentDoc = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'Listing'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Listing'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'listingId'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'listingType'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'platform'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'platformId'},
+                                            },
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                        ],
+                                    },
+                                },
+                                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                            ],
+                        },
+                    },
+                    {kind: 'Field', name: {kind: 'Name', value: 'price'}},
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<ListingFragment, unknown>
+export const UserProfileFragmentDoc = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'UserProfile'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'User'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'listings'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'FragmentSpread', name: {kind: 'Name', value: 'Listing'}},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'Listing'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Listing'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'listingId'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'listingType'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'platform'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'platformId'},
+                                            },
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                        ],
+                                    },
+                                },
+                                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                            ],
+                        },
+                    },
+                    {kind: 'Field', name: {kind: 'Name', value: 'price'}},
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<UserProfileFragment, unknown>
 export const GetOrdersByStatusDocument = {
     kind: 'Document',
     definitions: [
@@ -2031,3 +2168,107 @@ export const RegisterUserDocument = {
         },
     ],
 } as unknown as DocumentNode<RegisterUserMutation, RegisterUserMutationVariables>
+export const GetUserByIdDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetUserById'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'userById'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'FragmentSpread',
+                                    name: {kind: 'Name', value: 'UserProfile'},
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'Listing'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Listing'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'listingId'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'listingType'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'platform'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'platformId'},
+                                            },
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                        ],
+                                    },
+                                },
+                                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                            ],
+                        },
+                    },
+                    {kind: 'Field', name: {kind: 'Name', value: 'price'}},
+                ],
+            },
+        },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'UserProfile'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'User'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'listings'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'FragmentSpread', name: {kind: 'Name', value: 'Listing'}},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetUserByIdQuery, GetUserByIdQueryVariables>

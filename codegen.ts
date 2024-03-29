@@ -11,7 +11,7 @@ const config: CodegenConfig = {
         },
     },
     hooks: {
-        afterAllFileWrite: ['prettier ./src --write'],
+        afterAllFileWrite: ['prettier . --write'],
     },
 }
 

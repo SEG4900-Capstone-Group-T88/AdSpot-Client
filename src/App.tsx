@@ -16,6 +16,7 @@ import SignUp from './pages/SignUp'
 import ConnectedAccounts from './pages/ConnectedAccounts'
 import ConnectInstagram from './components/connectionComponents/ConnectInstagram'
 import Landing from './pages/Landing'
+import UserProfile from './pages/UserProfile'
 
 function App() {
     const [user, setUser] = useState<UserContextInfoFragment | null>(null)
@@ -69,6 +70,10 @@ function App() {
                             <Route
                                 path="/payment"
                                 element={<PaymentInfoPage />}
+                            />
+                            <Route
+                                path="/user/:userId"
+                                element={<UserProfile />}
                             />
                         </Routes>
                     </BrowserRouter>
