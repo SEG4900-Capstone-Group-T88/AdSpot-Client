@@ -13,7 +13,7 @@ import {TypedDocumentNode as DocumentNode} from '@graphql-typed-document-node/co
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    '\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        listing {\n            price\n            user {\n                userId\n                email\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n':
+    '\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        description\n        user {\n            userId\n            firstName\n            lastName\n            email\n        }\n        listing {\n            price\n            user {\n                userId\n                firstName\n                lastName\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n':
         types.OrderSummaryFragmentDoc,
     '\n    query GetOrdersByStatus(\n        $userId: Int!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        ordersByStatus(\n            userId: $userId\n            status: $status\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{orderDate: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n':
         types.GetOrdersByStatusDocument,
@@ -21,10 +21,16 @@ const documents = {
         types.GetRequestsByStatusDocument,
     '\n    fragment UserContextInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n':
         types.UserContextInfoFragmentDoc,
+    '\n    fragment UserSummary on User {\n        userId\n        firstName\n        lastName\n        listings {\n            platform {\n                name\n            }\n            listingType {\n                name\n            }\n            price\n        }\n    }\n':
+        types.UserSummaryFragmentDoc,
     '\n    mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {\n        exchangeInstagramAuthCodeForToken(input: $input) {\n            connection {\n                userId\n                platformId\n                handle\n                # token\n                # tokenExpiration\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.ExchangeInstagramAuthCodeForTokenDocument,
     '\n    mutation Login($input: LoginInput!) {\n        login(input: $input) {\n            user {\n                ...UserContextInfo\n            }\n            token\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.LoginDocument,
+    '\n    query GetUsers(\n        $filter: UserFilterInput\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        users(\n            where: $filter\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{userId: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...UserSummary\n                }\n            }\n        }\n    }\n':
+        types.GetUsersDocument,
+    '\n    query GetPlatforms {\n        platforms {\n            platformId\n            name\n        }\n    }\n':
+        types.GetPlatformsDocument,
     '\n    mutation RegisterUser($input: AddUserInput!) {\n        addUser(input: $input) {\n            user {\n                ...UserContextInfo\n            }\n            token\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.RegisterUserDocument,
 }
@@ -47,8 +53,8 @@ export function graphql(source: string): unknown
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        listing {\n            price\n            user {\n                userId\n                email\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n',
-): (typeof documents)['\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        listing {\n            price\n            user {\n                userId\n                email\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n']
+    source: '\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        description\n        user {\n            userId\n            firstName\n            lastName\n            email\n        }\n        listing {\n            price\n            user {\n                userId\n                firstName\n                lastName\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n',
+): (typeof documents)['\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        description\n        user {\n            userId\n            firstName\n            lastName\n            email\n        }\n        listing {\n            price\n            user {\n                userId\n                firstName\n                lastName\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -71,6 +77,12 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+    source: '\n    fragment UserSummary on User {\n        userId\n        firstName\n        lastName\n        listings {\n            platform {\n                name\n            }\n            listingType {\n                name\n            }\n            price\n        }\n    }\n',
+): (typeof documents)['\n    fragment UserSummary on User {\n        userId\n        firstName\n        lastName\n        listings {\n            platform {\n                name\n            }\n            listingType {\n                name\n            }\n            price\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
     source: '\n    mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {\n        exchangeInstagramAuthCodeForToken(input: $input) {\n            connection {\n                userId\n                platformId\n                handle\n                # token\n                # tokenExpiration\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
 ): (typeof documents)['\n    mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {\n        exchangeInstagramAuthCodeForToken(input: $input) {\n            connection {\n                userId\n                platformId\n                handle\n                # token\n                # tokenExpiration\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
 /**
@@ -79,6 +91,18 @@ export function graphql(
 export function graphql(
     source: '\n    mutation Login($input: LoginInput!) {\n        login(input: $input) {\n            user {\n                ...UserContextInfo\n            }\n            token\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
 ): (typeof documents)['\n    mutation Login($input: LoginInput!) {\n        login(input: $input) {\n            user {\n                ...UserContextInfo\n            }\n            token\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    query GetUsers(\n        $filter: UserFilterInput\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        users(\n            where: $filter\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{userId: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...UserSummary\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    query GetUsers(\n        $filter: UserFilterInput\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        users(\n            where: $filter\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{userId: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...UserSummary\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    query GetPlatforms {\n        platforms {\n            platformId\n            name\n        }\n    }\n',
+): (typeof documents)['\n    query GetPlatforms {\n        platforms {\n            platformId\n            name\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

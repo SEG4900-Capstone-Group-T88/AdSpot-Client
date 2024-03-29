@@ -6,6 +6,7 @@ import {UserContext} from './UserContext'
 import {useContext, useState} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowLeft, faArrowRight} from '@fortawesome/free-solid-svg-icons'
+import {OrderContextEnum} from '../OrderContextEnum'
 
 export const GetOrdersByStatusDocument = graphql(`
     query GetOrdersByStatus(
@@ -45,13 +46,14 @@ export const GetOrdersByStatusDocument = graphql(`
 function RequestsByStatus(props: {status: OrderStatusEnum}) {
     const userContext = useContext(UserContext)
 
+    const pageSize = 5
     const [pagingVariables, setPagingVariables] = useState<{
         first: number | null
         after: string | null
         last: number | null
         before: string | null
     }>({
-        first: 5,
+        first: pageSize,
         after: null,
         last: null,
         before: null,
@@ -68,7 +70,6 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
             before: pagingVariables.before,
         },
     })
-    console.log(data?.ordersByStatus?.pageInfo)
 
     return (
         <div>
@@ -76,41 +77,72 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
                 <OrderSummary
                     key={edge.cursor}
                     order={edge.node}
+                    orderContext={OrderContextEnum.Order}
                 />
             ))}
             <div className="flex justify-between text-center">
-                <button
-                    disabled={!data?.ordersByStatus?.pageInfo.hasPreviousPage}
-                    onClick={() => {
-                        setPagingVariables({
-                            first: null,
-                            after: null,
-                            last: 5,
-                            before: data?.ordersByStatus?.pageInfo.startCursor ?? null,
-                        })
-                    }}
-                >
-                    <FontAwesomeIcon
-                        icon={faArrowLeft}
-                        size="xl"
-                    />
-                </button>
-                <button
-                    disabled={!data?.ordersByStatus?.pageInfo.hasNextPage}
-                    onClick={() => {
-                        setPagingVariables({
-                            first: 5,
-                            after: data?.ordersByStatus?.pageInfo.endCursor ?? null,
-                            last: null,
-                            before: null,
-                        })
-                    }}
-                >
-                    <FontAwesomeIcon
-                        icon={faArrowRight}
-                        size="xl"
-                    />
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        disabled={!data?.ordersByStatus?.pageInfo.hasPreviousPage}
+                        onClick={() => {
+                            setPagingVariables({
+                                first: pageSize,
+                                after: null,
+                                last: null,
+                                before: null,
+                            })
+                        }}
+                    >
+                        <span>First</span>
+                    </button>
+                    <button
+                        disabled={!data?.ordersByStatus?.pageInfo.hasPreviousPage}
+                        onClick={() => {
+                            setPagingVariables({
+                                first: null,
+                                after: null,
+                                last: pageSize,
+                                before: data?.ordersByStatus?.pageInfo.startCursor ?? null,
+                            })
+                        }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faArrowLeft}
+                            size="xl"
+                        />
+                    </button>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        disabled={!data?.ordersByStatus?.pageInfo.hasNextPage}
+                        onClick={() => {
+                            setPagingVariables({
+                                first: pageSize,
+                                after: data?.ordersByStatus?.pageInfo.endCursor ?? null,
+                                last: null,
+                                before: null,
+                            })
+                        }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faArrowRight}
+                            size="xl"
+                        />
+                    </button>
+                    <button
+                        disabled={!data?.ordersByStatus?.pageInfo.hasNextPage}
+                        onClick={() => {
+                            setPagingVariables({
+                                first: null,
+                                after: null,
+                                last: pageSize,
+                                before: null,
+                            })
+                        }}
+                    >
+                        <span>Last</span>
+                    </button>
+                </div>
             </div>
         </div>
     )
