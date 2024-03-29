@@ -1,5 +1,4 @@
-import {graphql} from '../gql'
-import {UserSummaryFragment} from '../gql/graphql'
+import {FragmentType, graphql, useFragment} from '../gql'
 import Profile from '../images/profile.png'
 
 export const UserSummaryFragmentDocument = graphql(`
@@ -19,8 +18,8 @@ export const UserSummaryFragmentDocument = graphql(`
     }
 `)
 
-function UserSummary(props: {user: UserSummaryFragment}) {
-    const user = props.user
+function UserSummary(props: {user: FragmentType<typeof UserSummaryFragmentDocument>}) {
+    const user = useFragment(UserSummaryFragmentDocument, props.user)
     const platformNames = user.listings
         .map((listing) => listing.platform.name)
         .filter((val, idx, arr) => arr.indexOf(val) === idx)

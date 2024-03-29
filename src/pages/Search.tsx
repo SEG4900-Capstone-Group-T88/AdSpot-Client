@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import {graphql, useFragment} from '../gql'
+import {FragmentType, graphql, useFragment} from '../gql'
 import {useQuery} from 'urql'
 import UserSummary, {UserSummaryFragmentDocument} from '../components/UserSummary'
 import {UserFilterInput} from '../gql/graphql'
@@ -257,7 +257,7 @@ function Search() {
                             users.map((user) => (
                                 <UserSummary
                                     key={user.userId}
-                                    user={user}
+                                    user={user as FragmentType<typeof UserSummaryFragmentDocument>}
                                 />
                             ))}
                     </div>
