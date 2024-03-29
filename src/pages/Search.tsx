@@ -22,7 +22,7 @@ export const GetUsersQuery = graphql(`
             after: $after
             last: $last
             before: $before
-            order: [{userId: ASC}]
+            order: [{firstName: ASC}]
         ) {
             totalCount
             pageInfo {
