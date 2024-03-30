@@ -686,6 +686,23 @@ export type ListingFragment = {
     }
 } & {' $fragmentName'?: 'ListingFragment'}
 
+export type OrderListingMutationVariables = Exact<{
+    input: OrderListingInput
+}>
+
+export type OrderListingMutation = {
+    __typename?: 'Mutation'
+    orderListing: {
+        __typename?: 'OrderListingPayload'
+        order?: {__typename?: 'Order'; orderId: number} | null
+        errors?: Array<
+            | {__typename?: 'CannotOrderOwnListingError'; message: string}
+            | {__typename?: 'InvalidListingIdError'; message: string}
+            | {__typename?: 'ListingPriceHasChangedError'; message: string}
+        > | null
+    }
+}
+
 export type GetUserConnectionsQueryVariables = Exact<{
     input: Scalars['Int']['input']
 }>
@@ -1193,6 +1210,82 @@ export const UserProfileFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<UserProfileFragment, unknown>
+export const OrderListingDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'OrderListing'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'OrderListingInput'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'orderListing'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'order'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'message'},
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<OrderListingMutation, OrderListingMutationVariables>
 export const GetUserConnectionsDocument = {
     kind: 'Document',
     definitions: [

@@ -42,8 +42,13 @@ function UserSummary(props: {user: FragmentType<typeof UserSummaryFragmentDocume
                 </h4>
             </div>
             <div className="flex flex-wrap gap-2 py-2">
-                {platformNames.map((platform) => (
-                    <span className="bg-purple text-white rounded px-2">{platform}</span>
+                {platformNames.map((platform, idx) => (
+                    <span
+                        key={idx}
+                        className="bg-purple text-white rounded px-2"
+                    >
+                        {platform}
+                    </span>
                 ))}
             </div>
             <span className="py-2">
