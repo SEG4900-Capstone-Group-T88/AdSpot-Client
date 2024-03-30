@@ -686,6 +686,30 @@ export type ListingFragment = {
     }
 } & {' $fragmentName'?: 'ListingFragment'}
 
+export type GetUserConnectionsQueryVariables = Exact<{
+    input: Scalars['Int']['input']
+}>
+
+export type GetUserConnectionsQuery = {
+    __typename?: 'Query'
+    userById?: {
+        __typename?: 'User'
+        connections: Array<{__typename?: 'Connection'; platformId: number; handle: string}>
+    } | null
+}
+
+export type GetListingTypesQueryVariables = Exact<{[key: string]: never}>
+
+export type GetListingTypesQuery = {
+    __typename?: 'Query'
+    platforms: Array<{
+        __typename?: 'Platform'
+        platformId: number
+        name: string
+        listingTypes: Array<{__typename?: 'ListingType'; name: string; listingTypeId: number}>
+    }>
+}
+
 export type OrderSummaryFragment = {
     __typename?: 'Order'
     orderId: number
@@ -805,18 +829,6 @@ export type ExchangeInstagramAuthCodeForTokenMutation = {
         } | null
         errors?: Array<{__typename?: 'InstagramOauthError'; message: string}> | null
     }
-}
-
-export type GetUserConnectionsQueryVariables = Exact<{
-    input: Scalars['Int']['input']
-}>
-
-export type GetUserConnectionsQuery = {
-    __typename?: 'Query'
-    userById?: {
-        __typename?: 'User'
-        connections: Array<{__typename?: 'Connection'; platformId: number; handle: string}>
-    } | null
 }
 
 export type LoginMutationVariables = Exact<{
@@ -1181,6 +1193,101 @@ export const UserProfileFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<UserProfileFragment, unknown>
+export const GetUserConnectionsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetUserConnections'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'userById'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'connections'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'platformId'},
+                                            },
+                                            {kind: 'Field', name: {kind: 'Name', value: 'handle'}},
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetUserConnectionsQuery, GetUserConnectionsQueryVariables>
+export const GetListingTypesDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetListingTypes'},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'platforms'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'platformId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'listingTypes'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'listingTypeId'},
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetListingTypesQuery, GetListingTypesQueryVariables>
 export const GetOrdersByStatusDocument = {
     kind: 'Document',
     definitions: [
@@ -1774,61 +1881,6 @@ export const ExchangeInstagramAuthCodeForTokenDocument = {
     ExchangeInstagramAuthCodeForTokenMutation,
     ExchangeInstagramAuthCodeForTokenMutationVariables
 >
-export const GetUserConnectionsDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'query',
-            name: {kind: 'Name', value: 'GetUserConnections'},
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
-                    type: {
-                        kind: 'NonNullType',
-                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
-                    },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'userById'},
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'userId'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
-                            },
-                        ],
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'connections'},
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'platformId'},
-                                            },
-                                            {kind: 'Field', name: {kind: 'Name', value: 'handle'}},
-                                        ],
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<GetUserConnectionsQuery, GetUserConnectionsQueryVariables>
 export const LoginDocument = {
     kind: 'Document',
     definitions: [
