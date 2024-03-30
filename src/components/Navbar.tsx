@@ -131,7 +131,7 @@ function Navbar() {
         const platformId = Number(listingArray[1])
 
         const data = new FormData(event.target as HTMLFormElement)
-        const price = data.get('price')
+        const price = Number(data.get('price'))
 
         const userId = user?.userId ?? -1
 
