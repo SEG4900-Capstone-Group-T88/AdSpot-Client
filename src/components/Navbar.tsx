@@ -5,6 +5,38 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGear} from '@fortawesome/free-solid-svg-icons'
 import {Card, Input, Checkbox, Typography, Select, Option} from '@material-tailwind/react'
 import {UserContext} from './UserContext'
+import {graphql} from '../gql'
+import {useQuery} from 'urql'
+
+export const GetUserConnections = graphql(`
+    query GetUserConnections($input: Int!) {
+        userById(userId: $input) {
+            connections {
+                platformId
+                handle
+            }
+        }
+    }
+`)
+
+export const GetListingTypes = graphql(`
+    query GetListingTypes {
+        platforms {
+            platformId
+            name
+            listingTypes {
+                name
+                listingTypeId
+            }
+        }
+    }
+`)
+
+interface Listing {
+    platformId: number
+    listingTypeId: number
+    name: string
+}
 
 function Navbar() {
     const navigate = useNavigate()
@@ -37,6 +69,38 @@ function Navbar() {
     const closeModal = () => {
         setIsModalOpen(false)
     }
+
+    const [userConnections] = useQuery({
+        query: GetUserConnections,
+        variables: {input: user?.userId ?? -1},
+    })
+
+    const connectedAccountsPlatformId = new Array()
+    userConnections.data?.userById?.connections.forEach((element) => {
+        connectedAccountsPlatformId.push(element.platformId)
+    })
+
+    const [listingTypes] = useQuery({
+        query: GetListingTypes,
+    })
+
+    const listings = new Array()
+
+    listingTypes.data?.platforms.forEach((element) => {
+        var platfromName = element.name
+        var platformId = element.platformId
+        element.listingTypes.forEach((element) => {
+            var listingTypeId = element.listingTypeId
+            var listingName = platfromName + ' ' + element.name
+            if (connectedAccountsPlatformId.includes(platformId)) {
+                listings.push({
+                    platformId: platformId,
+                    listingTypeId: listingTypeId,
+                    name: listingName,
+                } as Listing)
+            }
+        })
+    })
 
     return (
         <div className="flex justify-between text-[25px] mx-[-80px]">
@@ -152,48 +216,14 @@ function Navbar() {
                                             className: 'before:content-none after:content-none',
                                         }}
                                     >
-                                        <Option
-                                            key="test1"
-                                            value="test1"
-                                        >
-                                            Facebook Post
-                                        </Option>
-                                        <Option
-                                            key="test2"
-                                            value="test2"
-                                        >
-                                            Facebook Share to Feed
-                                        </Option>
-                                        <Option
-                                            key="test3"
-                                            value="test3"
-                                        >
-                                            Facebook Live Promotion
-                                        </Option>
-                                        <Option
-                                            key="test4"
-                                            value="test4"
-                                        >
-                                            Instagram Post
-                                        </Option>
-                                        <Option
-                                            key="test5"
-                                            value="test5"
-                                        >
-                                            Instagram Live Promotion
-                                        </Option>
-                                        <Option
-                                            key="test4"
-                                            value="test4"
-                                        >
-                                            Twitter Tweet
-                                        </Option>
-                                        <Option
-                                            key="test5"
-                                            value="test5"
-                                        >
-                                            Twitter Re-Tweet
-                                        </Option>
+                                        {listings.map((listing) => (
+                                            <Option
+                                                key={listing.name}
+                                                value={listing.listingTypeId}
+                                            >
+                                                {listing.name}
+                                            </Option>
+                                        ))}
                                     </Select>
                                     <Typography
                                         variant="h6"
