@@ -727,6 +727,27 @@ export type GetListingTypesQuery = {
     }>
 }
 
+export type AddListingMutationVariables = Exact<{
+    input: AddListingInput
+}>
+
+export type AddListingMutation = {
+    __typename?: 'Mutation'
+    addListing: {
+        __typename?: 'AddListingPayload'
+        listing?: Array<{
+            __typename?: 'Listing'
+            listingId: number
+            listingType: {
+                __typename?: 'ListingType'
+                listingTypeId: number
+                name: string
+                platform: {__typename?: 'Platform'; platformId: number; name: string}
+            }
+        }> | null
+    }
+}
+
 export type OrderSummaryFragment = {
     __typename?: 'Order'
     orderId: number
@@ -1381,6 +1402,103 @@ export const GetListingTypesDocument = {
         },
     ],
 } as unknown as DocumentNode<GetListingTypesQuery, GetListingTypesQueryVariables>
+export const AddListingDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'AddListing'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'AddListingInput'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'addListing'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'listing'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'listingId'},
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'listingType'},
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'listingTypeId',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'name'},
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'platform'},
+                                                            selectionSet: {
+                                                                kind: 'SelectionSet',
+                                                                selections: [
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: {
+                                                                            kind: 'Name',
+                                                                            value: 'platformId',
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: {
+                                                                            kind: 'Name',
+                                                                            value: 'name',
+                                                                        },
+                                                                    },
+                                                                ],
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AddListingMutation, AddListingMutationVariables>
 export const GetOrdersByStatusDocument = {
     kind: 'Document',
     definitions: [

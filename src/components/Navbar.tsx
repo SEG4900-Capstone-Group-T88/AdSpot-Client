@@ -1,4 +1,4 @@
-import {useContext, useState} from 'react'
+import React, {useContext, useState} from 'react'
 import {useNavigate, NavLink, Link} from 'react-router-dom'
 import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
@@ -6,7 +6,7 @@ import {faGear} from '@fortawesome/free-solid-svg-icons'
 import {Card, Input, Checkbox, Typography, Select, Option} from '@material-tailwind/react'
 import {UserContext} from './UserContext'
 import {graphql} from '../gql'
-import {useQuery} from 'urql'
+import {useMutation, useQuery} from 'urql'
 
 export const GetUserConnections = graphql(`
     query GetUserConnections($input: Int!) {
@@ -32,6 +32,24 @@ export const GetListingTypes = graphql(`
     }
 `)
 
+export const CreateListingMutation = graphql(`
+    mutation AddListing($input: AddListingInput!) {
+        addListing(input: $input) {
+            listing {
+                listingId
+                listingType {
+                    listingTypeId
+                    name
+                    platform {
+                        platformId
+                        name
+                    }
+                }
+            }
+        }
+    }
+`)
+
 interface Listing {
     platformId: number
     listingTypeId: number
@@ -43,6 +61,7 @@ function Navbar() {
     const [showPopup, setShowPopup] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const {user, setUser} = useContext(UserContext)
+    const [, addListing] = useMutation(CreateListingMutation)
 
     const togglePopup = () => {
         setShowPopup(!showPopup)
@@ -101,6 +120,36 @@ function Navbar() {
             }
         })
     })
+
+    const createListing = (event: React.FormEvent) => {
+        event.preventDefault()
+        const listingElement = document.getElementById('listingSelection') as HTMLSelectElement
+        const listingSelection = listingElement.firstElementChild?.getAttribute('value')
+        const listingArray = listingSelection?.split(',') ?? ['0', '0']
+
+        const listingTypeId = Number(listingArray[0])
+        const platformId = Number(listingArray[1])
+
+        const data = new FormData(event.target as HTMLFormElement)
+        const price = Number(data.get('price'))
+
+        const userId = user?.userId ?? -1
+
+        addListing({
+            input: {
+                userId,
+                platformId,
+                listingTypeId,
+                price,
+            },
+        }).then((result) => {
+            if (result.error) {
+                console.log('ERROR WITH LISTING CREATION!')
+            } else {
+                closeModal()
+            }
+        })
+    }
 
     return (
         <div className="flex justify-between text-[25px] mx-[-80px]">
@@ -199,50 +248,58 @@ function Navbar() {
                             color="transparent"
                             placeholder=""
                         >
-                            <form className="mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-4">
-                                <div className="mb-1 my-6 flex flex-col gap-6">
-                                    <Typography
-                                        variant="h6"
-                                        color="blue-gray"
-                                        className="-mb-3"
-                                        placeholder=""
-                                    >
-                                        Listing Type
-                                    </Typography>
-                                    <Select
-                                        placeholder="@handle"
-                                        className="!border-t-blue-gray-200 focus:!border-t-gray-900 flex items-center"
-                                        labelProps={{
-                                            className: 'before:content-none after:content-none',
-                                        }}
-                                    >
-                                        {listings.map((listing) => (
-                                            <Option
-                                                key={listing.name}
-                                                value={listing.listingTypeId.toString()}
-                                            >
-                                                {listing.name}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                    <Typography
-                                        variant="h6"
-                                        color="blue-gray"
-                                        className="-mb-3"
-                                        placeholder=""
-                                    >
-                                        Price
-                                    </Typography>
-                                    <Input
-                                        size="lg"
-                                        placeholder="$"
-                                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-                                        labelProps={{
-                                            className: 'before:content-none after:content-none',
-                                        }}
-                                        crossOrigin={undefined}
-                                    />
-                                </div>
+                            <form
+                                className="mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-4"
+                                onSubmit={createListing}
+                            >
+                                <Typography
+                                    variant="h6"
+                                    color="blue-gray"
+                                    className="-mb-3"
+                                    placeholder=""
+                                >
+                                    Listing Type
+                                </Typography>
+                                <Select
+                                    placeholder=""
+                                    className="!border-t-blue-gray-200 focus:!border-t-gray-900 flex items-center"
+                                    labelProps={{
+                                        className: 'before:content-none after:content-none',
+                                    }}
+                                    name="listingSelection"
+                                    id="listingSelection"
+                                >
+                                    {listings.map((listing) => (
+                                        <Option
+                                            key={listing.name}
+                                            value={
+                                                listing.listingTypeId.toString() +
+                                                ',' +
+                                                listing.platformId.toString()
+                                            }
+                                        >
+                                            {listing.name}
+                                        </Option>
+                                    ))}
+                                </Select>
+                                <Typography
+                                    variant="h6"
+                                    color="blue-gray"
+                                    className="-mb-3"
+                                    placeholder=""
+                                >
+                                    Price
+                                </Typography>
+                                <Input
+                                    size="lg"
+                                    placeholder="$"
+                                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                                    labelProps={{
+                                        className: 'before:content-none after:content-none',
+                                    }}
+                                    crossOrigin={undefined}
+                                    name="price"
+                                />
                                 <Checkbox
                                     label={
                                         <Typography
@@ -266,7 +323,7 @@ function Navbar() {
                                 />
                                 <button
                                     className="bg-purple text-white rounded-lg px-4 py-2 mt-2 shadow-lg"
-                                    onClick={closeModal}
+                                    type="submit"
                                 >
                                     Post
                                 </button>
