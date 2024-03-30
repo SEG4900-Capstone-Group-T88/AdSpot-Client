@@ -75,7 +75,7 @@ function Navbar() {
         variables: {input: user?.userId ?? -1},
     })
 
-    const connectedAccountsPlatformId = new Array()
+    const connectedAccountsPlatformId: number[] = []
     userConnections.data?.userById?.connections.forEach((element) => {
         connectedAccountsPlatformId.push(element.platformId)
     })
@@ -84,14 +84,14 @@ function Navbar() {
         query: GetListingTypes,
     })
 
-    const listings = new Array()
+    const listings: Listing[] = []
 
     listingTypes.data?.platforms.forEach((element) => {
-        var platfromName = element.name
-        var platformId = element.platformId
+        const platformName = element.name
+        const platformId = element.platformId
         element.listingTypes.forEach((element) => {
-            var listingTypeId = element.listingTypeId
-            var listingName = platfromName + ' ' + element.name
+            const listingTypeId = element.listingTypeId
+            const listingName = platformName + ' ' + element.name
             if (connectedAccountsPlatformId.includes(platformId)) {
                 listings.push({
                     platformId: platformId,
@@ -219,7 +219,7 @@ function Navbar() {
                                         {listings.map((listing) => (
                                             <Option
                                                 key={listing.name}
-                                                value={listing.listingTypeId}
+                                                value={listing.listingTypeId.toString()}
                                             >
                                                 {listing.name}
                                             </Option>
