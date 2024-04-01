@@ -21,6 +21,7 @@ function ConnectedAccounts() {
     const [result] = useQuery({
         query: GetUserConnections,
         variables: {input: user?.userId ?? -1},
+        requestPolicy: 'network-only',
     })
 
     const connectedAccounts: Map<number, string> = new Map()
