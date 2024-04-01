@@ -43,18 +43,24 @@ function ConnectedAccounts() {
             <div className="flex items-center my-16">
                 <div>
                     <h2>Your Connected Accounts</h2>
-                    <div className="flex items-center my-3">
+                    <div className="flex items-center my-3 gap-4">
                         {facebookHandle && (
-                            <SocialIcon
-                                className="mx-5"
-                                network="facebook"
-                            />
+                            <div>
+                                <SocialIcon
+                                    className="mx-5"
+                                    network="facebook"
+                                />
+                                <p className="mt-4 truncate">{facebookHandle}</p>
+                            </div>
                         )}
                         {twitterHandle && (
-                            <SocialIcon
-                                className="mx-5"
-                                network="twitter"
-                            />
+                            <div>
+                                <SocialIcon
+                                    className="mx-5"
+                                    network="twitter"
+                                />
+                                <p className="mt-4">{twitterHandle}</p>
+                            </div>
                         )}
                         {instagramHandle && (
                             <div className="flex flex-col">
@@ -66,10 +72,13 @@ function ConnectedAccounts() {
                             </div>
                         )}
                         {youtubeHandle && (
-                            <SocialIcon
-                                className="mx-5"
-                                network="youtube"
-                            />
+                            <div>
+                                <SocialIcon
+                                    className="mx-5"
+                                    network="youtube"
+                                />
+                                <p className="mt-4">{youtubeHandle}</p>
+                            </div>
                         )}
                     </div>
                 </div>
