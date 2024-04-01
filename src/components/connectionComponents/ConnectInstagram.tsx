@@ -50,6 +50,7 @@ function ConnectInstagram() {
     setUser(user)
 
     if (authCode) {
+        console.log(authCode)
         executeMutation({
             input: {
                 userId: parseInt(userId ?? ''),
@@ -58,9 +59,10 @@ function ConnectInstagram() {
             },
         }).then((result) => {
             console.log(result)
-            navigate('/settings/connectedAccounts')
         })
     }
+
+    navigate('/settings/connectedAccounts')
 
     return (
         <>
