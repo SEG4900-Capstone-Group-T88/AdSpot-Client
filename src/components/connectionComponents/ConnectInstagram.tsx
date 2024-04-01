@@ -56,10 +56,11 @@ function ConnectInstagram() {
                 platformId: 3, // Hardcoded to Instagram platform ID from our backend
                 authCode,
             },
-        }).then((result) => console.log(result))
+        }).then((result) => {
+            console.log(result)
+            navigate('/settings/connectedAccounts')
+        })
     }
-
-    navigate('/settings/connectedAccounts')
 
     return (
         <>

@@ -41,7 +41,6 @@ export type AddConnectionPayload = {
 
 export type AddListingInput = {
     listingTypeId: Scalars['Int']['input']
-    platformId: Scalars['Int']['input']
     price: Scalars['Decimal']['input']
     userId: Scalars['Int']['input']
 }
@@ -675,7 +674,7 @@ export type UsersEdge = {
     node: User
 }
 
-export type ListingFragment = {
+export type ListingSummaryFragment = {
     __typename?: 'Listing'
     listingId: number
     price: any
@@ -684,7 +683,7 @@ export type ListingFragment = {
         name: string
         platform: {__typename?: 'Platform'; platformId: number; name: string}
     }
-} & {' $fragmentName'?: 'ListingFragment'}
+} & {' $fragmentName'?: 'ListingSummaryFragment'}
 
 export type OrderListingMutationVariables = Exact<{
     input: OrderListingInput
@@ -838,6 +837,22 @@ export type UserContextInfoFragment = {
     lastName: string
 } & {' $fragmentName'?: 'UserContextInfoFragment'}
 
+export type GetUserListingsQueryVariables = Exact<{
+    userId: Scalars['Int']['input']
+}>
+
+export type GetUserListingsQuery = {
+    __typename?: 'Query'
+    userById?: {
+        __typename?: 'User'
+        listings: Array<
+            {__typename?: 'Listing'} & {
+                ' $fragmentRefs'?: {ListingSummaryFragment: ListingSummaryFragment}
+            }
+        >
+    } | null
+}
+
 export type UserSummaryFragment = {
     __typename?: 'User'
     userId: number
@@ -951,7 +966,9 @@ export type UserProfileFragment = {
     firstName: string
     lastName: string
     listings: Array<
-        {__typename?: 'Listing'} & {' $fragmentRefs'?: {ListingFragment: ListingFragment}}
+        {__typename?: 'Listing'} & {
+            ' $fragmentRefs'?: {ListingSummaryFragment: ListingSummaryFragment}
+        }
     >
 } & {' $fragmentName'?: 'UserProfileFragment'}
 
@@ -1126,12 +1143,12 @@ export const UserSummaryFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<UserSummaryFragment, unknown>
-export const ListingFragmentDoc = {
+export const ListingSummaryFragmentDoc = {
     kind: 'Document',
     definitions: [
         {
             kind: 'FragmentDefinition',
-            name: {kind: 'Name', value: 'Listing'},
+            name: {kind: 'Name', value: 'ListingSummary'},
             typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Listing'}},
             selectionSet: {
                 kind: 'SelectionSet',
@@ -1166,7 +1183,7 @@ export const ListingFragmentDoc = {
             },
         },
     ],
-} as unknown as DocumentNode<ListingFragment, unknown>
+} as unknown as DocumentNode<ListingSummaryFragment, unknown>
 export const UserProfileFragmentDoc = {
     kind: 'Document',
     definitions: [
@@ -1186,7 +1203,10 @@ export const UserProfileFragmentDoc = {
                         selectionSet: {
                             kind: 'SelectionSet',
                             selections: [
-                                {kind: 'FragmentSpread', name: {kind: 'Name', value: 'Listing'}},
+                                {
+                                    kind: 'FragmentSpread',
+                                    name: {kind: 'Name', value: 'ListingSummary'},
+                                },
                             ],
                         },
                     },
@@ -1195,7 +1215,7 @@ export const UserProfileFragmentDoc = {
         },
         {
             kind: 'FragmentDefinition',
-            name: {kind: 'Name', value: 'Listing'},
+            name: {kind: 'Name', value: 'ListingSummary'},
             typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Listing'}},
             selectionSet: {
                 kind: 'SelectionSet',
@@ -2005,6 +2025,96 @@ export const GetRequestsByStatusDocument = {
         },
     ],
 } as unknown as DocumentNode<GetRequestsByStatusQuery, GetRequestsByStatusQueryVariables>
+export const GetUserListingsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetUserListings'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'userById'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'listings'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'FragmentSpread',
+                                                name: {kind: 'Name', value: 'ListingSummary'},
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'ListingSummary'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Listing'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'listingId'}},
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'listingType'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'platform'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'platformId'},
+                                            },
+                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                                        ],
+                                    },
+                                },
+                                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                            ],
+                        },
+                    },
+                    {kind: 'Field', name: {kind: 'Name', value: 'price'}},
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetUserListingsQuery, GetUserListingsQueryVariables>
 export const ExchangeInstagramAuthCodeForTokenDocument = {
     kind: 'Document',
     definitions: [
@@ -2543,7 +2653,7 @@ export const GetUserByIdDocument = {
         },
         {
             kind: 'FragmentDefinition',
-            name: {kind: 'Name', value: 'Listing'},
+            name: {kind: 'Name', value: 'ListingSummary'},
             typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Listing'}},
             selectionSet: {
                 kind: 'SelectionSet',
@@ -2593,7 +2703,10 @@ export const GetUserByIdDocument = {
                         selectionSet: {
                             kind: 'SelectionSet',
                             selections: [
-                                {kind: 'FragmentSpread', name: {kind: 'Name', value: 'Listing'}},
+                                {
+                                    kind: 'FragmentSpread',
+                                    name: {kind: 'Name', value: 'ListingSummary'},
+                                },
                             ],
                         },
                     },

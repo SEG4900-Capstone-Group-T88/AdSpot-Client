@@ -75,8 +75,8 @@ function OrderSummary(props: {
                         {orderDate.toLocaleString()}
                     </span>
                 </div>
-                <div className="grid grid-cols-3">
-                    <div className="flex gap-4 items-center">
+                <div className="grid grid-cols-5 gap-4">
+                    <div className="flex gap-4 items-center col-span-2">
                         <img
                             src={Profile}
                             className="h-12 w-12"
@@ -98,9 +98,7 @@ function OrderSummary(props: {
                             </p>
                         </div>
                     </div>
-                    <div>
-                        <p>{order.description.split(' ').slice(0, 30).join(' ')} ...</p>
-                    </div>
+                    <p className="col-span-2 truncate">{order.description}</p>
                     <div className="flex gap-4 justify-self-end h-fit">
                         <span className={`rounded p-4 ${getOrderStatusBgColor(order)}`}>
                             {order.orderStatusId}

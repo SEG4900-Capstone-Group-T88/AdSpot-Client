@@ -2,9 +2,10 @@ import {useContext, useState} from 'react'
 import {FragmentType, graphql, useFragment} from '../gql'
 import {UserContext} from './UserContext'
 import {useMutation} from 'urql'
+import {Input, Typography} from '@material-tailwind/react'
 
-export const ListingFragmentDocument = graphql(`
-    fragment Listing on Listing {
+export const ListingSummaryFragmentDocument = graphql(`
+    fragment ListingSummary on Listing {
         listingId
         listingType {
             platform {
@@ -32,8 +33,11 @@ export const OrderListingDocument = graphql(`
     }
 `)
 
-function Listing(props: {listing: FragmentType<typeof ListingFragmentDocument>}) {
-    const listing = useFragment(ListingFragmentDocument, props.listing)
+function Listing(props: {
+    listing: FragmentType<typeof ListingSummaryFragmentDocument>
+    buyable: boolean
+}) {
+    const listing = useFragment(ListingSummaryFragmentDocument, props.listing)
     const {user} = useContext(UserContext)
     const [, orderListing] = useMutation(OrderListingDocument)
     const [showPopup, setShowPopup] = useState(false)
@@ -59,6 +63,16 @@ function Listing(props: {listing: FragmentType<typeof ListingFragmentDocument>})
         setShowPopup(false)
     }
 
+    function updatePrice(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+
+        const newPrice = Number(event.currentTarget.price.value)
+        console.log(
+            `Changing price of listing ${listing.listingId} from $${listing.price} to $${newPrice}`,
+        )
+        alert('Not implemented yet.')
+    }
+
     return (
         <>
             <div
@@ -71,7 +85,7 @@ function Listing(props: {listing: FragmentType<typeof ListingFragmentDocument>})
                 </span>
                 <span>${listing.price}</span>
             </div>
-            {showPopup && (
+            {showPopup && props.buyable && (
                 <div className="modal-bg">
                     <div className="modal-content relative w-1/2">
                         <button
@@ -106,6 +120,49 @@ function Listing(props: {listing: FragmentType<typeof ListingFragmentDocument>})
                                 type="submit"
                             >
                                 Buy
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+            {showPopup && !props.buyable && (
+                <div className="modal-bg">
+                    <div className="modal-content relative w-1/5">
+                        <button
+                            className="absolute top-0 right-0 mt-4 mr-4 text-[red] text-3xl font-semibold hover:text-red-700"
+                            onClick={() => setShowPopup(false)}
+                        >
+                            &times;
+                        </button>
+                        <form
+                            className="mt-8"
+                            onSubmit={updatePrice}
+                        >
+                            <div className="flex flex-col gap-4">
+                                <Typography
+                                    variant="h6"
+                                    color="blue-gray"
+                                    className="-mb-3"
+                                    placeholder=""
+                                >
+                                    Price
+                                </Typography>
+                                <Input
+                                    size="lg"
+                                    placeholder="$"
+                                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                                    labelProps={{
+                                        className: 'before:content-none after:content-none',
+                                    }}
+                                    crossOrigin={undefined}
+                                    name="price"
+                                />
+                            </div>
+                            <button
+                                className="bg-purple text-white rounded-lg px-4 py-2 mt-4 shadow-lg"
+                                type="submit"
+                            >
+                                Update
                             </button>
                         </form>
                     </div>

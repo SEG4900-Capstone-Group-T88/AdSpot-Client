@@ -13,8 +13,8 @@ import {TypedDocumentNode as DocumentNode} from '@graphql-typed-document-node/co
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    '\n    fragment Listing on Listing {\n        listingId\n        listingType {\n            platform {\n                platformId\n                name\n            }\n            name\n        }\n        price\n    }\n':
-        types.ListingFragmentDoc,
+    '\n    fragment ListingSummary on Listing {\n        listingId\n        listingType {\n            platform {\n                platformId\n                name\n            }\n            name\n        }\n        price\n    }\n':
+        types.ListingSummaryFragmentDoc,
     '\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.OrderListingDocument,
     '\n    query GetUserConnections($input: Int!) {\n        userById(userId: $input) {\n            connections {\n                platformId\n                handle\n            }\n        }\n    }\n':
@@ -31,6 +31,8 @@ const documents = {
         types.GetRequestsByStatusDocument,
     '\n    fragment UserContextInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n':
         types.UserContextInfoFragmentDoc,
+    '\n    query GetUserListings($userId: Int!) {\n        userById(userId: $userId) {\n            listings {\n                ...ListingSummary\n            }\n        }\n    }\n':
+        types.GetUserListingsDocument,
     '\n    fragment UserSummary on User {\n        userId\n        firstName\n        lastName\n        listings {\n            platform {\n                name\n            }\n            listingType {\n                name\n            }\n            price\n        }\n    }\n':
         types.UserSummaryFragmentDoc,
     '\n    mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {\n        exchangeInstagramAuthCodeForToken(input: $input) {\n            connection {\n                userId\n                platformId\n                handle\n                # token\n                # tokenExpiration\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
@@ -43,7 +45,7 @@ const documents = {
         types.GetPlatformsDocument,
     '\n    mutation RegisterUser($input: AddUserInput!) {\n        addUser(input: $input) {\n            user {\n                ...UserContextInfo\n            }\n            token\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.RegisterUserDocument,
-    '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...Listing\n        }\n    }\n':
+    '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n    }\n':
         types.UserProfileFragmentDoc,
     '\n    query GetUserById($userId: Int!) {\n        userById(userId: $userId) {\n            ...UserProfile\n        }\n    }\n':
         types.GetUserByIdDocument,
@@ -67,8 +69,8 @@ export function graphql(source: string): unknown
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    fragment Listing on Listing {\n        listingId\n        listingType {\n            platform {\n                platformId\n                name\n            }\n            name\n        }\n        price\n    }\n',
-): (typeof documents)['\n    fragment Listing on Listing {\n        listingId\n        listingType {\n            platform {\n                platformId\n                name\n            }\n            name\n        }\n        price\n    }\n']
+    source: '\n    fragment ListingSummary on Listing {\n        listingId\n        listingType {\n            platform {\n                platformId\n                name\n            }\n            name\n        }\n        price\n    }\n',
+): (typeof documents)['\n    fragment ListingSummary on Listing {\n        listingId\n        listingType {\n            platform {\n                platformId\n                name\n            }\n            name\n        }\n        price\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -121,6 +123,12 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+    source: '\n    query GetUserListings($userId: Int!) {\n        userById(userId: $userId) {\n            listings {\n                ...ListingSummary\n            }\n        }\n    }\n',
+): (typeof documents)['\n    query GetUserListings($userId: Int!) {\n        userById(userId: $userId) {\n            listings {\n                ...ListingSummary\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
     source: '\n    fragment UserSummary on User {\n        userId\n        firstName\n        lastName\n        listings {\n            platform {\n                name\n            }\n            listingType {\n                name\n            }\n            price\n        }\n    }\n',
 ): (typeof documents)['\n    fragment UserSummary on User {\n        userId\n        firstName\n        lastName\n        listings {\n            platform {\n                name\n            }\n            listingType {\n                name\n            }\n            price\n        }\n    }\n']
 /**
@@ -157,8 +165,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...Listing\n        }\n    }\n',
-): (typeof documents)['\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...Listing\n        }\n    }\n']
+    source: '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n    }\n',
+): (typeof documents)['\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
