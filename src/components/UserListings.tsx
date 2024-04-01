@@ -20,6 +20,7 @@ function UserListings() {
     const [{data}] = useQuery({
         query: GetUserListingsDocument,
         variables: {userId: user?.userId ?? -1},
+        requestPolicy: 'network-only',
     })
 
     return (
