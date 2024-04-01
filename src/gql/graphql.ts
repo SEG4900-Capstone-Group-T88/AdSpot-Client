@@ -41,7 +41,6 @@ export type AddConnectionPayload = {
 
 export type AddListingInput = {
     listingTypeId: Scalars['Int']['input']
-    platformId: Scalars['Int']['input']
     price: Scalars['Decimal']['input']
     userId: Scalars['Int']['input']
 }

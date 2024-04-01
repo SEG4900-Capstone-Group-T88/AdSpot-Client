@@ -21,6 +21,7 @@ function UserListings() {
         query: GetUserListingsDocument,
         variables: {userId: user?.userId ?? -1},
     })
+
     return (
         <div className="flex flex-wrap gap-4 mt-4 mb-8">
             {data?.userById?.listings.map((listing) => (

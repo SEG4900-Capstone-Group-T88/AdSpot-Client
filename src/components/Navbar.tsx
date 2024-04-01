@@ -128,7 +128,6 @@ function Navbar() {
         const listingArray = listingSelection?.split(',') ?? ['0', '0']
 
         const listingTypeId = Number(listingArray[0])
-        const platformId = Number(listingArray[1])
 
         const data = new FormData(event.target as HTMLFormElement)
         const price = Number(data.get('price'))
@@ -138,7 +137,6 @@ function Navbar() {
         addListing({
             input: {
                 userId,
-                platformId,
                 listingTypeId,
                 price,
             },

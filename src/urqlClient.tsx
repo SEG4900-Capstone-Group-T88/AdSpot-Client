@@ -46,6 +46,7 @@ const auth = authExchange(async (utilities) => {
 const client = new Client({
     url: 'https://localhost:8081',
     exchanges: [cacheExchange, auth, fetchExchange],
+    requestPolicy: 'network-only',
 })
 
 export default client

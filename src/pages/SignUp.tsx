@@ -40,7 +40,8 @@ function SignUp() {
 
         register({input: {firstName, lastName, email, password}}).then((result) => {
             const errors = result.data?.addUser.errors ?? []
-            if (errors.length === 0 && result.data) {
+
+            if (!result.error && errors.length === 0 && result.data) {
                 saveAuthData(result.data.addUser.token ?? '')
 
                 const user = result.data.addUser.user as UserContextInfoFragment
@@ -52,8 +53,10 @@ function SignUp() {
                 localStorage.setItem('userLName', user.lastName)
 
                 navigate('/dashboard')
-            } else {
+            } else if (errors.length > 0) {
                 alert(errors.map((error) => error.message).join('\n'))
+            } else if (result.error) {
+                alert(result.error)
             }
         })
     }
