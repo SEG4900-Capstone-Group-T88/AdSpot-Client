@@ -7,6 +7,7 @@ import Requests from '../components/Requests'
 import Orders from '../components/Orders'
 import {useContext} from 'react'
 import {UserContext} from '../components/UserContext'
+import UserListings from '../components/UserListings'
 
 function Dashboard() {
     const {user} = useContext(UserContext)
@@ -40,6 +41,9 @@ function Dashboard() {
                     </div>
                 </div>
             </div>
+
+            <h3>My Listings</h3>
+            <UserListings />
 
             <h3>Requests</h3>
             <Requests />

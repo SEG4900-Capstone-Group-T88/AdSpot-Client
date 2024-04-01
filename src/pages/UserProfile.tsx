@@ -4,7 +4,7 @@ import Profile from '../images/profile.png'
 import {useParams} from 'react-router-dom'
 import Listing from '../components/Listing'
 import Navbar from '../components/Navbar'
-import {ListingFragment} from '../gql/graphql'
+import {ListingSummaryFragment} from '../gql/graphql'
 
 export const UserProfileFragmentDocument = graphql(`
     fragment UserProfile on User {
@@ -12,7 +12,7 @@ export const UserProfileFragmentDocument = graphql(`
         firstName
         lastName
         listings {
-            ...Listing
+            ...ListingSummary
         }
     }
 `)
@@ -57,8 +57,9 @@ function UserProfile() {
                         {user.listings.map((listing) => {
                             return (
                                 <Listing
-                                    key={(listing as ListingFragment).listingId}
+                                    key={(listing as ListingSummaryFragment).listingId}
                                     listing={listing}
+                                    buyable={true}
                                 />
                             )
                         })}

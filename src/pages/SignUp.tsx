@@ -39,28 +39,26 @@ function SignUp() {
         const password = data.get('password')?.toString() ?? ''
 
         register({input: {firstName, lastName, email, password}}).then((result) => {
-            if (!result.error && result.data && result.data.addUser) {
+            const errors = result.data?.addUser.errors ?? []
+            if (errors.length === 0 && result.data) {
                 saveAuthData(result.data.addUser.token ?? '')
 
-                if (result.data?.addUser.user) {
-                    setUser(result.data.addUser.user as UserContextInfoFragment)
-                }
+                const user = result.data.addUser.user as UserContextInfoFragment
+                setUser(user)
+
+                localStorage.setItem('userId', user.userId.toString())
+                localStorage.setItem('userEmail', user.email)
+                localStorage.setItem('userFName', user.firstName)
+                localStorage.setItem('userLName', user.lastName)
+
+                navigate('/dashboard')
+            } else {
+                alert(errors.map((error) => error.message).join('\n'))
             }
         })
-
-        navigate('/dashboard')
     }
 
     const disabled = registerResult.fetching
-
-    /**
-    const submit = useCallback(() => {
-        login(variables).then((result) => {
-            setUser(result.data?.login.user ?? null)
-            console.log(user)
-        })
-    }, [state, login, variables])
-    */
 
     return (
         <>
