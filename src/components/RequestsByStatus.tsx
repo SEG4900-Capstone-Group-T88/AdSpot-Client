@@ -69,7 +69,7 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
             last: pagingVariables.last,
             before: pagingVariables.before,
         },
-        requestPolicy: "network-only"
+        requestPolicy: 'network-only',
     })
 
     return (
