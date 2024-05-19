@@ -45,6 +45,7 @@ const auth = authExchange(async (utilities) => {
 
 const client = new Client({
     url: 'https://localhost:8081',
+    fetchSubscriptions: true,
     exchanges: [cacheExchange, auth, fetchExchange],
 })
 
