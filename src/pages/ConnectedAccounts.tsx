@@ -47,7 +47,7 @@ function ConnectedAccounts() {
             initial.set(element.platformId, element.handle)
         })
         setConnectedAccounts(initial)
-    }, [])
+    }, [result])
 
     const [subscriptionResult] = useSubscription({
         query: OnAccountConnectedSubscription,
