@@ -22,6 +22,11 @@ export type Scalars = {
     Decimal: {input: any; output: any}
 }
 
+export type AccountHasNotBeenConnectedError = Error & {
+    __typename?: 'AccountHasNotBeenConnectedError'
+    message: Scalars['String']['output']
+}
+
 export type AccountWithEmailAlreadyExistsError = Error & {
     __typename?: 'AccountWithEmailAlreadyExistsError'
     message: Scalars['String']['output']
@@ -36,8 +41,10 @@ export type AddConnectionInput = {
 
 export type AddConnectionPayload = {
     __typename?: 'AddConnectionPayload'
-    connection?: Maybe<Array<Connection>>
+    connection?: Maybe<Connection>
 }
+
+export type AddListingError = AccountHasNotBeenConnectedError | InvalidListingTypeIdError
 
 export type AddListingInput = {
     listingTypeId: Scalars['Int']['input']
@@ -47,6 +54,7 @@ export type AddListingInput = {
 
 export type AddListingPayload = {
     __typename?: 'AddListingPayload'
+    errors?: Maybe<Array<AddListingError>>
     listing?: Maybe<Array<Listing>>
 }
 
@@ -189,6 +197,11 @@ export type IntOperationFilterInput = {
 
 export type InvalidListingIdError = Error & {
     __typename?: 'InvalidListingIdError'
+    message: Scalars['String']['output']
+}
+
+export type InvalidListingTypeIdError = Error & {
+    __typename?: 'InvalidListingTypeIdError'
     message: Scalars['String']['output']
 }
 
@@ -394,7 +407,7 @@ export type OrderListingInput = {
 export type OrderListingPayload = {
     __typename?: 'OrderListingPayload'
     errors?: Maybe<Array<OrderListingError>>
-    order?: Maybe<Order>
+    order?: Maybe<Array<Order>>
 }
 
 export type OrderSortInput = {
@@ -599,6 +612,15 @@ export type StringOperationFilterInput = {
     startsWith?: InputMaybe<Scalars['String']['input']>
 }
 
+export type Subscription = {
+    __typename?: 'Subscription'
+    onAccountConnected: Connection
+}
+
+export type SubscriptionOnAccountConnectedArgs = {
+    userId: Scalars['Int']['input']
+}
+
 export type UpdatePasswordInput = {
     password: Scalars['String']['input']
     userId: Scalars['Int']['input']
@@ -693,7 +715,7 @@ export type OrderListingMutation = {
     __typename?: 'Mutation'
     orderListing: {
         __typename?: 'OrderListingPayload'
-        order?: {__typename?: 'Order'; orderId: number} | null
+        order?: Array<{__typename?: 'Order'; orderId: number}> | null
         errors?: Array<
             | {__typename?: 'CannotOrderOwnListingError'; message: string}
             | {__typename?: 'InvalidListingIdError'; message: string}
@@ -881,6 +903,24 @@ export type ExchangeInstagramAuthCodeForTokenMutation = {
             handle: string
         } | null
         errors?: Array<{__typename?: 'InstagramOauthError'; message: string}> | null
+    }
+}
+
+export type AccountConnectedFragment = {
+    __typename?: 'Connection'
+    userId: number
+    platformId: number
+    handle: string
+} & {' $fragmentName'?: 'AccountConnectedFragment'}
+
+export type OnAccountConnectedSubscriptionVariables = Exact<{
+    userId: Scalars['Int']['input']
+}>
+
+export type OnAccountConnectedSubscription = {
+    __typename?: 'Subscription'
+    onAccountConnected: {__typename?: 'Connection'} & {
+        ' $fragmentRefs'?: {AccountConnectedFragment: AccountConnectedFragment}
     }
 }
 
@@ -1143,6 +1183,24 @@ export const UserSummaryFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<UserSummaryFragment, unknown>
+export const AccountConnectedFragmentDoc = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'AccountConnected'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Connection'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'platformId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'handle'}},
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AccountConnectedFragment, unknown>
 export const ListingSummaryFragmentDoc = {
     kind: 'Document',
     definitions: [
@@ -2201,6 +2259,67 @@ export const ExchangeInstagramAuthCodeForTokenDocument = {
 } as unknown as DocumentNode<
     ExchangeInstagramAuthCodeForTokenMutation,
     ExchangeInstagramAuthCodeForTokenMutationVariables
+>
+export const OnAccountConnectedDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'subscription',
+            name: {kind: 'Name', value: 'OnAccountConnected'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'onAccountConnected'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'FragmentSpread',
+                                    name: {kind: 'Name', value: 'AccountConnected'},
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'AccountConnected'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Connection'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'platformId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'handle'}},
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<
+    OnAccountConnectedSubscription,
+    OnAccountConnectedSubscriptionVariables
 >
 export const LoginDocument = {
     kind: 'Document',

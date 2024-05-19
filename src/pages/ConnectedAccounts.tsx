@@ -1,8 +1,9 @@
 import Navbar from '../components/Navbar'
 import {SocialIcon} from 'react-social-icons'
 import {graphql} from '../gql'
-import {useQuery} from 'urql'
-import {useContext} from 'react'
+import {AccountConnectedFragment} from '../gql/graphql'
+import {useQuery, useSubscription} from 'urql'
+import {useContext, useEffect, useState} from 'react'
 import {UserContext} from '../components/UserContext'
 
 export const GetUserConnections = graphql(`
@@ -16,21 +17,50 @@ export const GetUserConnections = graphql(`
     }
 `)
 
+export const AccountConnectedFragmentDocument = graphql(`
+    fragment AccountConnected on Connection {
+        userId
+        platformId
+        handle
+    }
+`)
+
+export const OnAccountConnectedSubscription = graphql(`
+    subscription OnAccountConnected($userId: Int!) {
+        onAccountConnected(userId: $userId) {
+            ...AccountConnected
+        }
+    }
+`)
+
 function ConnectedAccounts() {
     const {user} = useContext(UserContext)
+    const [connectedAccounts, setConnectedAccounts] = useState(new Map<number, string>())
+
     const [result] = useQuery({
         query: GetUserConnections,
         variables: {input: user?.userId ?? -1},
-        requestPolicy: 'network-only',
     })
+    useEffect(() => {
+        const initial = new Map<number, string>()
+        result.data?.userById?.connections.forEach((element) => {
+            initial.set(element.platformId, element.handle)
+        })
+        setConnectedAccounts(initial)
+    }, [result])
 
-    const connectedAccounts: Map<number, string> = new Map()
-
-    result.data?.userById?.connections.forEach((element) => {
-        connectedAccounts.set(element.platformId, element.handle)
+    const [subscriptionResult] = useSubscription({
+        query: OnAccountConnectedSubscription,
+        variables: {userId: user?.userId ?? -1},
     })
-
-    console.log(connectedAccounts)
+    if (subscriptionResult.data?.onAccountConnected) {
+        const connection = subscriptionResult.data.onAccountConnected as AccountConnectedFragment
+        if (!connectedAccounts.has(connection.platformId)) {
+            setConnectedAccounts(
+                new Map(connectedAccounts.set(connection.platformId, connection.handle)),
+            )
+        }
+    }
 
     const facebookHandle = connectedAccounts.get(1)
     const twitterHandle = connectedAccounts.get(2)

@@ -37,6 +37,10 @@ const documents = {
         types.UserSummaryFragmentDoc,
     '\n    mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {\n        exchangeInstagramAuthCodeForToken(input: $input) {\n            connection {\n                userId\n                platformId\n                handle\n                # token\n                # tokenExpiration\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.ExchangeInstagramAuthCodeForTokenDocument,
+    '\n    fragment AccountConnected on Connection {\n        userId\n        platformId\n        handle\n    }\n':
+        types.AccountConnectedFragmentDoc,
+    '\n    subscription OnAccountConnected($userId: Int!) {\n        onAccountConnected(userId: $userId) {\n            ...AccountConnected\n        }\n    }\n':
+        types.OnAccountConnectedDocument,
     '\n    mutation Login($input: LoginInput!) {\n        login(input: $input) {\n            user {\n                ...UserContextInfo\n            }\n            token\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.LoginDocument,
     '\n    query GetUsers(\n        $filter: UserFilterInput\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        users(\n            where: $filter\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{firstName: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...UserSummary\n                }\n            }\n        }\n    }\n':
@@ -137,6 +141,18 @@ export function graphql(
 export function graphql(
     source: '\n    mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {\n        exchangeInstagramAuthCodeForToken(input: $input) {\n            connection {\n                userId\n                platformId\n                handle\n                # token\n                # tokenExpiration\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
 ): (typeof documents)['\n    mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {\n        exchangeInstagramAuthCodeForToken(input: $input) {\n            connection {\n                userId\n                platformId\n                handle\n                # token\n                # tokenExpiration\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    fragment AccountConnected on Connection {\n        userId\n        platformId\n        handle\n    }\n',
+): (typeof documents)['\n    fragment AccountConnected on Connection {\n        userId\n        platformId\n        handle\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    subscription OnAccountConnected($userId: Int!) {\n        onAccountConnected(userId: $userId) {\n            ...AccountConnected\n        }\n    }\n',
+): (typeof documents)['\n    subscription OnAccountConnected($userId: Int!) {\n        onAccountConnected(userId: $userId) {\n            ...AccountConnected\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
