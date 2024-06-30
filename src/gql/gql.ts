@@ -13,6 +13,8 @@ import {TypedDocumentNode as DocumentNode} from '@graphql-typed-document-node/co
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    '\n    query GetUserContextInfo($userId: Int!) {\n        userById(userId: $userId) {\n            ...UserContextInfo\n        }\n    }\n':
+        types.GetUserContextInfoDocument,
     '\n    fragment ListingSummary on Listing {\n        listingId\n        listingType {\n            platform {\n                platformId\n                name\n            }\n            name\n        }\n        price\n    }\n':
         types.ListingSummaryFragmentDoc,
     '\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
@@ -69,6 +71,12 @@ const documents = {
  */
 export function graphql(source: string): unknown
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    query GetUserContextInfo($userId: Int!) {\n        userById(userId: $userId) {\n            ...UserContextInfo\n        }\n    }\n',
+): (typeof documents)['\n    query GetUserContextInfo($userId: Int!) {\n        userById(userId: $userId) {\n            ...UserContextInfo\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

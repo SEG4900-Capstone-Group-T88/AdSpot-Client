@@ -32,6 +32,8 @@ export type AccountWithEmailAlreadyExistsError = Error & {
     message: Scalars['String']['output']
 }
 
+export type AddConnectionError = ConnectionAlreadyExistsError
+
 export type AddConnectionInput = {
     accountHandle: Scalars['String']['input']
     apiToken: Scalars['String']['input']
@@ -41,7 +43,8 @@ export type AddConnectionInput = {
 
 export type AddConnectionPayload = {
     __typename?: 'AddConnectionPayload'
-    connection?: Maybe<Connection>
+    connection?: Maybe<Array<Connection>>
+    errors?: Maybe<Array<AddConnectionError>>
 }
 
 export type AddListingError = AccountHasNotBeenConnectedError | InvalidListingTypeIdError
@@ -94,6 +97,11 @@ export type Connection = {
     tokenExpiration: Scalars['DateTime']['output']
     user: User
     userId: Scalars['Int']['output']
+}
+
+export type ConnectionAlreadyExistsError = Error & {
+    __typename?: 'ConnectionAlreadyExistsError'
+    message: Scalars['String']['output']
 }
 
 export type ConnectionFilterInput = {
@@ -694,6 +702,19 @@ export type UsersEdge = {
     cursor: Scalars['String']['output']
     /** The item at the end of the edge. */
     node: User
+}
+
+export type GetUserContextInfoQueryVariables = Exact<{
+    userId: Scalars['Int']['input']
+}>
+
+export type GetUserContextInfoQuery = {
+    __typename?: 'Query'
+    userById?:
+        | ({__typename?: 'User'} & {
+              ' $fragmentRefs'?: {UserContextInfoFragment: UserContextInfoFragment}
+          })
+        | null
 }
 
 export type ListingSummaryFragment = {
@@ -1309,6 +1330,65 @@ export const UserProfileFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<UserProfileFragment, unknown>
+export const GetUserContextInfoDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetUserContextInfo'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'userById'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'FragmentSpread',
+                                    name: {kind: 'Name', value: 'UserContextInfo'},
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            kind: 'FragmentDefinition',
+            name: {kind: 'Name', value: 'UserContextInfo'},
+            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'User'}},
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'email'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetUserContextInfoQuery, GetUserContextInfoQueryVariables>
 export const OrderListingDocument = {
     kind: 'Document',
     definitions: [
