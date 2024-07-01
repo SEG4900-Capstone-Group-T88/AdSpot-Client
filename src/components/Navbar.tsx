@@ -68,9 +68,8 @@ function Navbar() {
     }
 
     const handleLogout = () => {
-        setUser(null)
         localStorage.clear()
-        navigate('/search')
+        setUser(null)
     }
 
     const handleSettings = () => {
