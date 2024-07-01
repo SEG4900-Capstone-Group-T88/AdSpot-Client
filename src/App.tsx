@@ -36,24 +36,20 @@ function App() {
         query: GetUserContextInfoDocument,
         variables: {userId: userId},
     })
+
     useEffect(() => {
         console.log('App useEffect')
         const token = getToken()
         if (token) {
             const decoded = jwtDecode<JwtPayload>(token)
-            console.log(decoded)
             if (decoded.exp && decoded.exp > Date.now() / 1000) {
-                console.log('token is valid')
                 setUserId(parseInt(decoded.sub!))
-            } else {
-                console.log('token is expired')
             }
         }
-    }, [])
-    useEffect(() => {
         if (data?.userById) {
             const user = data.userById as UserContextInfoFragment
             setUser(user)
+            console.log('App setUser')
         }
     }, [data])
 

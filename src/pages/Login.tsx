@@ -43,13 +43,8 @@ function Login() {
                 saveAuthData(result.data.login.token ?? '')
 
                 if (result.data.login.user) {
-                    const currentUser = result.data.login.user as UserContextInfoFragment
-                    setUser(currentUser)
-
-                    localStorage.setItem('userId', currentUser?.userId.toString() ?? '')
-                    localStorage.setItem('userEmail', currentUser?.email ?? '')
-                    localStorage.setItem('userFName', currentUser?.firstName ?? '')
-                    localStorage.setItem('userLName', currentUser?.lastName ?? '')
+                    const user = result.data.login.user as UserContextInfoFragment
+                    setUser(user)
 
                     navigate('/dashboard')
                 }
