@@ -1,5 +1,5 @@
-import {useQuery} from 'urql'
-import {OrderStatusEnum} from '../gql/graphql'
+import {useQuery, useSubscription} from 'urql'
+import {OrderStatusEnum, OrderSummaryFragment} from '../gql/graphql'
 import OrderSummary from './OrderSummary'
 import {UserContext} from './UserContext'
 import {useContext, useState} from 'react'
@@ -43,8 +43,18 @@ export const GetRequestsByStatusDocument = graphql(`
     }
 `)
 
+export const OnNewOrderSubscription = graphql(`
+    subscription OnNewOrder($userId: Int!) {
+        onNewOrder(userId: $userId) {
+            orderId
+            userId
+            listingId
+        }
+    }
+`)
+
 function RequestsByStatus(props: {status: OrderStatusEnum}) {
-    const userContext = useContext(UserContext)
+    const {user} = useContext(UserContext)
 
     const pageSize = 5
     const [pagingVariables, setPagingVariables] = useState<{
@@ -59,18 +69,41 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
         before: null,
     })
 
-    const [{data}] = useQuery({
+    const [{data}, reexecuteQuery] = useQuery({
         query: GetRequestsByStatusDocument,
         variables: {
-            userId: userContext.user?.userId ?? 0,
+            userId: user?.userId ?? 0,
             status: props.status,
             first: pagingVariables.first,
             after: pagingVariables.after,
             last: pagingVariables.last,
             before: pagingVariables.before,
         },
-        requestPolicy: 'network-only',
+        // requestPolicy: 'network-only',
     })
+    if (props.status === OrderStatusEnum.Pending) {
+        console.log(data?.requestsByStatus?.edges?.map((e) => e.node))
+    }
+
+    const [subscriptionResult] = useSubscription({
+        query: OnNewOrderSubscription,
+        variables: {userId: user?.userId ?? -1},
+    })
+    if (props.status === OrderStatusEnum.Pending && subscriptionResult.data?.onNewOrder) {
+        const change = subscriptionResult.data.onNewOrder
+        console.log(
+            `User ${change.userId} bought listing ${change.listingId} owned by User ${user?.userId}`,
+        )
+        if (
+            !data?.requestsByStatus?.edges?.find((e) => {
+                const order = e.node as OrderSummaryFragment
+                return order.orderId === change.orderId
+            })
+        ) {
+            console.log('reexecuteQuery')
+            reexecuteQuery()
+        }
+    }
 
     return (
         <div>
