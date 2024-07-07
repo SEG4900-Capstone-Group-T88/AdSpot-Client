@@ -9,7 +9,7 @@
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "format": "prettier . --check",
         "preview": "vite preview",
-        "codegen": "graphql-codegen --watch",
+        "codegen": "graphql-codegen",
         "test": "echo 'no tests yet'"
     },
     "dependencies": {

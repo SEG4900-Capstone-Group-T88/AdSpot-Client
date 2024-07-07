@@ -680,6 +680,7 @@ export type StringOperationFilterInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  name: Scalars['String']['output'];
   onAccountConnected: Connection;
   onNewOrder: Order;
 };

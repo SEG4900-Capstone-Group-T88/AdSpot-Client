@@ -1,8 +1,8 @@
 import {useQuery, useSubscription} from 'urql'
-import {OrderStatusEnum, OrderSummaryFragment} from '../gql/graphql'
+import {OrderStatusEnum} from '../gql/graphql'
 import OrderSummary from './OrderSummary'
 import {UserContext} from './UserContext'
-import {useContext, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowLeft, faArrowRight} from '@fortawesome/free-solid-svg-icons'
 import {graphql} from '../gql'
@@ -79,31 +79,22 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
             last: pagingVariables.last,
             before: pagingVariables.before,
         },
-        // requestPolicy: 'network-only',
+        requestPolicy: 'network-only',
     })
-    if (props.status === OrderStatusEnum.Pending) {
-        console.log(data?.requestsByStatus?.edges?.map((e) => e.node))
-    }
 
     const [subscriptionResult] = useSubscription({
         query: OnNewOrderSubscription,
         variables: {userId: user?.userId ?? -1},
+        // only subscribe on pending tab
+        pause: props.status !== OrderStatusEnum.Pending,
     })
-    if (props.status === OrderStatusEnum.Pending && subscriptionResult.data?.onNewOrder) {
-        const change = subscriptionResult.data.onNewOrder
-        console.log(
-            `User ${change.userId} bought listing ${change.listingId} owned by User ${user?.userId}`,
-        )
-        if (
-            !data?.requestsByStatus?.edges?.find((e) => {
-                const order = e.node as OrderSummaryFragment
-                return order.orderId === change.orderId
-            })
-        ) {
-            console.log('reexecuteQuery')
-            reexecuteQuery()
+    useEffect(() => {
+        if (subscriptionResult.data?.onNewOrder) {
+            const change = subscriptionResult.data.onNewOrder
+            console.log(change)
+            reexecuteQuery({requestPolicy: 'network-only'})
         }
-    }
+    }, [subscriptionResult, reexecuteQuery])
 
     return (
         <div>
