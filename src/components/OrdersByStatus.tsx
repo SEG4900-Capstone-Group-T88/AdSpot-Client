@@ -43,8 +43,8 @@ export const GetOrdersByStatusDocument = graphql(`
     }
 `)
 
-function RequestsByStatus(props: {status: OrderStatusEnum}) {
-    const userContext = useContext(UserContext)
+function OrdersByStatus(props: {status: OrderStatusEnum}) {
+    const {user} = useContext(UserContext)
 
     const pageSize = 5
     const [pagingVariables, setPagingVariables] = useState<{
@@ -62,7 +62,7 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
     const [{data}] = useQuery({
         query: GetOrdersByStatusDocument,
         variables: {
-            userId: userContext.user?.userId ?? 0,
+            userId: user?.userId ?? 0,
             status: props.status,
             first: pagingVariables.first,
             after: pagingVariables.after,
@@ -149,4 +149,4 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
     )
 }
 
-export default RequestsByStatus
+export default OrdersByStatus

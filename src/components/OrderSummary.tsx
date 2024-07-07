@@ -5,6 +5,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faXmarkCircle, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
 import {OrderStatusEnum, OrderSummaryFragment} from '../gql/graphql'
 import {OrderContextEnum} from '../OrderContextEnum'
+import {useContext} from 'react'
+import {UserContext} from './UserContext'
+import {useMutation} from 'urql'
 
 export const OrderSummaryFragmentDocument = graphql(`
     fragment OrderSummary on Order {
@@ -38,6 +41,36 @@ export const OrderSummaryFragmentDocument = graphql(`
     }
 `)
 
+export const AcceptOrderDocument = graphql(`
+    mutation AcceptOrder($input: AcceptOrderInput!) {
+        acceptOrder(input: $input) {
+            order {
+                orderId
+            }
+            errors {
+                ... on Error {
+                    message
+                }
+            }
+        }
+    }
+`)
+
+export const RejectOrderDocument = graphql(`
+    mutation RejectOrder($input: RejectOrderInput!) {
+        rejectOrder(input: $input) {
+            order {
+                orderId
+            }
+            errors {
+                ... on Error {
+                    message
+                }
+            }
+        }
+    }
+`)
+
 function getOrderStatusBgColor(order: OrderSummaryFragment) {
     if (order == undefined) {
         return ''
@@ -60,8 +93,13 @@ function OrderSummary(props: {
     order: FragmentType<typeof OrderSummaryFragmentDocument>
     orderContext: OrderContextEnum
 }) {
+    const {user} = useContext(UserContext)
+
     const order = useFragment(OrderSummaryFragmentDocument, props.order)
     const orderDate = new Date(order.orderDate)
+
+    const [, acceptOrder] = useMutation(AcceptOrderDocument)
+    const [, rejectOrder] = useMutation(RejectOrderDocument)
 
     return (
         <div>
@@ -106,14 +144,36 @@ function OrderSummary(props: {
                         {order.orderStatusId === OrderStatusEnum.Pending &&
                             props.orderContext === OrderContextEnum.Request && (
                                 <div className="flex flex-col justify-between">
-                                    <button>
+                                    <button
+                                        onClick={() => {
+                                            if (user) {
+                                                acceptOrder({
+                                                    input: {
+                                                        userId: user.userId,
+                                                        orderId: order.orderId,
+                                                    },
+                                                })
+                                            }
+                                        }}
+                                    >
                                         <FontAwesomeIcon
                                             icon={faCheckCircle}
                                             size="xl"
                                             color="green"
                                         />
                                     </button>
-                                    <button>
+                                    <button
+                                        onClick={() => {
+                                            if (user) {
+                                                rejectOrder({
+                                                    input: {
+                                                        userId: user.userId,
+                                                        orderId: order.orderId,
+                                                    },
+                                                })
+                                            }
+                                        }}
+                                    >
                                         <FontAwesomeIcon
                                             icon={faXmarkCircle}
                                             size="xl"

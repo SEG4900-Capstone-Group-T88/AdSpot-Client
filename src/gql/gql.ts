@@ -27,10 +27,16 @@ const documents = {
         types.AddListingDocument,
     '\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        description\n        user {\n            userId\n            firstName\n            lastName\n            email\n        }\n        listing {\n            price\n            user {\n                userId\n                firstName\n                lastName\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n':
         types.OrderSummaryFragmentDoc,
+    '\n    mutation AcceptOrder($input: AcceptOrderInput!) {\n        acceptOrder(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
+        types.AcceptOrderDocument,
+    '\n    mutation RejectOrder($input: RejectOrderInput!) {\n        rejectOrder(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
+        types.RejectOrderDocument,
     '\n    query GetOrdersByStatus(\n        $userId: Int!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        ordersByStatus(\n            userId: $userId\n            status: $status\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{orderDate: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n':
         types.GetOrdersByStatusDocument,
     '\n    query GetRequestsByStatus(\n        $userId: Int!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        requestsByStatus(\n            userId: $userId\n            status: $status\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{orderDate: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n':
         types.GetRequestsByStatusDocument,
+    '\n    subscription OnNewOrder($userId: Int!) {\n        onNewOrder(userId: $userId) {\n            orderId\n            userId\n            listingId\n        }\n    }\n':
+        types.OnNewOrderDocument,
     '\n    fragment UserContextInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n':
         types.UserContextInfoFragmentDoc,
     '\n    query GetUserListings($userId: Int!) {\n        userById(userId: $userId) {\n            listings {\n                ...ListingSummary\n            }\n        }\n    }\n':
@@ -117,6 +123,18 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+    source: '\n    mutation AcceptOrder($input: AcceptOrderInput!) {\n        acceptOrder(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    mutation AcceptOrder($input: AcceptOrderInput!) {\n        acceptOrder(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    mutation RejectOrder($input: RejectOrderInput!) {\n        rejectOrder(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    mutation RejectOrder($input: RejectOrderInput!) {\n        rejectOrder(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
     source: '\n    query GetOrdersByStatus(\n        $userId: Int!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        ordersByStatus(\n            userId: $userId\n            status: $status\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{orderDate: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n',
 ): (typeof documents)['\n    query GetOrdersByStatus(\n        $userId: Int!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        ordersByStatus(\n            userId: $userId\n            status: $status\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{orderDate: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n']
 /**
@@ -125,6 +143,12 @@ export function graphql(
 export function graphql(
     source: '\n    query GetRequestsByStatus(\n        $userId: Int!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        requestsByStatus(\n            userId: $userId\n            status: $status\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{orderDate: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n',
 ): (typeof documents)['\n    query GetRequestsByStatus(\n        $userId: Int!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n    ) {\n        requestsByStatus(\n            userId: $userId\n            status: $status\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            order: [{orderDate: ASC}]\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    subscription OnNewOrder($userId: Int!) {\n        onNewOrder(userId: $userId) {\n            orderId\n            userId\n            listingId\n        }\n    }\n',
+): (typeof documents)['\n    subscription OnNewOrder($userId: Int!) {\n        onNewOrder(userId: $userId) {\n            orderId\n            userId\n            listingId\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

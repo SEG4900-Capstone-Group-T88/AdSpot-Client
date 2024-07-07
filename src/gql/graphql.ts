@@ -22,6 +22,19 @@ export type Scalars = {
     Decimal: {input: any; output: any}
 }
 
+export type AcceptOrderError = InvalidOrderIdError | ListingDoesNotBelongToUserError
+
+export type AcceptOrderInput = {
+    orderId: Scalars['Int']['input']
+    userId: Scalars['Int']['input']
+}
+
+export type AcceptOrderPayload = {
+    __typename?: 'AcceptOrderPayload'
+    errors?: Maybe<Array<AcceptOrderError>>
+    order?: Maybe<Array<Order>>
+}
+
 export type AccountHasNotBeenConnectedError = Error & {
     __typename?: 'AccountHasNotBeenConnectedError'
     message: Scalars['String']['output']
@@ -162,7 +175,7 @@ export type DeleteUserInput = {
 
 export type DeleteUserPayload = {
     __typename?: 'DeleteUserPayload'
-    user?: Maybe<User>
+    user?: Maybe<Array<User>>
 }
 
 export type Error = {
@@ -213,6 +226,11 @@ export type InvalidListingTypeIdError = Error & {
     message: Scalars['String']['output']
 }
 
+export type InvalidOrderIdError = Error & {
+    __typename?: 'InvalidOrderIdError'
+    message: Scalars['String']['output']
+}
+
 export type ListFilterInputTypeOfConnectionFilterInput = {
     all?: InputMaybe<ConnectionFilterInput>
     any?: InputMaybe<Scalars['Boolean']['input']>
@@ -253,6 +271,11 @@ export type Listing = {
     price: Scalars['Decimal']['output']
     user: User
     userId: Scalars['Int']['output']
+}
+
+export type ListingDoesNotBelongToUserError = Error & {
+    __typename?: 'ListingDoesNotBelongToUserError'
+    message: Scalars['String']['output']
 }
 
 export type ListingFilterInput = {
@@ -329,6 +352,7 @@ export type LoginPayload = {
 
 export type Mutation = {
     __typename?: 'Mutation'
+    acceptOrder: AcceptOrderPayload
     addConnection: AddConnectionPayload
     addListing: AddListingPayload
     addUser: AddUserPayload
@@ -336,7 +360,12 @@ export type Mutation = {
     exchangeInstagramAuthCodeForToken: ExchangeInstagramAuthCodeForTokenPayload
     login: LoginPayload
     orderListing: OrderListingPayload
+    rejectOrder: RejectOrderPayload
     updatePassword: UpdatePasswordPayload
+}
+
+export type MutationAcceptOrderArgs = {
+    input: AcceptOrderInput
 }
 
 export type MutationAddConnectionArgs = {
@@ -365,6 +394,10 @@ export type MutationLoginArgs = {
 
 export type MutationOrderListingArgs = {
     input: OrderListingInput
+}
+
+export type MutationRejectOrderArgs = {
+    input: RejectOrderInput
 }
 
 export type MutationUpdatePasswordArgs = {
@@ -578,6 +611,19 @@ export type QueryUsersArgs = {
     where?: InputMaybe<UserFilterInput>
 }
 
+export type RejectOrderError = InvalidOrderIdError | ListingDoesNotBelongToUserError
+
+export type RejectOrderInput = {
+    orderId: Scalars['Int']['input']
+    userId: Scalars['Int']['input']
+}
+
+export type RejectOrderPayload = {
+    __typename?: 'RejectOrderPayload'
+    errors?: Maybe<Array<RejectOrderError>>
+    order?: Maybe<Array<Order>>
+}
+
 /** A connection to a list of items. */
 export type RequestsByStatusConnection = {
     __typename?: 'RequestsByStatusConnection'
@@ -622,10 +668,16 @@ export type StringOperationFilterInput = {
 
 export type Subscription = {
     __typename?: 'Subscription'
+    name: Scalars['String']['output']
     onAccountConnected: Connection
+    onNewOrder: Order
 }
 
 export type SubscriptionOnAccountConnectedArgs = {
+    userId: Scalars['Int']['input']
+}
+
+export type SubscriptionOnNewOrderArgs = {
     userId: Scalars['Int']['input']
 }
 
@@ -636,7 +688,7 @@ export type UpdatePasswordInput = {
 
 export type UpdatePasswordPayload = {
     __typename?: 'UpdatePasswordPayload'
-    user?: Maybe<User>
+    user?: Maybe<Array<User>>
 }
 
 export type User = {
@@ -810,6 +862,38 @@ export type OrderSummaryFragment = {
     }
 } & {' $fragmentName'?: 'OrderSummaryFragment'}
 
+export type AcceptOrderMutationVariables = Exact<{
+    input: AcceptOrderInput
+}>
+
+export type AcceptOrderMutation = {
+    __typename?: 'Mutation'
+    acceptOrder: {
+        __typename?: 'AcceptOrderPayload'
+        order?: Array<{__typename?: 'Order'; orderId: number}> | null
+        errors?: Array<
+            | {__typename?: 'InvalidOrderIdError'; message: string}
+            | {__typename?: 'ListingDoesNotBelongToUserError'; message: string}
+        > | null
+    }
+}
+
+export type RejectOrderMutationVariables = Exact<{
+    input: RejectOrderInput
+}>
+
+export type RejectOrderMutation = {
+    __typename?: 'Mutation'
+    rejectOrder: {
+        __typename?: 'RejectOrderPayload'
+        order?: Array<{__typename?: 'Order'; orderId: number}> | null
+        errors?: Array<
+            | {__typename?: 'InvalidOrderIdError'; message: string}
+            | {__typename?: 'ListingDoesNotBelongToUserError'; message: string}
+        > | null
+    }
+}
+
 export type GetOrdersByStatusQueryVariables = Exact<{
     userId: Scalars['Int']['input']
     status: OrderStatusEnum
@@ -870,6 +954,15 @@ export type GetRequestsByStatusQuery = {
             }
         }> | null
     } | null
+}
+
+export type OnNewOrderSubscriptionVariables = Exact<{
+    userId: Scalars['Int']['input']
+}>
+
+export type OnNewOrderSubscription = {
+    __typename?: 'Subscription'
+    onNewOrder: {__typename?: 'Order'; orderId: number; userId: number; listingId: number}
 }
 
 export type UserContextInfoFragment = {
@@ -1657,6 +1750,158 @@ export const AddListingDocument = {
         },
     ],
 } as unknown as DocumentNode<AddListingMutation, AddListingMutationVariables>
+export const AcceptOrderDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'AcceptOrder'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'AcceptOrderInput'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'acceptOrder'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'order'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'message'},
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AcceptOrderMutation, AcceptOrderMutationVariables>
+export const RejectOrderDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'RejectOrder'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'RejectOrderInput'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'rejectOrder'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'order'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'message'},
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<RejectOrderMutation, RejectOrderMutationVariables>
 export const GetOrdersByStatusDocument = {
     kind: 'Document',
     definitions: [
@@ -2163,6 +2408,50 @@ export const GetRequestsByStatusDocument = {
         },
     ],
 } as unknown as DocumentNode<GetRequestsByStatusQuery, GetRequestsByStatusQueryVariables>
+export const OnNewOrderDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'subscription',
+            name: {kind: 'Name', value: 'OnNewOrder'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'onNewOrder'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'listingId'}},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<OnNewOrderSubscription, OnNewOrderSubscriptionVariables>
 export const GetUserListingsDocument = {
     kind: 'Document',
     definitions: [

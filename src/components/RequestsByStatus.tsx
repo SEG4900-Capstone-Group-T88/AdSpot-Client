@@ -1,8 +1,8 @@
-import {useQuery} from 'urql'
+import {useQuery, useSubscription} from 'urql'
 import {OrderStatusEnum} from '../gql/graphql'
 import OrderSummary from './OrderSummary'
 import {UserContext} from './UserContext'
-import {useContext, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowLeft, faArrowRight} from '@fortawesome/free-solid-svg-icons'
 import {graphql} from '../gql'
@@ -43,8 +43,18 @@ export const GetRequestsByStatusDocument = graphql(`
     }
 `)
 
+export const OnNewOrderSubscription = graphql(`
+    subscription OnNewOrder($userId: Int!) {
+        onNewOrder(userId: $userId) {
+            orderId
+            userId
+            listingId
+        }
+    }
+`)
+
 function RequestsByStatus(props: {status: OrderStatusEnum}) {
-    const userContext = useContext(UserContext)
+    const {user} = useContext(UserContext)
 
     const pageSize = 5
     const [pagingVariables, setPagingVariables] = useState<{
@@ -59,10 +69,10 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
         before: null,
     })
 
-    const [{data}] = useQuery({
+    const [{data}, reexecuteQuery] = useQuery({
         query: GetRequestsByStatusDocument,
         variables: {
-            userId: userContext.user?.userId ?? 0,
+            userId: user?.userId ?? 0,
             status: props.status,
             first: pagingVariables.first,
             after: pagingVariables.after,
@@ -71,6 +81,20 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
         },
         requestPolicy: 'network-only',
     })
+
+    const [subscriptionResult] = useSubscription({
+        query: OnNewOrderSubscription,
+        variables: {userId: user?.userId ?? -1},
+        // only subscribe on pending tab
+        pause: props.status !== OrderStatusEnum.Pending,
+    })
+    useEffect(() => {
+        if (subscriptionResult.data?.onNewOrder) {
+            const change = subscriptionResult.data.onNewOrder
+            console.log(change)
+            reexecuteQuery({requestPolicy: 'network-only'})
+        }
+    }, [subscriptionResult, reexecuteQuery])
 
     return (
         <div>
