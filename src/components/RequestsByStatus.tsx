@@ -1,5 +1,5 @@
 import {useQuery, useSubscription} from 'urql'
-import {OrderStatusEnum} from '../gql/graphql'
+import {OrderSortInput, OrderStatusEnum, SortEnumType} from '../gql/graphql'
 import OrderSummary from './OrderSummary'
 import {UserContext} from './UserContext'
 import {useContext, useEffect, useState} from 'react'
@@ -16,6 +16,7 @@ export const GetRequestsByStatusDocument = graphql(`
         $after: String
         $last: Int
         $before: String
+        $order: [OrderSortInput!]
     ) {
         requestsByStatus(
             userId: $userId
@@ -24,7 +25,7 @@ export const GetRequestsByStatusDocument = graphql(`
             after: $after
             last: $last
             before: $before
-            order: [{orderDate: ASC}]
+            order: $order
         ) {
             totalCount
             pageInfo {
@@ -53,7 +54,7 @@ export const OnNewOrderSubscription = graphql(`
     }
 `)
 
-function RequestsByStatus(props: {status: OrderStatusEnum}) {
+function RequestsByStatus(props: {status: OrderStatusEnum; sortingStrategy: string}) {
     const {user} = useContext(UserContext)
 
     const pageSize = 5
@@ -69,6 +70,15 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
         before: null,
     })
 
+    const order: OrderSortInput[] = [
+        {
+            orderDate:
+                props.sortingStrategy === 'Date: Oldest to Newest'
+                    ? SortEnumType.Asc
+                    : SortEnumType.Desc,
+        },
+    ]
+
     const [{data}, reexecuteQuery] = useQuery({
         query: GetRequestsByStatusDocument,
         variables: {
@@ -78,6 +88,7 @@ function RequestsByStatus(props: {status: OrderStatusEnum}) {
             after: pagingVariables.after,
             last: pagingVariables.last,
             before: pagingVariables.before,
+            order: order,
         },
         requestPolicy: 'network-only',
     })

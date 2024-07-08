@@ -45,10 +45,8 @@ function Dashboard() {
             <h3>My Listings</h3>
             <UserListings />
 
-            <h3>Requests</h3>
             <Requests />
 
-            <h3>Orders</h3>
             <Orders />
 
             <Footer />
