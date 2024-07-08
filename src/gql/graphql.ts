@@ -901,6 +901,7 @@ export type GetOrdersByStatusQueryVariables = Exact<{
     after?: InputMaybe<Scalars['String']['input']>
     last?: InputMaybe<Scalars['Int']['input']>
     before?: InputMaybe<Scalars['String']['input']>
+    order?: InputMaybe<Array<OrderSortInput> | OrderSortInput>
 }>
 
 export type GetOrdersByStatusQuery = {
@@ -932,6 +933,7 @@ export type GetRequestsByStatusQueryVariables = Exact<{
     after?: InputMaybe<Scalars['String']['input']>
     last?: InputMaybe<Scalars['Int']['input']>
     before?: InputMaybe<Scalars['String']['input']>
+    order?: InputMaybe<Array<OrderSortInput> | OrderSortInput>
 }>
 
 export type GetRequestsByStatusQuery = {
@@ -1946,6 +1948,20 @@ export const GetOrdersByStatusDocument = {
                     variable: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
                     type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
                 },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'order'}},
+                    type: {
+                        kind: 'ListType',
+                        type: {
+                            kind: 'NonNullType',
+                            type: {
+                                kind: 'NamedType',
+                                name: {kind: 'Name', value: 'OrderSortInput'},
+                            },
+                        },
+                    },
+                },
             ],
             selectionSet: {
                 kind: 'SelectionSet',
@@ -1987,21 +2003,7 @@ export const GetOrdersByStatusDocument = {
                             {
                                 kind: 'Argument',
                                 name: {kind: 'Name', value: 'order'},
-                                value: {
-                                    kind: 'ListValue',
-                                    values: [
-                                        {
-                                            kind: 'ObjectValue',
-                                            fields: [
-                                                {
-                                                    kind: 'ObjectField',
-                                                    name: {kind: 'Name', value: 'orderDate'},
-                                                    value: {kind: 'EnumValue', value: 'ASC'},
-                                                },
-                                            ],
-                                        },
-                                    ],
-                                },
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'order'}},
                             },
                         ],
                         selectionSet: {
@@ -2199,6 +2201,20 @@ export const GetRequestsByStatusDocument = {
                     variable: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
                     type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
                 },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'order'}},
+                    type: {
+                        kind: 'ListType',
+                        type: {
+                            kind: 'NonNullType',
+                            type: {
+                                kind: 'NamedType',
+                                name: {kind: 'Name', value: 'OrderSortInput'},
+                            },
+                        },
+                    },
+                },
             ],
             selectionSet: {
                 kind: 'SelectionSet',
@@ -2240,21 +2256,7 @@ export const GetRequestsByStatusDocument = {
                             {
                                 kind: 'Argument',
                                 name: {kind: 'Name', value: 'order'},
-                                value: {
-                                    kind: 'ListValue',
-                                    values: [
-                                        {
-                                            kind: 'ObjectValue',
-                                            fields: [
-                                                {
-                                                    kind: 'ObjectField',
-                                                    name: {kind: 'Name', value: 'orderDate'},
-                                                    value: {kind: 'EnumValue', value: 'ASC'},
-                                                },
-                                            ],
-                                        },
-                                    ],
-                                },
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'order'}},
                             },
                         ],
                         selectionSet: {
