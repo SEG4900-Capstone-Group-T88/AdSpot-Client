@@ -32,7 +32,7 @@ export type AcceptOrderInput = {
 export type AcceptOrderPayload = {
     __typename?: 'AcceptOrderPayload'
     errors?: Maybe<Array<AcceptOrderError>>
-    order?: Maybe<Array<Order>>
+    order?: Maybe<Order>
 }
 
 export type AccountHasNotBeenConnectedError = Error & {
@@ -56,7 +56,7 @@ export type AddConnectionInput = {
 
 export type AddConnectionPayload = {
     __typename?: 'AddConnectionPayload'
-    connection?: Maybe<Array<Connection>>
+    connection?: Maybe<Connection>
     errors?: Maybe<Array<AddConnectionError>>
 }
 
@@ -71,7 +71,7 @@ export type AddListingInput = {
 export type AddListingPayload = {
     __typename?: 'AddListingPayload'
     errors?: Maybe<Array<AddListingError>>
-    listing?: Maybe<Array<Listing>>
+    listing?: Maybe<Listing>
 }
 
 export type AddUserError = AccountWithEmailAlreadyExistsError
@@ -169,13 +169,16 @@ export type DecimalOperationFilterInput = {
     nlte?: InputMaybe<Scalars['Decimal']['input']>
 }
 
+export type DeleteUserError = InvalidUserIdError
+
 export type DeleteUserInput = {
     userId: Scalars['Int']['input']
 }
 
 export type DeleteUserPayload = {
     __typename?: 'DeleteUserPayload'
-    user?: Maybe<Array<User>>
+    errors?: Maybe<Array<DeleteUserError>>
+    user?: Maybe<User>
 }
 
 export type Error = {
@@ -228,6 +231,11 @@ export type InvalidListingTypeIdError = Error & {
 
 export type InvalidOrderIdError = Error & {
     __typename?: 'InvalidOrderIdError'
+    message: Scalars['String']['output']
+}
+
+export type InvalidUserIdError = Error & {
+    __typename?: 'InvalidUserIdError'
     message: Scalars['String']['output']
 }
 
@@ -448,7 +456,12 @@ export type OrderListingInput = {
 export type OrderListingPayload = {
     __typename?: 'OrderListingPayload'
     errors?: Maybe<Array<OrderListingError>>
-    order?: Maybe<Array<Order>>
+    order?: Maybe<Order>
+}
+
+export enum OrderPov {
+    Buyer = 'BUYER',
+    Seller = 'SELLER',
 }
 
 export type OrderSortInput = {
@@ -520,6 +533,28 @@ export type OrdersByStatusEdge = {
     node: Order
 }
 
+/** A connection to a list of items. */
+export type OrdersConnection = {
+    __typename?: 'OrdersConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<OrdersEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type OrdersEdge = {
+    __typename?: 'OrdersEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
 /** Information about pagination in a connection. */
 export type PageInfo = {
     __typename?: 'PageInfo'
@@ -557,9 +592,11 @@ export type Query = {
     __typename?: 'Query'
     connection: Array<Connection>
     orderById?: Maybe<Order>
-    orders: Array<Order>
+    orders?: Maybe<OrdersConnection>
+    /** @deprecated Use the `orders` field with a filter instead */
     ordersByStatus?: Maybe<OrdersByStatusConnection>
     platforms: Array<Platform>
+    /** @deprecated Use the `orders` field with a filter instead */
     requestsByStatus?: Maybe<RequestsByStatusConnection>
     userById?: Maybe<User>
     users?: Maybe<UsersConnection>
@@ -575,6 +612,13 @@ export type QueryOrderByIdArgs = {
 }
 
 export type QueryOrdersArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    order?: InputMaybe<Array<OrderSortInput>>
+    pov: OrderPov
+    userId: Scalars['Int']['input']
     where?: InputMaybe<OrderFilterInput>
 }
 
@@ -621,7 +665,7 @@ export type RejectOrderInput = {
 export type RejectOrderPayload = {
     __typename?: 'RejectOrderPayload'
     errors?: Maybe<Array<RejectOrderError>>
-    order?: Maybe<Array<Order>>
+    order?: Maybe<Order>
 }
 
 /** A connection to a list of items. */
@@ -681,6 +725,8 @@ export type SubscriptionOnNewOrderArgs = {
     userId: Scalars['Int']['input']
 }
 
+export type UpdatePasswordError = InvalidUserIdError
+
 export type UpdatePasswordInput = {
     password: Scalars['String']['input']
     userId: Scalars['Int']['input']
@@ -688,7 +734,8 @@ export type UpdatePasswordInput = {
 
 export type UpdatePasswordPayload = {
     __typename?: 'UpdatePasswordPayload'
-    user?: Maybe<Array<User>>
+    errors?: Maybe<Array<UpdatePasswordError>>
+    user?: Maybe<User>
 }
 
 export type User = {
@@ -788,7 +835,7 @@ export type OrderListingMutation = {
     __typename?: 'Mutation'
     orderListing: {
         __typename?: 'OrderListingPayload'
-        order?: Array<{__typename?: 'Order'; orderId: number}> | null
+        order?: {__typename?: 'Order'; orderId: number} | null
         errors?: Array<
             | {__typename?: 'CannotOrderOwnListingError'; message: string}
             | {__typename?: 'InvalidListingIdError'; message: string}
@@ -829,7 +876,7 @@ export type AddListingMutation = {
     __typename?: 'Mutation'
     addListing: {
         __typename?: 'AddListingPayload'
-        listing?: Array<{
+        listing?: {
             __typename?: 'Listing'
             listingId: number
             listingType: {
@@ -838,7 +885,7 @@ export type AddListingMutation = {
                 name: string
                 platform: {__typename?: 'Platform'; platformId: number; name: string}
             }
-        }> | null
+        } | null
     }
 }
 
@@ -870,7 +917,7 @@ export type AcceptOrderMutation = {
     __typename?: 'Mutation'
     acceptOrder: {
         __typename?: 'AcceptOrderPayload'
-        order?: Array<{__typename?: 'Order'; orderId: number}> | null
+        order?: {__typename?: 'Order'; orderId: number} | null
         errors?: Array<
             | {__typename?: 'InvalidOrderIdError'; message: string}
             | {__typename?: 'ListingDoesNotBelongToUserError'; message: string}
@@ -886,7 +933,7 @@ export type RejectOrderMutation = {
     __typename?: 'Mutation'
     rejectOrder: {
         __typename?: 'RejectOrderPayload'
-        order?: Array<{__typename?: 'Order'; orderId: number}> | null
+        order?: {__typename?: 'Order'; orderId: number} | null
         errors?: Array<
             | {__typename?: 'InvalidOrderIdError'; message: string}
             | {__typename?: 'ListingDoesNotBelongToUserError'; message: string}
