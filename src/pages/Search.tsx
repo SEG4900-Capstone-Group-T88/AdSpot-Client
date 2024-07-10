@@ -158,7 +158,6 @@ function Search() {
                                 type="range"
                                 min="1"
                                 max="999"
-                                defaultValue="500"
                                 className="slider"
                                 id="priceRange"
                                 value={price}

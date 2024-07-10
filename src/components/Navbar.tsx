@@ -88,6 +88,27 @@ function Navbar() {
         setIsModalOpen(false)
     }
 
+    function userIcon() {
+        if (user) {
+            return (
+                <div
+                    className="h-10 w-10 border-2 border-current rounded-full cursor-pointer text-center"
+                    onClick={togglePopup}
+                >
+                    {user?.firstName.charAt(0).toUpperCase()}
+                </div>
+            )
+        } else {
+            return (
+                <img
+                    src={Profile}
+                    className="h-10 w-10 cursor-pointer"
+                    onClick={togglePopup}
+                />
+            )
+        }
+    }
+
     const [userConnections] = useQuery({
         query: GetUserConnections,
         variables: {input: user?.userId ?? -1},
@@ -195,11 +216,7 @@ function Navbar() {
                     </button>
                 )}
                 <div className="relative">
-                    <img
-                        src={Profile}
-                        className="h-10 w-10 cursor-pointer"
-                        onClick={togglePopup}
-                    />
+                    {userIcon()}
                     {showPopup && (
                         <div className="absolute bg-white border rounded-lg shadow-lg py-2 w-40 right-0 mt-2">
                             {user && (

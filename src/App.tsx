@@ -6,7 +6,7 @@ import Messages from './pages/Messages'
 import Search from './pages/Search'
 import SettingsPage from './pages/SettingsPage'
 import PaymentInfoPage from './pages/PaymentInfoPage'
-import {useQuery} from 'urql'
+import {cacheExchange, Client, fetchExchange, Provider} from 'urql'
 import {UserContext} from './components/UserContext'
 import {useEffect, useState} from 'react'
 import {UserContextInfoFragment} from './gql/graphql'
@@ -16,9 +16,10 @@ import ConnectedAccounts from './pages/ConnectedAccounts'
 import ConnectInstagram from './components/connectionComponents/ConnectInstagram'
 import Landing from './pages/Landing'
 import UserProfile from './pages/UserProfile'
-import {getToken} from './authStore'
+import {getToken, isTokenValid} from './authStore'
 import {JwtPayload, jwtDecode} from 'jwt-decode'
 import {graphql} from './gql'
+import {authExchange} from '@urql/exchange-auth'
 
 const GetUserContextInfoDocument = graphql(`
     query GetUserContextInfo($userId: Int!) {
@@ -30,85 +31,143 @@ const GetUserContextInfoDocument = graphql(`
 
 function App() {
     const [user, setUser] = useState<UserContextInfoFragment | null>(null)
-    const [userId, setUserId] = useState(-1)
 
-    const [{data}] = useQuery({
-        query: GetUserContextInfoDocument,
-        variables: {userId: userId},
+    function logout() {
+        if (user) {
+            setUser(null)
+            alert('You have been logged out. Please log back in.')
+        }
+        localStorage.clear()
+    }
+
+    // https://commerce.nearform.com/open-source/urql/docs/advanced/authentication/
+    const auth = authExchange(async (utilities) => {
+        let token = getToken()
+
+        return {
+            addAuthToOperation(operation) {
+                return token
+                    ? utilities.appendHeaders(operation, {
+                          Authorization: `Bearer ${token}`,
+                      })
+                    : operation
+            },
+            didAuthError(error) {
+                return error.graphQLErrors.some((e) => e.extensions?.code === 'AUTH_NOT_AUTHORIZED')
+            },
+            willAuthError(operation) {
+                // Sync tokens on every operation
+                token = getToken()
+
+                if (!isTokenValid(token)) {
+                    // Detect our login mutation and let this operation through:
+                    return (
+                        operation.kind !== 'mutation' ||
+                        // Here we find any mutation definition with the "signin" field
+                        !operation.query.definitions.some((definition) => {
+                            return (
+                                definition.kind === 'OperationDefinition' &&
+                                definition.selectionSet.selections.some((node) => {
+                                    // The field name is just an example, since register may also be an exception
+                                    return node.kind === 'Field' && node.name.value === 'login'
+                                })
+                            )
+                        })
+                    )
+                }
+                return false
+            },
+            async refreshAuth() {
+                // (triggered after an auth error has occurred)
+                logout()
+            },
+        }
+    })
+
+    const client = new Client({
+        url: 'https://localhost:8081',
+        fetchSubscriptions: true,
+        exchanges: [cacheExchange, auth, fetchExchange],
     })
 
     useEffect(() => {
-        console.log('App useEffect')
-        const token = getToken()
-        if (token) {
-            const decoded = jwtDecode<JwtPayload>(token)
-            if (decoded.exp && decoded.exp > Date.now() / 1000) {
-                setUserId(parseInt(decoded.sub!))
+        async function initializeUser(token: string) {
+            const userId = parseInt(jwtDecode<JwtPayload>(token).sub!)
+            const result = await client
+                .query(GetUserContextInfoDocument, {userId: userId})
+                .toPromise()
+            if (result.data?.userById) {
+                const user = result.data.userById as UserContextInfoFragment
+                setUser(user)
+                console.log('Restored user from token')
             }
         }
-        if (data?.userById) {
-            const user = data.userById as UserContextInfoFragment
-            setUser(user)
-            console.log('App setUser')
+
+        const token = getToken()
+        if (token && isTokenValid(token)) {
+            initializeUser(token)
         }
-    }, [data])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <ThemeProvider>
-            <UserContext.Provider value={{user, setUser}}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={<Landing />}
-                        />
-                        <Route
-                            path="/login"
-                            element={<Login />}
-                        />
-                        <Route
-                            path="/signup"
-                            element={<SignUp />}
-                        />
-                        <Route
-                            path="/search"
-                            element={<Search />}
-                        />
-                        <Route
-                            path="/dashboard"
-                            element={<Dashboard />}
-                        />
-                        <Route
-                            path="/create-account"
-                            element={<CreateAccount />}
-                        />
-                        <Route
-                            path="/messages"
-                            element={<Messages />}
-                        />
-                        <Route
-                            path="/settings"
-                            element={<SettingsPage />}
-                        />
-                        <Route
-                            path="/settings/connectedAccounts"
-                            element={<ConnectedAccounts />}
-                        />
-                        <Route
-                            path="/settings/connectInstagramAccount"
-                            element={<ConnectInstagram />}
-                        />
-                        <Route
-                            path="/payment"
-                            element={<PaymentInfoPage />}
-                        />
-                        <Route
-                            path="/user/:userId"
-                            element={<UserProfile />}
-                        />
-                    </Routes>
-                </BrowserRouter>
-            </UserContext.Provider>
+            <Provider value={client}>
+                <UserContext.Provider value={{user, setUser}}>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={<Landing />}
+                            />
+                            <Route
+                                path="/login"
+                                element={<Login />}
+                            />
+                            <Route
+                                path="/signup"
+                                element={<SignUp />}
+                            />
+                            <Route
+                                path="/search"
+                                element={<Search />}
+                            />
+                            <Route
+                                path="/dashboard"
+                                element={<Dashboard />}
+                            />
+                            <Route
+                                path="/create-account"
+                                element={<CreateAccount />}
+                            />
+                            <Route
+                                path="/messages"
+                                element={<Messages />}
+                            />
+                            <Route
+                                path="/settings"
+                                element={<SettingsPage />}
+                            />
+                            <Route
+                                path="/settings/connectedAccounts"
+                                element={<ConnectedAccounts />}
+                            />
+                            <Route
+                                path="/settings/connectInstagramAccount"
+                                element={<ConnectInstagram />}
+                            />
+                            <Route
+                                path="/payment"
+                                element={<PaymentInfoPage />}
+                            />
+                            <Route
+                                path="/user/:userId"
+                                element={<UserProfile />}
+                            />
+                        </Routes>
+                    </BrowserRouter>
+                </UserContext.Provider>
+            </Provider>
         </ThemeProvider>
     )
 }

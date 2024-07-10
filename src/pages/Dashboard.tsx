@@ -3,11 +3,11 @@ import Navbar from '../components/Navbar'
 import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faSackDollar, faStar} from '@fortawesome/free-solid-svg-icons'
-import Requests from '../components/Requests'
-import Orders from '../components/Orders'
 import {useContext} from 'react'
 import {UserContext} from '../components/UserContext'
 import UserListings from '../components/UserListings'
+import Requests from '../components/Requests'
+import Orders from '../components/Orders'
 
 function Dashboard() {
     const {user} = useContext(UserContext)
