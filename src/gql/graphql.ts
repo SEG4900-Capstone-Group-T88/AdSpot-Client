@@ -512,28 +512,6 @@ export type OrderStatusSortInput = {
 }
 
 /** A connection to a list of items. */
-export type OrdersByStatusConnection = {
-    __typename?: 'OrdersByStatusConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<OrdersByStatusEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type OrdersByStatusEdge = {
-    __typename?: 'OrdersByStatusEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
-}
-
-/** A connection to a list of items. */
 export type OrdersConnection = {
     __typename?: 'OrdersConnection'
     /** A list of edges. */
@@ -593,11 +571,7 @@ export type Query = {
     connection: Array<Connection>
     orderById?: Maybe<Order>
     orders?: Maybe<OrdersConnection>
-    /** @deprecated Use the `orders` field with a filter instead */
-    ordersByStatus?: Maybe<OrdersByStatusConnection>
     platforms: Array<Platform>
-    /** @deprecated Use the `orders` field with a filter instead */
-    requestsByStatus?: Maybe<RequestsByStatusConnection>
     userById?: Maybe<User>
     users?: Maybe<UsersConnection>
 }
@@ -620,26 +594,6 @@ export type QueryOrdersArgs = {
     pov: OrderPov
     userId: Scalars['Int']['input']
     where?: InputMaybe<OrderFilterInput>
-}
-
-export type QueryOrdersByStatusArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    status: OrderStatusEnum
-    userId: Scalars['Int']['input']
-}
-
-export type QueryRequestsByStatusArgs = {
-    after?: InputMaybe<Scalars['String']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    first?: InputMaybe<Scalars['Int']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    order?: InputMaybe<Array<OrderSortInput>>
-    status: OrderStatusEnum
-    userId: Scalars['Int']['input']
 }
 
 export type QueryUserByIdArgs = {
@@ -666,28 +620,6 @@ export type RejectOrderPayload = {
     __typename?: 'RejectOrderPayload'
     errors?: Maybe<Array<RejectOrderError>>
     order?: Maybe<Order>
-}
-
-/** A connection to a list of items. */
-export type RequestsByStatusConnection = {
-    __typename?: 'RequestsByStatusConnection'
-    /** A list of edges. */
-    edges?: Maybe<Array<RequestsByStatusEdge>>
-    /** A flattened list of the nodes. */
-    nodes?: Maybe<Array<Order>>
-    /** Information to aid in pagination. */
-    pageInfo: PageInfo
-    /** Identifies the total count of items in the connection. */
-    totalCount: Scalars['Int']['output']
-}
-
-/** An edge in a connection. */
-export type RequestsByStatusEdge = {
-    __typename?: 'RequestsByStatusEdge'
-    /** A cursor for use in pagination. */
-    cursor: Scalars['String']['output']
-    /** The item at the end of the edge. */
-    node: Order
 }
 
 export enum SortEnumType {
@@ -941,8 +873,9 @@ export type RejectOrderMutation = {
     }
 }
 
-export type GetOrdersByStatusQueryVariables = Exact<{
+export type GetOrdersQueryVariables = Exact<{
     userId: Scalars['Int']['input']
+    pov: OrderPov
     status: OrderStatusEnum
     first?: InputMaybe<Scalars['Int']['input']>
     after?: InputMaybe<Scalars['String']['input']>
@@ -951,10 +884,10 @@ export type GetOrdersByStatusQueryVariables = Exact<{
     order?: InputMaybe<Array<OrderSortInput> | OrderSortInput>
 }>
 
-export type GetOrdersByStatusQuery = {
+export type GetOrdersQuery = {
     __typename?: 'Query'
-    ordersByStatus?: {
-        __typename?: 'OrdersByStatusConnection'
+    orders?: {
+        __typename?: 'OrdersConnection'
         totalCount: number
         pageInfo: {
             __typename?: 'PageInfo'
@@ -964,54 +897,13 @@ export type GetOrdersByStatusQuery = {
             endCursor?: string | null
         }
         edges?: Array<{
-            __typename?: 'OrdersByStatusEdge'
+            __typename?: 'OrdersEdge'
             cursor: string
             node: {__typename?: 'Order'} & {
                 ' $fragmentRefs'?: {OrderSummaryFragment: OrderSummaryFragment}
             }
         }> | null
     } | null
-}
-
-export type GetRequestsByStatusQueryVariables = Exact<{
-    userId: Scalars['Int']['input']
-    status: OrderStatusEnum
-    first?: InputMaybe<Scalars['Int']['input']>
-    after?: InputMaybe<Scalars['String']['input']>
-    last?: InputMaybe<Scalars['Int']['input']>
-    before?: InputMaybe<Scalars['String']['input']>
-    order?: InputMaybe<Array<OrderSortInput> | OrderSortInput>
-}>
-
-export type GetRequestsByStatusQuery = {
-    __typename?: 'Query'
-    requestsByStatus?: {
-        __typename?: 'RequestsByStatusConnection'
-        totalCount: number
-        pageInfo: {
-            __typename?: 'PageInfo'
-            hasPreviousPage: boolean
-            hasNextPage: boolean
-            startCursor?: string | null
-            endCursor?: string | null
-        }
-        edges?: Array<{
-            __typename?: 'RequestsByStatusEdge'
-            cursor: string
-            node: {__typename?: 'Order'} & {
-                ' $fragmentRefs'?: {OrderSummaryFragment: OrderSummaryFragment}
-            }
-        }> | null
-    } | null
-}
-
-export type OnNewOrderSubscriptionVariables = Exact<{
-    userId: Scalars['Int']['input']
-}>
-
-export type OnNewOrderSubscription = {
-    __typename?: 'Subscription'
-    onNewOrder: {__typename?: 'Order'; orderId: number; userId: number; listingId: number}
 }
 
 export type UserContextInfoFragment = {
@@ -1951,13 +1843,13 @@ export const RejectOrderDocument = {
         },
     ],
 } as unknown as DocumentNode<RejectOrderMutation, RejectOrderMutationVariables>
-export const GetOrdersByStatusDocument = {
+export const GetOrdersDocument = {
     kind: 'Document',
     definitions: [
         {
             kind: 'OperationDefinition',
             operation: 'query',
-            name: {kind: 'Name', value: 'GetOrdersByStatus'},
+            name: {kind: 'Name', value: 'GetOrders'},
             variableDefinitions: [
                 {
                     kind: 'VariableDefinition',
@@ -1965,6 +1857,14 @@ export const GetOrdersByStatusDocument = {
                     type: {
                         kind: 'NonNullType',
                         type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'pov'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'OrderPov'}},
                     },
                 },
                 {
@@ -2015,7 +1915,7 @@ export const GetOrdersByStatusDocument = {
                 selections: [
                     {
                         kind: 'Field',
-                        name: {kind: 'Name', value: 'ordersByStatus'},
+                        name: {kind: 'Name', value: 'orders'},
                         arguments: [
                             {
                                 kind: 'Argument',
@@ -2024,8 +1924,8 @@ export const GetOrdersByStatusDocument = {
                             },
                             {
                                 kind: 'Argument',
-                                name: {kind: 'Name', value: 'status'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'status'}},
+                                name: {kind: 'Name', value: 'pov'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'pov'}},
                             },
                             {
                                 kind: 'Argument',
@@ -2046,6 +1946,32 @@ export const GetOrdersByStatusDocument = {
                                 kind: 'Argument',
                                 name: {kind: 'Name', value: 'before'},
                                 value: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
+                            },
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'where'},
+                                value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                        {
+                                            kind: 'ObjectField',
+                                            name: {kind: 'Name', value: 'orderStatusId'},
+                                            value: {
+                                                kind: 'ObjectValue',
+                                                fields: [
+                                                    {
+                                                        kind: 'ObjectField',
+                                                        name: {kind: 'Name', value: 'eq'},
+                                                        value: {
+                                                            kind: 'Variable',
+                                                            name: {kind: 'Name', value: 'status'},
+                                                        },
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    ],
+                                },
                             },
                             {
                                 kind: 'Argument',
@@ -2203,304 +2129,7 @@ export const GetOrdersByStatusDocument = {
             },
         },
     ],
-} as unknown as DocumentNode<GetOrdersByStatusQuery, GetOrdersByStatusQueryVariables>
-export const GetRequestsByStatusDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'query',
-            name: {kind: 'Name', value: 'GetRequestsByStatus'},
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
-                    type: {
-                        kind: 'NonNullType',
-                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
-                    },
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'status'}},
-                    type: {
-                        kind: 'NonNullType',
-                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'OrderStatusEnum'}},
-                    },
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
-                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
-                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
-                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
-                    type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'order'}},
-                    type: {
-                        kind: 'ListType',
-                        type: {
-                            kind: 'NonNullType',
-                            type: {
-                                kind: 'NamedType',
-                                name: {kind: 'Name', value: 'OrderSortInput'},
-                            },
-                        },
-                    },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'requestsByStatus'},
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'userId'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
-                            },
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'status'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'status'}},
-                            },
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'first'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
-                            },
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'after'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
-                            },
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'last'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
-                            },
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'before'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
-                            },
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'order'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'order'}},
-                            },
-                        ],
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                {kind: 'Field', name: {kind: 'Name', value: 'totalCount'}},
-                                {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'pageInfo'},
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'hasPreviousPage'},
-                                            },
-                                            {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'hasNextPage'},
-                                            },
-                                            {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'startCursor'},
-                                            },
-                                            {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'endCursor'},
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'edges'},
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {kind: 'Field', name: {kind: 'Name', value: 'cursor'}},
-                                            {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'node'},
-                                                selectionSet: {
-                                                    kind: 'SelectionSet',
-                                                    selections: [
-                                                        {
-                                                            kind: 'FragmentSpread',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'OrderSummary',
-                                                            },
-                                                        },
-                                                    ],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            kind: 'FragmentDefinition',
-            name: {kind: 'Name', value: 'OrderSummary'},
-            typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Order'}},
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
-                    {kind: 'Field', name: {kind: 'Name', value: 'orderDate'}},
-                    {kind: 'Field', name: {kind: 'Name', value: 'orderStatusId'}},
-                    {kind: 'Field', name: {kind: 'Name', value: 'description'}},
-                    {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'user'},
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
-                                {kind: 'Field', name: {kind: 'Name', value: 'firstName'}},
-                                {kind: 'Field', name: {kind: 'Name', value: 'lastName'}},
-                                {kind: 'Field', name: {kind: 'Name', value: 'email'}},
-                            ],
-                        },
-                    },
-                    {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'listing'},
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                {kind: 'Field', name: {kind: 'Name', value: 'price'}},
-                                {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'user'},
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
-                                            {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'firstName'},
-                                            },
-                                            {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'lastName'},
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'listingType'},
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-                                            {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'platform'},
-                                                selectionSet: {
-                                                    kind: 'SelectionSet',
-                                                    selections: [
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {kind: 'Name', value: 'name'},
-                                                        },
-                                                    ],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'connection'},
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {kind: 'Field', name: {kind: 'Name', value: 'handle'}},
-                                        ],
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<GetRequestsByStatusQuery, GetRequestsByStatusQueryVariables>
-export const OnNewOrderDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'subscription',
-            name: {kind: 'Name', value: 'OnNewOrder'},
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
-                    type: {
-                        kind: 'NonNullType',
-                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
-                    },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'onNewOrder'},
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'userId'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
-                            },
-                        ],
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
-                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
-                                {kind: 'Field', name: {kind: 'Name', value: 'listingId'}},
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<OnNewOrderSubscription, OnNewOrderSubscriptionVariables>
+} as unknown as DocumentNode<GetOrdersQuery, GetOrdersQueryVariables>
 export const GetUserListingsDocument = {
     kind: 'Document',
     definitions: [
