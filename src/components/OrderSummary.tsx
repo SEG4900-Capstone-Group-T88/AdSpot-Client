@@ -3,8 +3,7 @@ import {graphql} from '../gql'
 import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faXmarkCircle, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
-import {OrderStatusEnum, OrderSummaryFragment} from '../gql/graphql'
-import {OrderContextEnum} from '../OrderContextEnum'
+import {OrderPov, OrderStatusEnum, OrderSummaryFragment} from '../gql/graphql'
 import {useContext} from 'react'
 import {UserContext} from './UserContext'
 import {useMutation} from 'urql'
@@ -91,7 +90,7 @@ function getOrderStatusBgColor(order: OrderSummaryFragment) {
 
 function OrderSummary(props: {
     order: FragmentType<typeof OrderSummaryFragmentDocument>
-    orderContext: OrderContextEnum
+    pov: OrderPov
 }) {
     const {user} = useContext(UserContext)
 
@@ -121,16 +120,16 @@ function OrderSummary(props: {
                         />
                         <div>
                             <h4>
-                                {props.orderContext === OrderContextEnum.Order
+                                {props.pov === OrderPov.Buyer
                                     ? order.listing.user.firstName
                                     : order.user.firstName}{' '}
-                                {props.orderContext === OrderContextEnum.Order
+                                {props.pov === OrderPov.Buyer
                                     ? order.listing.user.lastName
                                     : order.user.lastName}{' '}
                                 - 1 {order.listing.listingType.name} for ${order.listing.price}
                             </h4>
                             <p className="text-purple text-[20px]">
-                                {props.orderContext === OrderContextEnum.Order
+                                {props.pov === OrderPov.Buyer
                                     ? `@${order.listing.connection.handle}`
                                     : order.user.email}
                             </p>
@@ -142,7 +141,7 @@ function OrderSummary(props: {
                             {order.orderStatusId}
                         </span>
                         {order.orderStatusId === OrderStatusEnum.Pending &&
-                            props.orderContext === OrderContextEnum.Request && (
+                            props.pov === OrderPov.Seller && (
                                 <div className="flex flex-col justify-between">
                                     <button
                                         onClick={() => {
@@ -183,7 +182,7 @@ function OrderSummary(props: {
                                 </div>
                             )}
                         {order.orderStatusId === OrderStatusEnum.Accepted &&
-                            props.orderContext === OrderContextEnum.Request && (
+                            props.pov === OrderPov.Seller && (
                                 <button className="underline">Submit Deliverable</button>
                             )}
                         {order.orderStatusId === OrderStatusEnum.Completed && (

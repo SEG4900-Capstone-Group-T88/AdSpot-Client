@@ -1,63 +1,217 @@
-import {OrderStatusEnum} from '../gql/graphql'
-import {Tabs, TabsHeader, Tab, TabsBody, TabPanel} from '@material-tailwind/react'
-import OrdersByStatus from './OrdersByStatus'
-import {useState} from 'react'
+import {useQuery, useSubscription} from 'urql'
+import {graphql} from '../gql'
+import {OrderPov, OrderSortInput, OrderStatusEnum, SortEnumType} from '../gql/graphql'
+import {useContext, useEffect, useState} from 'react'
+import {UserContext} from './UserContext'
+import OrderSummary from './OrderSummary'
+import {faArrowLeft, faArrowRight} from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {Button} from '@material-tailwind/react'
 
-function Orders() {
-    const statusesToShow = [
-        OrderStatusEnum.Pending,
-        OrderStatusEnum.Accepted,
-        OrderStatusEnum.Completed,
-        OrderStatusEnum.Rejected,
+export const GetOrdersDocument = graphql(`
+    query GetOrders(
+        $userId: Int!
+        $pov: OrderPov!
+        $status: OrderStatusEnum!
+        $first: Int
+        $after: String
+        $last: Int
+        $before: String
+        $order: [OrderSortInput!]
+    ) {
+        orders(
+            userId: $userId
+            pov: $pov
+            first: $first
+            after: $after
+            last: $last
+            before: $before
+            where: {orderStatusId: {eq: $status}}
+            order: $order
+        ) {
+            totalCount
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+            edges {
+                cursor
+                node {
+                    ...OrderSummary
+                }
+            }
+        }
+    }
+`)
+
+export const OnNewOrderSubscription = graphql(`
+    subscription OnNewOrder($userId: Int!) {
+        onNewOrder(userId: $userId) {
+            orderId
+            userId
+            listingId
+        }
+    }
+`)
+
+function Orders(props: {
+    pov: OrderPov
+    status: OrderStatusEnum
+    pageSize: number
+    sort: string
+    onCountChange: (pov: OrderPov, status: OrderStatusEnum, count: number) => void
+}) {
+    const {user} = useContext(UserContext)
+
+    const [pagingVariables, setPagingVariables] = useState<{
+        first: number | null
+        after: string | null
+        last: number | null
+        before: string | null
+    }>({
+        first: props.pageSize,
+        after: null,
+        last: null,
+        before: null,
+    })
+
+    // Reset paging variables when page size changes
+    useEffect(() => {
+        setPagingVariables({
+            first: props.pageSize,
+            after: null,
+            last: null,
+            before: null,
+        })
+    }, [props.pageSize])
+
+    const order: OrderSortInput[] = [
+        {
+            orderDate:
+                props.sort === 'Date: Oldest to Newest' ? SortEnumType.Asc : SortEnumType.Desc,
+        },
     ]
 
-    const sortingStrategies = ['Date: Oldest to Newest', 'Date: Newest to Oldest']
+    const [{data}, reexecuteQuery] = useQuery({
+        query: GetOrdersDocument,
+        variables: {
+            userId: user?.userId ?? -1,
+            pov: props.pov,
+            status: props.status,
+            first: pagingVariables.first,
+            after: pagingVariables.after,
+            last: pagingVariables.last,
+            before: pagingVariables.before,
+            order: order,
+        },
+        pause: !user,
+    })
+    const count = data?.orders?.totalCount
+    useEffect(() => {
+        if (count) {
+            props.onCountChange(props.pov, props.status, count)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [count])
 
-    const [sortingStrategy, setSortingStrategy] = useState(sortingStrategies[0])
+    const [subscriptionResult] = useSubscription({
+        query: OnNewOrderSubscription,
+        variables: {userId: user?.userId ?? -1},
+        // only subscribe on pending tab
+        pause: !(props.pov === OrderPov.Seller && props.status === OrderStatusEnum.Pending),
+    })
+    useEffect(() => {
+        if (subscriptionResult.data?.onNewOrder) {
+            const change = subscriptionResult.data.onNewOrder
+            console.log(change)
+            reexecuteQuery({requestPolicy: 'network-only'})
+        }
+    }, [subscriptionResult, reexecuteQuery])
 
     return (
-        <>
-            <div className="flex items-center justify-between">
-                <h3>Orders</h3>
-                <div>
-                    <label>Sort by: </label>
-                    <select
-                        value={sortingStrategy}
-                        onChange={(e) => setSortingStrategy(e.target.value)}
+        <div>
+            {data?.orders?.edges?.map((edge) => (
+                <OrderSummary
+                    key={edge.cursor}
+                    order={edge.node}
+                    pov={props.pov}
+                />
+            ))}
+            <div className="flex justify-between text-center">
+                <div className="flex gap-2">
+                    <Button
+                        placeholder=""
+                        className="bg-purple"
+                        disabled={!data?.orders?.pageInfo.hasPreviousPage}
+                        onClick={() => {
+                            setPagingVariables({
+                                first: props.pageSize,
+                                after: null,
+                                last: null,
+                                before: null,
+                            })
+                        }}
                     >
-                        {sortingStrategies.map((option) => (
-                            <option value={option}>{option}</option>
-                        ))}
-                    </select>
+                        <span>First</span>
+                    </Button>
+                    <Button
+                        placeholder=""
+                        className="bg-purple"
+                        disabled={!data?.orders?.pageInfo.hasPreviousPage}
+                        onClick={() => {
+                            setPagingVariables({
+                                first: null,
+                                after: null,
+                                last: props.pageSize,
+                                before: data?.orders?.pageInfo.startCursor ?? null,
+                            })
+                        }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faArrowLeft}
+                            size="xl"
+                        />
+                    </Button>
+                </div>
+                <div className="flex gap-2">
+                    <Button
+                        placeholder=""
+                        className="bg-purple"
+                        disabled={!data?.orders?.pageInfo.hasNextPage}
+                        onClick={() => {
+                            setPagingVariables({
+                                first: props.pageSize,
+                                after: data?.orders?.pageInfo.endCursor ?? null,
+                                last: null,
+                                before: null,
+                            })
+                        }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faArrowRight}
+                            size="xl"
+                        />
+                    </Button>
+                    <Button
+                        placeholder=""
+                        className="bg-purple"
+                        disabled={!data?.orders?.pageInfo.hasNextPage}
+                        onClick={() => {
+                            setPagingVariables({
+                                first: null,
+                                after: null,
+                                last: props.pageSize,
+                                before: null,
+                            })
+                        }}
+                    >
+                        <span>Last</span>
+                    </Button>
                 </div>
             </div>
-            <Tabs value={OrderStatusEnum.Pending}>
-                <TabsHeader placeholder="">
-                    {statusesToShow.map((status) => (
-                        <Tab
-                            placeholder=""
-                            key={status}
-                            value={status}
-                        >
-                            {status}
-                        </Tab>
-                    ))}
-                </TabsHeader>
-                <TabsBody placeholder="">
-                    {statusesToShow.map((status) => (
-                        <TabPanel
-                            key={status}
-                            value={status}
-                        >
-                            <OrdersByStatus
-                                status={status}
-                                sortingStrategy={sortingStrategy}
-                            />
-                        </TabPanel>
-                    ))}
-                </TabsBody>
-            </Tabs>
-        </>
+        </div>
     )
 }
 
