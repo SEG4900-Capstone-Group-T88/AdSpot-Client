@@ -1,7 +1,7 @@
 import {CodegenConfig} from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-    schema: 'http://localhost:8080',
+    schema: 'https://localhost:8081',
     documents: ['src/**/*.tsx'],
     ignoreNoDocuments: true,
     generates: {
@@ -11,7 +11,7 @@ const config: CodegenConfig = {
         },
     },
     hooks: {
-        // afterAllFileWrite: ['prettier . --write'],
+        afterAllFileWrite: ['prettier src/gql --write'],
     },
 }
 
