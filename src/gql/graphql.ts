@@ -512,6 +512,28 @@ export type OrderStatusSortInput = {
 }
 
 /** A connection to a list of items. */
+export type OrdersByStatusConnection = {
+    __typename?: 'OrdersByStatusConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<OrdersByStatusEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type OrdersByStatusEdge = {
+    __typename?: 'OrdersByStatusEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
+}
+
+/** A connection to a list of items. */
 export type OrdersConnection = {
     __typename?: 'OrdersConnection'
     /** A list of edges. */
@@ -571,7 +593,11 @@ export type Query = {
     connection: Array<Connection>
     orderById?: Maybe<Order>
     orders?: Maybe<OrdersConnection>
+    /** @deprecated Use the `orders` field with a filter instead */
+    ordersByStatus?: Maybe<OrdersByStatusConnection>
     platforms: Array<Platform>
+    /** @deprecated Use the `orders` field with a filter instead */
+    requestsByStatus?: Maybe<RequestsByStatusConnection>
     userById?: Maybe<User>
     users?: Maybe<UsersConnection>
 }
@@ -594,6 +620,26 @@ export type QueryOrdersArgs = {
     pov: OrderPov
     userId: Scalars['Int']['input']
     where?: InputMaybe<OrderFilterInput>
+}
+
+export type QueryOrdersByStatusArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    order?: InputMaybe<Array<OrderSortInput>>
+    status: OrderStatusEnum
+    userId: Scalars['Int']['input']
+}
+
+export type QueryRequestsByStatusArgs = {
+    after?: InputMaybe<Scalars['String']['input']>
+    before?: InputMaybe<Scalars['String']['input']>
+    first?: InputMaybe<Scalars['Int']['input']>
+    last?: InputMaybe<Scalars['Int']['input']>
+    order?: InputMaybe<Array<OrderSortInput>>
+    status: OrderStatusEnum
+    userId: Scalars['Int']['input']
 }
 
 export type QueryUserByIdArgs = {
@@ -620,6 +666,28 @@ export type RejectOrderPayload = {
     __typename?: 'RejectOrderPayload'
     errors?: Maybe<Array<RejectOrderError>>
     order?: Maybe<Order>
+}
+
+/** A connection to a list of items. */
+export type RequestsByStatusConnection = {
+    __typename?: 'RequestsByStatusConnection'
+    /** A list of edges. */
+    edges?: Maybe<Array<RequestsByStatusEdge>>
+    /** A flattened list of the nodes. */
+    nodes?: Maybe<Array<Order>>
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars['Int']['output']
+}
+
+/** An edge in a connection. */
+export type RequestsByStatusEdge = {
+    __typename?: 'RequestsByStatusEdge'
+    /** A cursor for use in pagination. */
+    cursor: Scalars['String']['output']
+    /** The item at the end of the edge. */
+    node: Order
 }
 
 export enum SortEnumType {
@@ -904,6 +972,15 @@ export type GetOrdersQuery = {
             }
         }> | null
     } | null
+}
+
+export type OnNewOrderSubscriptionVariables = Exact<{
+    userId: Scalars['Int']['input']
+}>
+
+export type OnNewOrderSubscription = {
+    __typename?: 'Subscription'
+    onNewOrder: {__typename?: 'Order'; orderId: number; userId: number; listingId: number}
 }
 
 export type UserContextInfoFragment = {
@@ -2130,6 +2207,50 @@ export const GetOrdersDocument = {
         },
     ],
 } as unknown as DocumentNode<GetOrdersQuery, GetOrdersQueryVariables>
+export const OnNewOrderDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'subscription',
+            name: {kind: 'Name', value: 'OnNewOrder'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'onNewOrder'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'listingId'}},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<OnNewOrderSubscription, OnNewOrderSubscriptionVariables>
 export const GetUserListingsDocument = {
     kind: 'Document',
     definitions: [

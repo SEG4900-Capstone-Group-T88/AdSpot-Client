@@ -21,8 +21,8 @@ function Dashboard() {
     const [sort, setSort] = useState(sortOptions[0])
 
     const tabs = [
-        {value: OrderPov.Buyer, label: 'Orders'},
         {value: OrderPov.Seller, label: 'Requests'},
+        {value: OrderPov.Buyer, label: 'Orders'},
     ]
     const orderStatuses = [
         {value: OrderStatusEnum.Pending, label: 'Pending'},

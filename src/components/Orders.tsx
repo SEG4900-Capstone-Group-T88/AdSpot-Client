@@ -1,4 +1,4 @@
-import {useQuery} from 'urql'
+import {useQuery, useSubscription} from 'urql'
 import {graphql} from '../gql'
 import {OrderPov, OrderSortInput, OrderStatusEnum, SortEnumType} from '../gql/graphql'
 import {useContext, useEffect, useState} from 'react'
@@ -46,6 +46,16 @@ export const GetOrdersDocument = graphql(`
     }
 `)
 
+export const OnNewOrderSubscription = graphql(`
+    subscription OnNewOrder($userId: Int!) {
+        onNewOrder(userId: $userId) {
+            orderId
+            userId
+            listingId
+        }
+    }
+`)
+
 function Orders(props: {
     pov: OrderPov
     status: OrderStatusEnum
@@ -84,7 +94,7 @@ function Orders(props: {
         },
     ]
 
-    const [{data}] = useQuery({
+    const [{data}, reexecuteQuery] = useQuery({
         query: GetOrdersDocument,
         variables: {
             userId: user?.userId ?? -1,
@@ -105,6 +115,20 @@ function Orders(props: {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [count])
+
+    const [subscriptionResult] = useSubscription({
+        query: OnNewOrderSubscription,
+        variables: {userId: user?.userId ?? -1},
+        // only subscribe on pending tab
+        pause: !(props.pov === OrderPov.Seller && props.status === OrderStatusEnum.Pending),
+    })
+    useEffect(() => {
+        if (subscriptionResult.data?.onNewOrder) {
+            const change = subscriptionResult.data.onNewOrder
+            console.log(change)
+            reexecuteQuery({requestPolicy: 'network-only'})
+        }
+    }, [subscriptionResult, reexecuteQuery])
 
     return (
         <div>

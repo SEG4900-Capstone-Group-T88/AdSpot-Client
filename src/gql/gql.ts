@@ -33,6 +33,8 @@ const documents = {
         types.RejectOrderDocument,
     '\n    query GetOrders(\n        $userId: Int!\n        $pov: OrderPov!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n        $order: [OrderSortInput!]\n    ) {\n        orders(\n            userId: $userId\n            pov: $pov\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            where: {orderStatusId: {eq: $status}}\n            order: $order\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n':
         types.GetOrdersDocument,
+    '\n    subscription OnNewOrder($userId: Int!) {\n        onNewOrder(userId: $userId) {\n            orderId\n            userId\n            listingId\n        }\n    }\n':
+        types.OnNewOrderDocument,
     '\n    fragment UserContextInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n':
         types.UserContextInfoFragmentDoc,
     '\n    query GetUserListings($userId: Int!) {\n        userById(userId: $userId) {\n            listings {\n                ...ListingSummary\n            }\n        }\n    }\n':
@@ -133,6 +135,12 @@ export function graphql(
 export function graphql(
     source: '\n    query GetOrders(\n        $userId: Int!\n        $pov: OrderPov!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n        $order: [OrderSortInput!]\n    ) {\n        orders(\n            userId: $userId\n            pov: $pov\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            where: {orderStatusId: {eq: $status}}\n            order: $order\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n',
 ): (typeof documents)['\n    query GetOrders(\n        $userId: Int!\n        $pov: OrderPov!\n        $status: OrderStatusEnum!\n        $first: Int\n        $after: String\n        $last: Int\n        $before: String\n        $order: [OrderSortInput!]\n    ) {\n        orders(\n            userId: $userId\n            pov: $pov\n            first: $first\n            after: $after\n            last: $last\n            before: $before\n            where: {orderStatusId: {eq: $status}}\n            order: $order\n        ) {\n            totalCount\n            pageInfo {\n                hasPreviousPage\n                hasNextPage\n                startCursor\n                endCursor\n            }\n            edges {\n                cursor\n                node {\n                    ...OrderSummary\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    subscription OnNewOrder($userId: Int!) {\n        onNewOrder(userId: $userId) {\n            orderId\n            userId\n            listingId\n        }\n    }\n',
+): (typeof documents)['\n    subscription OnNewOrder($userId: Int!) {\n        onNewOrder(userId: $userId) {\n            orderId\n            userId\n            listingId\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
