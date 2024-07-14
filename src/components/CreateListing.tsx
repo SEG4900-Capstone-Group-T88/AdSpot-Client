@@ -149,7 +149,7 @@ function CreateListing() {
                 </button>
             )}
             {isModalOpen && (
-                <div className="modal-bg">
+                <div className="modal-bg !m-0">
                     <div className="modal-content relative">
                         <button
                             className="absolute top-0 right-0 mt-4 mr-4 text-[red] text-lg font-semibold hover:text-red-700"
