@@ -86,7 +86,6 @@ function Dashboard() {
                 </div>
             </div>
 
-            <h3>My Listings</h3>
             <UserListings />
 
             <Tabs value={tabs[0].value}>

@@ -33,6 +33,21 @@ export const OrderListingDocument = graphql(`
     }
 `)
 
+export const UpdateListingPriceMutation = graphql(`
+    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {
+        updateListingPrice(input: $input) {
+            listing {
+                listingId
+            }
+            errors {
+                ... on Error {
+                    message
+                }
+            }
+        }
+    }
+`)
+
 function Listing(props: {
     listing: FragmentType<typeof ListingSummaryFragmentDocument>
     buyable: boolean
@@ -41,6 +56,8 @@ function Listing(props: {
     const {user} = useContext(UserContext)
     const [, orderListing] = useMutation(OrderListingDocument)
     const [showPopup, setShowPopup] = useState(false)
+
+    const [, updateListingPrice] = useMutation(UpdateListingPriceMutation)
 
     function buyListing(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -67,10 +84,23 @@ function Listing(props: {
         event.preventDefault()
 
         const newPrice = Number(event.currentTarget.price.value)
-        console.log(
-            `Changing price of listing ${listing.listingId} from $${listing.price} to $${newPrice}`,
-        )
-        alert('Not implemented yet.')
+        if (user) {
+            updateListingPrice({
+                input: {
+                    listingId: listing.listingId,
+                    userId: user?.userId,
+                    price: newPrice,
+                },
+            }).then((result) => {
+                const listing = result.data?.updateListingPrice.listing
+                if (listing) {
+                    setShowPopup(false)
+                } else {
+                    const errors = result.data?.updateListingPrice.errors ?? []
+                    alert(errors.map((error) => error.message).join('\n'))
+                }
+            })
+        }
     }
 
     return (
