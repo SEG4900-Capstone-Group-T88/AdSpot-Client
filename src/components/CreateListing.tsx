@@ -35,6 +35,11 @@ export const CreateListingMutation = graphql(`
             listing {
                 listingId
             }
+            errors {
+                ... on Error {
+                    message
+                }
+            }
         }
     }
 `)

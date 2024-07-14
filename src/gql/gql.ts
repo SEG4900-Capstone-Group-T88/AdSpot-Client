@@ -19,7 +19,7 @@ const documents = {
         types.GetUserConnectionsDocument,
     '\n    query GetListingTypes {\n        platforms {\n            platformId\n            name\n            listingTypes {\n                name\n                listingTypeId\n            }\n        }\n    }\n':
         types.GetListingTypesDocument,
-    '\n    mutation AddListing($input: AddListingInput!) {\n        addListing(input: $input) {\n            listing {\n                listingId\n            }\n        }\n    }\n':
+    '\n    mutation AddListing($input: AddListingInput!) {\n        addListing(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.AddListingDocument,
     '\n    fragment ListingSummary on Listing {\n        listingId\n        listingType {\n            platform {\n                platformId\n                name\n            }\n            name\n        }\n        price\n    }\n':
         types.ListingSummaryFragmentDoc,
@@ -41,6 +41,8 @@ const documents = {
         types.GetUserListingsDocument,
     '\n    subscription OnNewListing($userId: Int!) {\n        onNewListing(userId: $userId) {\n            listingId\n        }\n    }\n':
         types.OnNewListingDocument,
+    '\n    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {\n        updateListingPrice(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
+        types.UpdateListingPriceDocument,
     '\n    fragment UserSummary on User {\n        userId\n        firstName\n        lastName\n        listings {\n            platform {\n                name\n            }\n            listingType {\n                name\n            }\n            price\n        }\n    }\n':
         types.UserSummaryFragmentDoc,
     '\n    mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {\n        exchangeInstagramAuthCodeForToken(input: $input) {\n            connection {\n                userId\n                platformId\n                handle\n                # token\n                # tokenExpiration\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
@@ -99,8 +101,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    mutation AddListing($input: AddListingInput!) {\n        addListing(input: $input) {\n            listing {\n                listingId\n            }\n        }\n    }\n',
-): (typeof documents)['\n    mutation AddListing($input: AddListingInput!) {\n        addListing(input: $input) {\n            listing {\n                listingId\n            }\n        }\n    }\n']
+    source: '\n    mutation AddListing($input: AddListingInput!) {\n        addListing(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    mutation AddListing($input: AddListingInput!) {\n        addListing(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -161,6 +163,12 @@ export function graphql(
 export function graphql(
     source: '\n    subscription OnNewListing($userId: Int!) {\n        onNewListing(userId: $userId) {\n            listingId\n        }\n    }\n',
 ): (typeof documents)['\n    subscription OnNewListing($userId: Int!) {\n        onNewListing(userId: $userId) {\n            listingId\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {\n        updateListingPrice(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {\n        updateListingPrice(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
