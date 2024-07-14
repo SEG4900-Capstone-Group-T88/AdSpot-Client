@@ -34,14 +34,6 @@ export const CreateListingMutation = graphql(`
         addListing(input: $input) {
             listing {
                 listingId
-                listingType {
-                    listingTypeId
-                    name
-                    platform {
-                        platformId
-                        name
-                    }
-                }
             }
         }
     }
@@ -124,6 +116,7 @@ function CreateListing() {
             if (result.error) {
                 console.log('ERROR WITH LISTING CREATION!')
             } else {
+                console.log(`Created listing with id ${result.data?.addListing.listing?.listingId}`)
                 closeModal()
             }
         })

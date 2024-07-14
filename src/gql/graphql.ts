@@ -591,6 +591,7 @@ export type PlatformSortInput = {
 export type Query = {
     __typename?: 'Query'
     connection: Array<Connection>
+    connections: Array<Connection>
     orderById?: Maybe<Order>
     orders?: Maybe<OrdersConnection>
     /** @deprecated Use the `orders` field with a filter instead */
@@ -604,6 +605,10 @@ export type Query = {
 
 export type QueryConnectionArgs = {
     platformId: Scalars['Int']['input']
+    userId: Scalars['Int']['input']
+}
+
+export type QueryConnectionsArgs = {
     userId: Scalars['Int']['input']
 }
 
@@ -714,10 +719,15 @@ export type Subscription = {
     __typename?: 'Subscription'
     name: Scalars['String']['output']
     onAccountConnected: Connection
+    onNewListing: Listing
     onNewOrder: Order
 }
 
 export type SubscriptionOnAccountConnectedArgs = {
+    userId: Scalars['Int']['input']
+}
+
+export type SubscriptionOnNewListingArgs = {
     userId: Scalars['Int']['input']
 }
 
@@ -816,34 +826,6 @@ export type GetUserContextInfoQuery = {
         | null
 }
 
-export type ListingSummaryFragment = {
-    __typename?: 'Listing'
-    listingId: number
-    price: any
-    listingType: {
-        __typename?: 'ListingType'
-        name: string
-        platform: {__typename?: 'Platform'; platformId: number; name: string}
-    }
-} & {' $fragmentName'?: 'ListingSummaryFragment'}
-
-export type OrderListingMutationVariables = Exact<{
-    input: OrderListingInput
-}>
-
-export type OrderListingMutation = {
-    __typename?: 'Mutation'
-    orderListing: {
-        __typename?: 'OrderListingPayload'
-        order?: {__typename?: 'Order'; orderId: number} | null
-        errors?: Array<
-            | {__typename?: 'CannotOrderOwnListingError'; message: string}
-            | {__typename?: 'InvalidListingIdError'; message: string}
-            | {__typename?: 'ListingPriceHasChangedError'; message: string}
-        > | null
-    }
-}
-
 export type GetUserConnectionsQueryVariables = Exact<{
     input: Scalars['Int']['input']
 }>
@@ -876,16 +858,35 @@ export type AddListingMutation = {
     __typename?: 'Mutation'
     addListing: {
         __typename?: 'AddListingPayload'
-        listing?: {
-            __typename?: 'Listing'
-            listingId: number
-            listingType: {
-                __typename?: 'ListingType'
-                listingTypeId: number
-                name: string
-                platform: {__typename?: 'Platform'; platformId: number; name: string}
-            }
-        } | null
+        listing?: {__typename?: 'Listing'; listingId: number} | null
+    }
+}
+
+export type ListingSummaryFragment = {
+    __typename?: 'Listing'
+    listingId: number
+    price: any
+    listingType: {
+        __typename?: 'ListingType'
+        name: string
+        platform: {__typename?: 'Platform'; platformId: number; name: string}
+    }
+} & {' $fragmentName'?: 'ListingSummaryFragment'}
+
+export type OrderListingMutationVariables = Exact<{
+    input: OrderListingInput
+}>
+
+export type OrderListingMutation = {
+    __typename?: 'Mutation'
+    orderListing: {
+        __typename?: 'OrderListingPayload'
+        order?: {__typename?: 'Order'; orderId: number} | null
+        errors?: Array<
+            | {__typename?: 'CannotOrderOwnListingError'; message: string}
+            | {__typename?: 'InvalidListingIdError'; message: string}
+            | {__typename?: 'ListingPriceHasChangedError'; message: string}
+        > | null
     }
 }
 
@@ -1005,6 +1006,15 @@ export type GetUserListingsQuery = {
             }
         >
     } | null
+}
+
+export type OnNewListingSubscriptionVariables = Exact<{
+    userId: Scalars['Int']['input']
+}>
+
+export type OnNewListingSubscription = {
+    __typename?: 'Subscription'
+    onNewListing: {__typename?: 'Listing'; listingId: number}
 }
 
 export type UserSummaryFragment = {
@@ -1500,82 +1510,6 @@ export const GetUserContextInfoDocument = {
         },
     ],
 } as unknown as DocumentNode<GetUserContextInfoQuery, GetUserContextInfoQueryVariables>
-export const OrderListingDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'mutation',
-            name: {kind: 'Name', value: 'OrderListing'},
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
-                    type: {
-                        kind: 'NonNullType',
-                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'OrderListingInput'}},
-                    },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'orderListing'},
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: {kind: 'Name', value: 'input'},
-                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
-                            },
-                        ],
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'order'},
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
-                                        ],
-                                    },
-                                },
-                                {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'errors'},
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'InlineFragment',
-                                                typeCondition: {
-                                                    kind: 'NamedType',
-                                                    name: {kind: 'Name', value: 'Error'},
-                                                },
-                                                selectionSet: {
-                                                    kind: 'SelectionSet',
-                                                    selections: [
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {kind: 'Name', value: 'message'},
-                                                        },
-                                                    ],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<OrderListingMutation, OrderListingMutationVariables>
 export const GetUserConnectionsDocument = {
     kind: 'Document',
     definitions: [
@@ -1714,45 +1648,78 @@ export const AddListingDocument = {
                                                 kind: 'Field',
                                                 name: {kind: 'Name', value: 'listingId'},
                                             },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AddListingMutation, AddListingMutationVariables>
+export const OrderListingDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'OrderListing'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'OrderListingInput'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'orderListing'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'order'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
                                             {
-                                                kind: 'Field',
-                                                name: {kind: 'Name', value: 'listingType'},
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
                                                 selectionSet: {
                                                     kind: 'SelectionSet',
                                                     selections: [
                                                         {
                                                             kind: 'Field',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'listingTypeId',
-                                                            },
-                                                        },
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {kind: 'Name', value: 'name'},
-                                                        },
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {kind: 'Name', value: 'platform'},
-                                                            selectionSet: {
-                                                                kind: 'SelectionSet',
-                                                                selections: [
-                                                                    {
-                                                                        kind: 'Field',
-                                                                        name: {
-                                                                            kind: 'Name',
-                                                                            value: 'platformId',
-                                                                        },
-                                                                    },
-                                                                    {
-                                                                        kind: 'Field',
-                                                                        name: {
-                                                                            kind: 'Name',
-                                                                            value: 'name',
-                                                                        },
-                                                                    },
-                                                                ],
-                                                            },
+                                                            name: {kind: 'Name', value: 'message'},
                                                         },
                                                     ],
                                                 },
@@ -1767,7 +1734,7 @@ export const AddListingDocument = {
             },
         },
     ],
-} as unknown as DocumentNode<AddListingMutation, AddListingMutationVariables>
+} as unknown as DocumentNode<OrderListingMutation, OrderListingMutationVariables>
 export const AcceptOrderDocument = {
     kind: 'Document',
     definitions: [
@@ -2341,6 +2308,46 @@ export const GetUserListingsDocument = {
         },
     ],
 } as unknown as DocumentNode<GetUserListingsQuery, GetUserListingsQueryVariables>
+export const OnNewListingDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'subscription',
+            name: {kind: 'Name', value: 'OnNewListing'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'onNewListing'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [{kind: 'Field', name: {kind: 'Name', value: 'listingId'}}],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<OnNewListingSubscription, OnNewListingSubscriptionVariables>
 export const ExchangeInstagramAuthCodeForTokenDocument = {
     kind: 'Document',
     definitions: [
