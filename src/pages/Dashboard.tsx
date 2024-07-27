@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import Profile from '../images/profile.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faSackDollar, faStar} from '@fortawesome/free-solid-svg-icons'
-import {useContext, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {UserContext} from '../components/UserContext'
 import UserListings from '../components/UserListings'
 import Orders from '../components/Orders'
@@ -45,6 +45,25 @@ function Dashboard() {
             [OrderStatusEnum.Rejected]: null,
         },
     })
+
+    useEffect(() => {
+        if (!user) {
+            setTabCounts({
+                [OrderPov.Buyer]: {
+                    [OrderStatusEnum.Pending]: null,
+                    [OrderStatusEnum.Accepted]: null,
+                    [OrderStatusEnum.Completed]: null,
+                    [OrderStatusEnum.Rejected]: null,
+                },
+                [OrderPov.Seller]: {
+                    [OrderStatusEnum.Pending]: null,
+                    [OrderStatusEnum.Accepted]: null,
+                    [OrderStatusEnum.Completed]: null,
+                    [OrderStatusEnum.Rejected]: null,
+                },
+            })
+        }
+    }, [user])
 
     function setTabCount(pov: OrderPov, status: OrderStatusEnum, count: number) {
         setTabCounts((prevTabCounts) => ({
@@ -88,6 +107,7 @@ function Dashboard() {
 
             <UserListings />
 
+            <h3>My Orders</h3>
             <Tabs value={tabs[0].value}>
                 <div className="flex mt-4 gap-4">
                     <div className="grow">
