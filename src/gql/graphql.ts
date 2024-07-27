@@ -374,6 +374,7 @@ export type Mutation = {
     login: LoginPayload
     orderListing: OrderListingPayload
     rejectOrder: RejectOrderPayload
+    submitDeliverable: SubmitDeliverablePayload
     updateListingPrice: UpdateListingPricePayload
     updatePassword: UpdatePasswordPayload
 }
@@ -414,6 +415,10 @@ export type MutationRejectOrderArgs = {
     input: RejectOrderInput
 }
 
+export type MutationSubmitDeliverableArgs = {
+    input: SubmitDeliverableInput
+}
+
 export type MutationUpdateListingPriceArgs = {
     input: UpdateListingPriceInput
 }
@@ -424,6 +429,7 @@ export type MutationUpdatePasswordArgs = {
 
 export type Order = {
     __typename?: 'Order'
+    deliverable?: Maybe<Scalars['String']['output']>
     description: Scalars['String']['output']
     listing: Listing
     listingId: Scalars['Int']['output']
@@ -438,6 +444,7 @@ export type Order = {
 
 export type OrderFilterInput = {
     and?: InputMaybe<Array<OrderFilterInput>>
+    deliverable?: InputMaybe<StringOperationFilterInput>
     description?: InputMaybe<StringOperationFilterInput>
     listing?: InputMaybe<ListingFilterInput>
     listingId?: InputMaybe<IntOperationFilterInput>
@@ -475,6 +482,7 @@ export enum OrderPov {
 }
 
 export type OrderSortInput = {
+    deliverable?: InputMaybe<SortEnumType>
     description?: InputMaybe<SortEnumType>
     listing?: InputMaybe<ListingSortInput>
     listingId?: InputMaybe<SortEnumType>
@@ -726,6 +734,19 @@ export type StringOperationFilterInput = {
     startsWith?: InputMaybe<Scalars['String']['input']>
 }
 
+export type SubmitDeliverableError = InvalidOrderIdError
+
+export type SubmitDeliverableInput = {
+    deliverable: Scalars['String']['input']
+    orderId: Scalars['Int']['input']
+}
+
+export type SubmitDeliverablePayload = {
+    __typename?: 'SubmitDeliverablePayload'
+    errors?: Maybe<Array<SubmitDeliverableError>>
+    order?: Maybe<Order>
+}
+
 export type Subscription = {
     __typename?: 'Subscription'
     name: Scalars['String']['output']
@@ -943,6 +964,7 @@ export type OrderSummaryFragment = {
     orderDate: any
     orderStatusId: OrderStatusEnum
     description: string
+    deliverable?: string | null
     user: {__typename?: 'User'; userId: number; firstName: string; lastName: string; email: string}
     listing: {
         __typename?: 'Listing'
@@ -986,6 +1008,19 @@ export type RejectOrderMutation = {
             | {__typename?: 'InvalidOrderIdError'; message: string}
             | {__typename?: 'ListingDoesNotBelongToUserError'; message: string}
         > | null
+    }
+}
+
+export type SubmitDeliverableMutationVariables = Exact<{
+    input: SubmitDeliverableInput
+}>
+
+export type SubmitDeliverableMutation = {
+    __typename?: 'Mutation'
+    submitDeliverable: {
+        __typename?: 'SubmitDeliverablePayload'
+        order?: {__typename?: 'Order'; orderId: number; deliverable?: string | null} | null
+        errors?: Array<{__typename: 'InvalidOrderIdError'; message: string}> | null
     }
 }
 
@@ -1226,6 +1261,7 @@ export const OrderSummaryFragmentDoc = {
                     {kind: 'Field', name: {kind: 'Name', value: 'orderDate'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'orderStatusId'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'description'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'deliverable'}},
                     {
                         kind: 'Field',
                         name: {kind: 'Name', value: 'user'},
@@ -2024,6 +2060,96 @@ export const RejectOrderDocument = {
         },
     ],
 } as unknown as DocumentNode<RejectOrderMutation, RejectOrderMutationVariables>
+export const SubmitDeliverableDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'SubmitDeliverable'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: {kind: 'Name', value: 'SubmitDeliverableInput'},
+                        },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'submitDeliverable'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'order'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'orderId'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'deliverable'},
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: '__typename',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'message'},
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<SubmitDeliverableMutation, SubmitDeliverableMutationVariables>
 export const GetOrdersDocument = {
     kind: 'Document',
     definitions: [
@@ -2232,6 +2358,7 @@ export const GetOrdersDocument = {
                     {kind: 'Field', name: {kind: 'Name', value: 'orderDate'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'orderStatusId'}},
                     {kind: 'Field', name: {kind: 'Name', value: 'description'}},
+                    {kind: 'Field', name: {kind: 'Name', value: 'deliverable'}},
                     {
                         kind: 'Field',
                         name: {kind: 'Name', value: 'user'},
