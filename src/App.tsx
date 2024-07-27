@@ -17,13 +17,12 @@ import ConnectInstagram from './components/connectionComponents/ConnectInstagram
 import Landing from './pages/Landing'
 import UserProfile from './pages/UserProfile'
 import {getToken, isTokenValid} from './authStore'
-import {JwtPayload, jwtDecode} from 'jwt-decode'
 import {graphql} from './gql'
 import {authExchange} from '@urql/exchange-auth'
 
-const GetUserContextInfoDocument = graphql(`
-    query GetUserContextInfo($userId: Int!) {
-        userById(userId: $userId) {
+const WhoAmIQuery = graphql(`
+    query WhoAmI {
+        whoAmI {
             ...UserContextInfo
         }
     }
@@ -36,6 +35,7 @@ function App() {
         if (user) {
             setUser(null)
             alert('You have been logged out. Please log back in.')
+            window.location.href = '/login' //useNavigate() doesn't work here
         }
         localStorage.clear()
     }
@@ -91,13 +91,10 @@ function App() {
     })
 
     useEffect(() => {
-        async function initializeUser(token: string) {
-            const userId = parseInt(jwtDecode<JwtPayload>(token).sub!)
-            const result = await client
-                .query(GetUserContextInfoDocument, {userId: userId})
-                .toPromise()
-            if (result.data?.userById) {
-                const user = result.data.userById as UserContextInfoFragment
+        async function initializeUser() {
+            const result = await client.query(WhoAmIQuery, {}).toPromise()
+            if (result.data?.whoAmI) {
+                const user = result.data.whoAmI as UserContextInfoFragment
                 setUser(user)
                 console.log('Restored user from token')
             }
@@ -105,7 +102,7 @@ function App() {
 
         const token = getToken()
         if (token && isTokenValid(token)) {
-            initializeUser(token)
+            initializeUser()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

@@ -46,15 +46,17 @@ function UserListings() {
     return (
         <>
             <h3>My Listings</h3>
-            <div className="flex flex-wrap gap-4 mt-4 mb-8">
-                {data?.userById?.listings.map((listing) => (
-                    <Listing
-                        key={(listing as ListingSummaryFragment).listingId}
-                        listing={listing}
-                        buyable={false}
-                    />
-                ))}
-            </div>
+            {user && (
+                <div className="flex flex-wrap gap-4 mt-4 mb-8">
+                    {data?.userById?.listings.map((listing) => (
+                        <Listing
+                            key={(listing as ListingSummaryFragment).listingId}
+                            listing={listing}
+                            buyable={false}
+                        />
+                    ))}
+                </div>
+            )}
         </>
     )
 }

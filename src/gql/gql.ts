@@ -13,8 +13,8 @@ import {TypedDocumentNode as DocumentNode} from '@graphql-typed-document-node/co
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    '\n    query GetUserContextInfo($userId: Int!) {\n        userById(userId: $userId) {\n            ...UserContextInfo\n        }\n    }\n':
-        types.GetUserContextInfoDocument,
+    '\n    query WhoAmI {\n        whoAmI {\n            ...UserContextInfo\n        }\n    }\n':
+        types.WhoAmIDocument,
     '\n    query GetUserConnections($input: Int!) {\n        userById(userId: $input) {\n            connections {\n                platformId\n                handle\n            }\n        }\n    }\n':
         types.GetUserConnectionsDocument,
     '\n    query GetListingTypes {\n        platforms {\n            platformId\n            name\n            listingTypes {\n                name\n                listingTypeId\n            }\n        }\n    }\n':
@@ -25,6 +25,8 @@ const documents = {
         types.ListingSummaryFragmentDoc,
     '\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.OrderListingDocument,
+    '\n    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {\n        updateListingPrice(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
+        types.UpdateListingPriceDocument,
     '\n    fragment OrderSummary on Order {\n        orderId\n        orderDate\n        orderStatusId\n        description\n        user {\n            userId\n            firstName\n            lastName\n            email\n        }\n        listing {\n            price\n            user {\n                userId\n                firstName\n                lastName\n            }\n            listingType {\n                name\n                platform {\n                    name\n                }\n            }\n            connection {\n                handle\n            }\n        }\n    }\n':
         types.OrderSummaryFragmentDoc,
     '\n    mutation AcceptOrder($input: AcceptOrderInput!) {\n        acceptOrder(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
@@ -41,8 +43,6 @@ const documents = {
         types.GetUserListingsDocument,
     '\n    subscription OnNewListing($userId: Int!) {\n        onNewListing(userId: $userId) {\n            listingId\n        }\n    }\n':
         types.OnNewListingDocument,
-    '\n    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {\n        updateListingPrice(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
-        types.UpdateListingPriceDocument,
     '\n    fragment UserSummary on User {\n        userId\n        firstName\n        lastName\n        listings {\n            platform {\n                name\n            }\n            listingType {\n                name\n            }\n            price\n        }\n    }\n':
         types.UserSummaryFragmentDoc,
     '\n    mutation ExchangeInstagramAuthCodeForToken($input: ExchangeInstagramAuthCodeForTokenInput!) {\n        exchangeInstagramAuthCodeForToken(input: $input) {\n            connection {\n                userId\n                platformId\n                handle\n                # token\n                # tokenExpiration\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
@@ -83,8 +83,8 @@ export function graphql(source: string): unknown
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    query GetUserContextInfo($userId: Int!) {\n        userById(userId: $userId) {\n            ...UserContextInfo\n        }\n    }\n',
-): (typeof documents)['\n    query GetUserContextInfo($userId: Int!) {\n        userById(userId: $userId) {\n            ...UserContextInfo\n        }\n    }\n']
+    source: '\n    query WhoAmI {\n        whoAmI {\n            ...UserContextInfo\n        }\n    }\n',
+): (typeof documents)['\n    query WhoAmI {\n        whoAmI {\n            ...UserContextInfo\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -115,6 +115,12 @@ export function graphql(
 export function graphql(
     source: '\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
 ): (typeof documents)['\n    mutation OrderListing($input: OrderListingInput!) {\n        orderListing(input: $input) {\n            order {\n                orderId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {\n        updateListingPrice(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {\n        updateListingPrice(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -163,12 +169,6 @@ export function graphql(
 export function graphql(
     source: '\n    subscription OnNewListing($userId: Int!) {\n        onNewListing(userId: $userId) {\n            listingId\n        }\n    }\n',
 ): (typeof documents)['\n    subscription OnNewListing($userId: Int!) {\n        onNewListing(userId: $userId) {\n            listingId\n        }\n    }\n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-    source: '\n    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {\n        updateListingPrice(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
-): (typeof documents)['\n    mutation UpdateListingPrice($input: UpdateListingPriceInput!) {\n        updateListingPrice(input: $input) {\n            listing {\n                listingId\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
