@@ -16,7 +16,7 @@ import ConnectedAccounts from './pages/ConnectedAccounts'
 import ConnectInstagram from './components/connectionComponents/ConnectInstagram'
 import Landing from './pages/Landing'
 import UserProfile from './pages/UserProfile'
-import {getToken, isTokenValid} from './authStore'
+import {getToken} from './authStore'
 import {graphql} from './gql'
 import {authExchange} from '@urql/exchange-auth'
 
@@ -55,26 +55,10 @@ function App() {
             didAuthError(error) {
                 return error.graphQLErrors.some((e) => e.extensions?.code === 'AUTH_NOT_AUTHORIZED')
             },
-            willAuthError(operation) {
+            willAuthError() {
                 // Sync tokens on every operation
                 token = getToken()
 
-                if (!isTokenValid(token)) {
-                    // Detect our login mutation and let this operation through:
-                    return (
-                        operation.kind !== 'mutation' ||
-                        // Here we find any mutation definition with the "signin" field
-                        !operation.query.definitions.some((definition) => {
-                            return (
-                                definition.kind === 'OperationDefinition' &&
-                                definition.selectionSet.selections.some((node) => {
-                                    // The field name is just an example, since register may also be an exception
-                                    return node.kind === 'Field' && node.name.value === 'login'
-                                })
-                            )
-                        })
-                    )
-                }
                 return false
             },
             async refreshAuth() {
@@ -96,13 +80,12 @@ function App() {
             if (result.data?.whoAmI) {
                 const user = result.data.whoAmI as UserContextInfoFragment
                 setUser(user)
-                console.log('Restored user from token')
             }
         }
 
         const token = getToken()
-        if (token && isTokenValid(token)) {
-            initializeUser()
+        if (token) {
+            initializeUser();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
