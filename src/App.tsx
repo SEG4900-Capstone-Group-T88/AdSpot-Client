@@ -85,7 +85,7 @@ function App() {
 
         const token = getToken()
         if (token) {
-            initializeUser();
+            initializeUser()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
