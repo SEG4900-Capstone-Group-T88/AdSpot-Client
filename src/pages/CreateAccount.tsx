@@ -179,9 +179,10 @@ function CreateAccount() {
                 <button
                     className="btn btn-orange uppercase mt-5 font-bold"
                     onClick={CheckBoolean}
+                    data-testid="submit-button"
                 >
                     {!successfulFields && 'Submit Registration'}
-                    {successfulFields && <div className="lds-dual-ring"></div>}
+                    {successfulFields && <div className="lds-dual-ring" data-testid="loading-spinner"></div>}
                 </button>
             </div>
         </>

@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "types": ["vitest/globals"],
         "target": "ES2020",
         "useDefineForClassFields": true,
         "lib": ["ES2020", "DOM", "DOM.Iterable"],
@@ -20,6 +21,6 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src", "codegen.ts"],
+    "include": ["src", "codegen.ts", "test-utils.tsx"],
     "references": [{"path": "./tsconfig.node.json"}]
 }

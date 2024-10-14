@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {Routes, Route} from 'react-router-dom'
 import CreateAccount from './pages/CreateAccount'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
@@ -94,7 +94,7 @@ function App() {
         <ThemeProvider>
             <Provider value={client}>
                 <UserContext.Provider value={{user, setUser}}>
-                    <BrowserRouter>
+                    
                         <Routes>
                             <Route
                                 path="/"
@@ -145,7 +145,7 @@ function App() {
                                 element={<UserProfile />}
                             />
                         </Routes>
-                    </BrowserRouter>
+                 
                 </UserContext.Provider>
             </Provider>
         </ThemeProvider>
