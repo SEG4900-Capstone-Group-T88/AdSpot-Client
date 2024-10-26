@@ -10,3 +10,15 @@ it('renders login', async () => {
   screen.getByText(/password/i)
   screen.getByText(/sign in/i)
 })
+
+it('renders the "Search" button', () => {
+  render(<Login />);
+  const searchLink = screen.getByRole('button', { name: /Search/i });
+  expect(searchLink).toBeVisible
+});
+
+it('renders the "Sign Up" link with correct href', async () => {          
+  render(<Login/>)
+  fireEvent.click(screen.getByRole('link', { name: /sign up/i }))
+  expect(mockClient.executeMutation).toHaveBeenCalled()
+})
