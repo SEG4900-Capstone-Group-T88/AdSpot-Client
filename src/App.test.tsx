@@ -14,7 +14,6 @@ describe('App Component', () => {
     { path: '/signup', expectedText: /Sign Up/i },
     { path: '/search', expectedText: /Filter/i },
     { path: '/dashboard', expectedText: /My Orders/i },
-    { path: '/create-account', expectedText: /Create Account/i },
     { path: '/messages', expectedText: /Messages/i },
     { path: '/settings', expectedText: /Settings/i },
     { path: '/settings/connectedAccounts', expectedText: /Accounts/i },

@@ -1,5 +1,4 @@
 import {Routes, Route} from 'react-router-dom'
-import CreateAccount from './pages/CreateAccount'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Messages from './pages/Messages'
@@ -115,10 +114,6 @@ function App() {
                             <Route
                                 path="/dashboard"
                                 element={<Dashboard />}
-                            />
-                            <Route
-                                path="/create-account"
-                                element={<CreateAccount />}
                             />
                             <Route
                                 path="/messages"
