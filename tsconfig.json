@@ -21,6 +21,6 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src", "codegen.ts", "test-utils.tsx"],
+    "include": ["src", "codegen.ts", "test-utils.tsx", "vitest.config.ts"],
     "references": [{"path": "./tsconfig.node.json"}]
 }
