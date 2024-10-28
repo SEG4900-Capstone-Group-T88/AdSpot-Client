@@ -11,7 +11,8 @@
         "preview": "vite preview",
         "codegen": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen",
         "test": "vitest",
-        "coverage": "vitest run --coverage"
+        "coverage": "vitest run --coverage",
+        "testUI": "vitest --ui"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -47,6 +48,7 @@
         "@vitejs/plugin-basic-ssl": "^1.1.0",
         "@vitejs/plugin-react": "^4.2.1",
         "@vitest/coverage-v8": "^2.1.3",
+        "@vitest/ui": "^2.1.3",
         "autoprefixer": "^10.4.18",
         "cross-env": "^7.0.3",
         "eslint": "^8.56.0",
