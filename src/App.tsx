@@ -93,54 +93,52 @@ function App() {
         <ThemeProvider>
             <Provider value={client}>
                 <UserContext.Provider value={{user, setUser}}>
-                    
-                        <Routes>
-                            <Route
-                                path="/"
-                                element={<Landing />}
-                            />
-                            <Route
-                                path="/login"
-                                element={<Login />}
-                            />
-                            <Route
-                                path="/signup"
-                                element={<SignUp />}
-                            />
-                            <Route
-                                path="/search"
-                                element={<Search />}
-                            />
-                            <Route
-                                path="/dashboard"
-                                element={<Dashboard />}
-                            />
-                            <Route
-                                path="/messages"
-                                element={<Messages />}
-                            />
-                            <Route
-                                path="/settings"
-                                element={<SettingsPage />}
-                            />
-                            <Route
-                                path="/settings/connectedAccounts"
-                                element={<ConnectedAccounts />}
-                            />
-                            <Route
-                                path="/settings/connectInstagramAccount"
-                                element={<ConnectInstagram />}
-                            />
-                            <Route
-                                path="/payment"
-                                element={<PaymentInfoPage />}
-                            />
-                            <Route
-                                path="/user/:userId"
-                                element={<UserProfile />}
-                            />
-                        </Routes>
-                 
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={<Landing />}
+                        />
+                        <Route
+                            path="/login"
+                            element={<Login />}
+                        />
+                        <Route
+                            path="/signup"
+                            element={<SignUp />}
+                        />
+                        <Route
+                            path="/search"
+                            element={<Search />}
+                        />
+                        <Route
+                            path="/dashboard"
+                            element={<Dashboard />}
+                        />
+                        <Route
+                            path="/messages"
+                            element={<Messages />}
+                        />
+                        <Route
+                            path="/settings"
+                            element={<SettingsPage />}
+                        />
+                        <Route
+                            path="/settings/connectedAccounts"
+                            element={<ConnectedAccounts />}
+                        />
+                        <Route
+                            path="/settings/connectInstagramAccount"
+                            element={<ConnectInstagram />}
+                        />
+                        <Route
+                            path="/payment"
+                            element={<PaymentInfoPage />}
+                        />
+                        <Route
+                            path="/user/:userId"
+                            element={<UserProfile />}
+                        />
+                    </Routes>
                 </UserContext.Provider>
             </Provider>
         </ThemeProvider>

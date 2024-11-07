@@ -10,11 +10,11 @@ export default defineConfig({
     plugins: [react(), basicSsl()],
     server: {
         open: true,
-    }, 
+    },
     test: {
-        environment: "jsdom", 
-        globals: true, 
-        setupFiles: "setupTests.ts",
+        environment: 'jsdom',
+        globals: true,
+        setupFiles: 'setupTests.ts',
         coverage: {
             exclude: [
                 ...configDefaults.exclude,
@@ -27,10 +27,10 @@ export default defineConfig({
                 'src/OrderContextEnum.tsx',
                 'src/main.tsx',
                 'src/urqlClient.tsx',
-                'src/authStore.tsx'
+                'src/authStore.tsx',
             ],
             enabled: true,
-            reporter: ['html']
-        }
+            reporter: ['html'],
+        },
     },
 })
