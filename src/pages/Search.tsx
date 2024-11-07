@@ -7,6 +7,7 @@ import UserSummary, {UserSummaryFragmentDocument} from '../components/UserSummar
 import {UserFilterInput} from '../gql/graphql'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowLeft, faArrowRight} from '@fortawesome/free-solid-svg-icons'
+import {Input} from '@material-tailwind/react'
 
 export const GetUsersQuery = graphql(`
     query GetUsers(
@@ -53,6 +54,7 @@ export const GetPlatformsQuery = graphql(`
 function Search() {
     const [selectedPlatformId, setSelectedPlatformId] = useState(-1)
     const [price, setPrice] = useState<number>(1000)
+    const [search, setSearch] = useState<string>('')
     // const [selectedNiche, setSelectedNiche] = useState<string[]>([])
     // const [selectedFollowerRange, setSelectedFollowerRange] = useState<[number, number] | null>(
     //     null,
@@ -79,10 +81,16 @@ function Search() {
         },
     }
 
-    const filters: UserFilterInput[] = [atLeastOneListingFilter, priceFilter]
+    let filters: UserFilterInput[] = [atLeastOneListingFilter, priceFilter]
     if (selectedPlatformId !== -1) {
         filters.push(platformFilter)
     }
+
+    if (search) {
+        const [firstName, lastName] = search.split(' ')
+        filters = [{firstName: {startsWith: firstName}}, {lastName: {startsWith: lastName ?? ''}}]
+    }
+
     const combinedFilter = {
         and: filters,
     }
@@ -150,8 +158,18 @@ function Search() {
             <Navbar />
             <div className="grid grid-cols-4 mt-4">
                 <div className="col-span-1">
-                    <div className="filter-container">
+                    <div className="filter-container flex flex-col gap-4">
                         <h3>Filter</h3>
+                        <div className="username w-fit">
+                            <h4>Name</h4>
+                            <Input
+                                type="text"
+                                size="lg"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                crossOrigin={undefined}
+                            />
+                        </div>
                         <div className="price-range">
                             <h4>Price range</h4>
                             <input
