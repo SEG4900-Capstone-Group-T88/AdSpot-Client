@@ -86,13 +86,23 @@ function Search() {
         filters.push(platformFilter)
     }
 
+    let combinedFilter
     if (search) {
         const [firstName, lastName] = search.split(' ')
-        filters = [{firstName: {startsWith: firstName}}, {lastName: {startsWith: lastName ?? ''}}]
-    }
-
-    const combinedFilter = {
-        and: filters,
+        if (lastName === undefined) {
+            // only one word
+            combinedFilter = {
+                or: [{firstName: {startsWith: firstName}}, {lastName: {startsWith: firstName}}],
+            }
+        } else {
+            combinedFilter = {
+                and: [{firstName: {startsWith: firstName}}, {lastName: {startsWith: lastName}}],
+            }
+        }
+    } else {
+        combinedFilter = {
+            and: filters,
+        }
     }
 
     const pageSize = 12
