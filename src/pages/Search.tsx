@@ -63,36 +63,46 @@ function Search() {
 
     const [{data: platformsData}] = useQuery({query: GetPlatformsQuery})
 
-    const atLeastOneListingFilter = {
-        listings: {any: true},
-    }
-    const platformFilter = {
-        listings: {
-            some: {
-                platform: {platformId: {eq: selectedPlatformId}},
-            },
-        },
-    }
-    const priceFilter = {
-        listings: {
-            some: {
-                and: [{price: {gte: 0}}, {price: {lte: price}}],
-            },
-        },
-    }
-
-    let filters: UserFilterInput[] = [atLeastOneListingFilter, priceFilter]
-    if (selectedPlatformId !== -1) {
-        filters.push(platformFilter)
-    }
-
-    if (search) {
+    let combinedFilter
+    if (search.length > 0) {
         const [firstName, lastName] = search.split(' ')
-        filters = [{firstName: {startsWith: firstName}}, {lastName: {startsWith: lastName ?? ''}}]
-    }
+        if (lastName === undefined) {
+            // only one word
+            combinedFilter = {
+                or: [{firstName: {startsWith: firstName}}, {lastName: {startsWith: firstName}}],
+            }
+        } else {
+            combinedFilter = {
+                and: [{firstName: {startsWith: firstName}}, {lastName: {startsWith: lastName}}],
+            }
+        }
+    } else {
+        const atLeastOneListingFilter = {
+            listings: {any: true},
+        }
+        const platformFilter = {
+            listings: {
+                some: {
+                    platform: {platformId: {eq: selectedPlatformId}},
+                },
+            },
+        }
+        const priceFilter = {
+            listings: {
+                some: {
+                    and: [{price: {gte: 0}}, {price: {lte: price}}],
+                },
+            },
+        }
 
-    const combinedFilter = {
-        and: filters,
+        const filters: UserFilterInput[] = [atLeastOneListingFilter, priceFilter]
+        if (selectedPlatformId !== -1) {
+            filters.push(platformFilter)
+        }
+
+        combinedFilter = {
+            and: filters,
+        }
     }
 
     const pageSize = 12
