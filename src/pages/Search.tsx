@@ -63,31 +63,8 @@ function Search() {
 
     const [{data: platformsData}] = useQuery({query: GetPlatformsQuery})
 
-    const atLeastOneListingFilter = {
-        listings: {any: true},
-    }
-    const platformFilter = {
-        listings: {
-            some: {
-                platform: {platformId: {eq: selectedPlatformId}},
-            },
-        },
-    }
-    const priceFilter = {
-        listings: {
-            some: {
-                and: [{price: {gte: 0}}, {price: {lte: price}}],
-            },
-        },
-    }
-
-    let filters: UserFilterInput[] = [atLeastOneListingFilter, priceFilter]
-    if (selectedPlatformId !== -1) {
-        filters.push(platformFilter)
-    }
-
     let combinedFilter
-    if (search) {
+    if (search.length > 0) {
         const [firstName, lastName] = search.split(' ')
         if (lastName === undefined) {
             // only one word
@@ -100,6 +77,29 @@ function Search() {
             }
         }
     } else {
+        const atLeastOneListingFilter = {
+            listings: {any: true},
+        }
+        const platformFilter = {
+            listings: {
+                some: {
+                    platform: {platformId: {eq: selectedPlatformId}},
+                },
+            },
+        }
+        const priceFilter = {
+            listings: {
+                some: {
+                    and: [{price: {gte: 0}}, {price: {lte: price}}],
+                },
+            },
+        }
+
+        const filters: UserFilterInput[] = [atLeastOneListingFilter, priceFilter]
+        if (selectedPlatformId !== -1) {
+            filters.push(platformFilter)
+        }
+
         combinedFilter = {
             and: filters,
         }
