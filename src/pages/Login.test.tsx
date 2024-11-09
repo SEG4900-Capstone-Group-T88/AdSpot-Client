@@ -13,8 +13,8 @@ it('renders login', async () => {
 
 it('renders the "Search" button', () => {
     render(<Login />)
-    const searchLink = screen.getByRole('button', {name: /Search/i})
-    expect(searchLink).toBeVisible
+    const exploreLink = screen.getByRole('button', {name: /Explore/i})
+    expect(exploreLink).toBeVisible
 })
 
 it('renders the "Sign Up" link with correct href', async () => {

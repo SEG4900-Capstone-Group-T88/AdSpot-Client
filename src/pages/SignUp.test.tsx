@@ -9,10 +9,10 @@ it('clicks button to login', async () => {
     screen.getByText(/Already have an account?/i)
 })
 
-it('renders the "Search" button', () => {
+it('renders the "Explore" button', () => {
     render(<SignUp />)
-    const searchLink = screen.getByRole('button', {name: /Search/i})
-    expect(searchLink).toBeVisible
+    const exploreLink = screen.getByRole('button', {name: /Explore/i})
+    expect(exploreLink).toBeVisible
 })
 
 it('renders the "Sign Up" link with correct href', async () => {
