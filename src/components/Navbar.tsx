@@ -85,7 +85,7 @@ function Navbar() {
                     className="bg-purple text-[white] rounded-lg px-6 py-1 m-1"
                     onClick={redirectToSearch}
                 >
-                    Search
+                    Explore
                 </button>
                 <CreateListing />
                 <div className="relative">
