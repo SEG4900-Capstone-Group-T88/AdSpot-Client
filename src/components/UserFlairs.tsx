@@ -139,7 +139,10 @@ function UserFlairs() {
                     {editable && flairs.length < 6 && (
                         <div
                             className="flex flex-col bg-white text-purple rounded p-2 cursor-pointer outline"
-                            onClick={() => {setShowPopup(true); setShowError(false)}}
+                            onClick={() => {
+                                setShowPopup(true)
+                                setShowError(false)
+                            }}
                         >
                             <span>
                                 Add Flair
@@ -181,7 +184,11 @@ function UserFlairs() {
                                     maxLength={10}
                                     onChange={() => setShowError(false)}
                                 ></input>
-                                {showError && (<span className='text-[red] mt-2'>This flair already exists</span>)}
+                                {showError && (
+                                    <span className="text-[red] mt-2">
+                                        This flair already exists
+                                    </span>
+                                )}
                             </div>
                             <button
                                 className="bg-purple text-white rounded-lg px-4 py-2 mt-4 shadow-lg"
