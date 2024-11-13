@@ -60,6 +60,7 @@ function UserFlairs() {
 
     const [showPopup, setShowPopup] = useState(false)
     const [editable, setEditable] = useState(false)
+    const [showError, setShowError] = useState(false)
     const [, addFlairMutation] = useMutation(AddFlairMutation)
     const [, deleteFlairMutation] = useMutation(DeleteFlairMutation)
 
@@ -76,9 +77,13 @@ function UserFlairs() {
                 flairTitle: flairTitle,
             },
         }).then((result) => {
-            setFlairs(result.data?.addFlair.flair ?? new Array<FlairObject>())
+            if (result.data?.addFlair.errors) {
+                setShowError(true)
+            } else {
+                setFlairs(result.data?.addFlair.flair ?? new Array<FlairObject>())
+                setShowPopup(false)
+            }
         })
-        setShowPopup(false)
     }
 
     function deleteFlair(flair: FlairObject) {
@@ -134,7 +139,7 @@ function UserFlairs() {
                     {editable && flairs.length < 6 && (
                         <div
                             className="flex flex-col bg-white text-purple rounded p-2 cursor-pointer outline"
-                            onClick={() => setShowPopup(true)}
+                            onClick={() => {setShowPopup(true); setShowError(false)}}
                         >
                             <span>
                                 Add Flair
@@ -174,7 +179,9 @@ function UserFlairs() {
                                     autoFocus={true}
                                     placeholder="Enter a your flair here."
                                     maxLength={10}
+                                    onChange={() => setShowError(false)}
                                 ></input>
+                                {showError && (<span className='text-[red] mt-2'>This flair already exists</span>)}
                             </div>
                             <button
                                 className="bg-purple text-white rounded-lg px-4 py-2 mt-4 shadow-lg"
