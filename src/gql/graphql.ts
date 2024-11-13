@@ -60,6 +60,19 @@ export type AddConnectionPayload = {
     errors?: Maybe<Array<AddConnectionError>>
 }
 
+export type AddFlairError = FlairAlreadyExistsError
+
+export type AddFlairInput = {
+    flairTitle: Scalars['String']['input']
+    userId: Scalars['Int']['input']
+}
+
+export type AddFlairPayload = {
+    __typename?: 'AddFlairPayload'
+    errors?: Maybe<Array<AddFlairError>>
+    flair?: Maybe<Array<Flair>>
+}
+
 export type AddListingError = AccountHasNotBeenConnectedError | InvalidListingTypeIdError
 
 export type AddListingInput = {
@@ -169,6 +182,16 @@ export type DecimalOperationFilterInput = {
     nlte?: InputMaybe<Scalars['Decimal']['input']>
 }
 
+export type DeleteFlairInput = {
+    flairTitle: Scalars['String']['input']
+    userId: Scalars['Int']['input']
+}
+
+export type DeleteFlairPayload = {
+    __typename?: 'DeleteFlairPayload'
+    flair?: Maybe<Array<Flair>>
+}
+
 export type DeleteUserError = InvalidUserIdError
 
 export type DeleteUserInput = {
@@ -197,6 +220,26 @@ export type ExchangeInstagramAuthCodeForTokenPayload = {
     __typename?: 'ExchangeInstagramAuthCodeForTokenPayload'
     connection?: Maybe<Connection>
     errors?: Maybe<Array<ExchangeInstagramAuthCodeForTokenError>>
+}
+
+export type Flair = {
+    __typename?: 'Flair'
+    flairTitle: Scalars['String']['output']
+    user: User
+    userId: Scalars['Int']['output']
+}
+
+export type FlairAlreadyExistsError = Error & {
+    __typename?: 'FlairAlreadyExistsError'
+    message: Scalars['String']['output']
+}
+
+export type FlairFilterInput = {
+    and?: InputMaybe<Array<FlairFilterInput>>
+    flairTitle?: InputMaybe<StringOperationFilterInput>
+    or?: InputMaybe<Array<FlairFilterInput>>
+    user?: InputMaybe<UserFilterInput>
+    userId?: InputMaybe<IntOperationFilterInput>
 }
 
 export type InstagramOauthError = Error & {
@@ -249,6 +292,13 @@ export type ListFilterInputTypeOfConnectionFilterInput = {
     any?: InputMaybe<Scalars['Boolean']['input']>
     none?: InputMaybe<ConnectionFilterInput>
     some?: InputMaybe<ConnectionFilterInput>
+}
+
+export type ListFilterInputTypeOfFlairFilterInput = {
+    all?: InputMaybe<FlairFilterInput>
+    any?: InputMaybe<Scalars['Boolean']['input']>
+    none?: InputMaybe<FlairFilterInput>
+    some?: InputMaybe<FlairFilterInput>
 }
 
 export type ListFilterInputTypeOfListingFilterInput = {
@@ -367,8 +417,10 @@ export type Mutation = {
     __typename?: 'Mutation'
     acceptOrder: AcceptOrderPayload
     addConnection: AddConnectionPayload
+    addFlair: AddFlairPayload
     addListing: AddListingPayload
     addUser: AddUserPayload
+    deleteFlair: DeleteFlairPayload
     deleteUser: DeleteUserPayload
     exchangeInstagramAuthCodeForToken: ExchangeInstagramAuthCodeForTokenPayload
     login: LoginPayload
@@ -387,12 +439,20 @@ export type MutationAddConnectionArgs = {
     input: AddConnectionInput
 }
 
+export type MutationAddFlairArgs = {
+    input: AddFlairInput
+}
+
 export type MutationAddListingArgs = {
     input: AddListingInput
 }
 
 export type MutationAddUserArgs = {
     input: AddUserInput
+}
+
+export type MutationDeleteFlairArgs = {
+    input: DeleteFlairInput
 }
 
 export type MutationDeleteUserArgs = {
@@ -610,6 +670,7 @@ export type Query = {
     __typename?: 'Query'
     connection: Array<Connection>
     connections: Array<Connection>
+    flairs: Array<Flair>
     orderById?: Maybe<Order>
     orders?: Maybe<OrdersConnection>
     /** @deprecated Use the `orders` field with a filter instead */
@@ -628,6 +689,10 @@ export type QueryConnectionArgs = {
 }
 
 export type QueryConnectionsArgs = {
+    userId: Scalars['Int']['input']
+}
+
+export type QueryFlairsArgs = {
     userId: Scalars['Int']['input']
 }
 
@@ -654,6 +719,10 @@ export type QueryOrdersByStatusArgs = {
     order?: InputMaybe<Array<OrderSortInput>>
     status: OrderStatusEnum
     userId: Scalars['Int']['input']
+}
+
+export type QueryPlatformsArgs = {
+    order?: InputMaybe<Array<PlatformSortInput>>
 }
 
 export type QueryRequestsByStatusArgs = {
@@ -802,6 +871,7 @@ export type User = {
     connections: Array<Connection>
     email: Scalars['String']['output']
     firstName: Scalars['String']['output']
+    flairs: Array<Flair>
     lastName: Scalars['String']['output']
     listings: Array<Listing>
     orders: Array<Order>
@@ -814,6 +884,7 @@ export type UserFilterInput = {
     connections?: InputMaybe<ListFilterInputTypeOfConnectionFilterInput>
     email?: InputMaybe<StringOperationFilterInput>
     firstName?: InputMaybe<StringOperationFilterInput>
+    flairs?: InputMaybe<ListFilterInputTypeOfFlairFilterInput>
     lastName?: InputMaybe<StringOperationFilterInput>
     listings?: InputMaybe<ListFilterInputTypeOfListingFilterInput>
     or?: InputMaybe<Array<UserFilterInput>>
@@ -1073,6 +1144,40 @@ export type UserContextInfoFragment = {
     firstName: string
     lastName: string
 } & {' $fragmentName'?: 'UserContextInfoFragment'}
+
+export type GetFlairsQueryVariables = Exact<{
+    userId: Scalars['Int']['input']
+}>
+
+export type GetFlairsQuery = {
+    __typename?: 'Query'
+    flairs: Array<{__typename?: 'Flair'; userId: number; flairTitle: string}>
+}
+
+export type AddFlairMutationVariables = Exact<{
+    input: AddFlairInput
+}>
+
+export type AddFlairMutation = {
+    __typename?: 'Mutation'
+    addFlair: {
+        __typename?: 'AddFlairPayload'
+        flair?: Array<{__typename?: 'Flair'; userId: number; flairTitle: string}> | null
+        errors?: Array<{__typename?: 'FlairAlreadyExistsError'; message: string}> | null
+    }
+}
+
+export type DeleteFlairMutationVariables = Exact<{
+    input: DeleteFlairInput
+}>
+
+export type DeleteFlairMutation = {
+    __typename?: 'Mutation'
+    deleteFlair: {
+        __typename?: 'DeleteFlairPayload'
+        flair?: Array<{__typename?: 'Flair'; userId: number; flairTitle: string}> | null
+    }
+}
 
 export type GetUserListingsQueryVariables = Exact<{
     userId: Scalars['Int']['input']
@@ -2482,6 +2587,184 @@ export const OnNewOrderDocument = {
         },
     ],
 } as unknown as DocumentNode<OnNewOrderSubscription, OnNewOrderSubscriptionVariables>
+export const GetFlairsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: {kind: 'Name', value: 'GetFlairs'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'flairs'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'userId'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'userId'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'flairTitle'}},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<GetFlairsQuery, GetFlairsQueryVariables>
+export const AddFlairDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'AddFlair'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'AddFlairInput'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'addFlair'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'flair'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'flairTitle'},
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'errors'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                    kind: 'NamedType',
+                                                    name: {kind: 'Name', value: 'Error'},
+                                                },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {kind: 'Name', value: 'message'},
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AddFlairMutation, AddFlairMutationVariables>
+export const DeleteFlairDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: {kind: 'Name', value: 'DeleteFlair'},
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                    type: {
+                        kind: 'NonNullType',
+                        type: {kind: 'NamedType', name: {kind: 'Name', value: 'DeleteFlairInput'}},
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'deleteFlair'},
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: {kind: 'Name', value: 'input'},
+                                value: {kind: 'Variable', name: {kind: 'Name', value: 'input'}},
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'flair'},
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                            {
+                                                kind: 'Field',
+                                                name: {kind: 'Name', value: 'flairTitle'},
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<DeleteFlairMutation, DeleteFlairMutationVariables>
 export const GetUserListingsDocument = {
     kind: 'Document',
     definitions: [
