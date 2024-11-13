@@ -6,6 +6,7 @@ import {faSackDollar, faStar} from '@fortawesome/free-solid-svg-icons'
 import {useContext, useEffect, useState} from 'react'
 import {UserContext} from '../components/UserContext'
 import UserListings from '../components/UserListings'
+import UserFlairs from '../components/UserFlairs'
 import Orders from '../components/Orders'
 import {Select, Option, Tab, TabPanel, Tabs, TabsBody, TabsHeader} from '@material-tailwind/react'
 import {OrderPov, OrderStatusEnum} from '../gql/graphql'
@@ -104,6 +105,7 @@ function Dashboard() {
                     </div>
                 </div>
             </div>
+            <UserFlairs />
 
             <UserListings />
 

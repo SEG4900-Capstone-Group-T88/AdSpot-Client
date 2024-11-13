@@ -41,6 +41,12 @@ const documents = {
         types.OnNewOrderDocument,
     '\n    fragment UserContextInfo on User {\n        userId\n        email\n        firstName\n        lastName\n    }\n':
         types.UserContextInfoFragmentDoc,
+    '\n    query GetFlairs($userId: Int!) {\n        flairs(userId: $userId) {\n            userId\n            flairTitle\n        }\n    }\n':
+        types.GetFlairsDocument,
+    '\n    mutation AddFlair($input: AddFlairInput!) {\n        addFlair(input: $input) {\n            flair {\n                userId\n                flairTitle\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
+        types.AddFlairDocument,
+    '\n    mutation DeleteFlair($input: DeleteFlairInput!) {\n        deleteFlair(input: $input) {\n            flair {\n                userId\n                flairTitle\n            }\n        }\n    }\n':
+        types.DeleteFlairDocument,
     '\n    query GetUserListings($userId: Int!) {\n        userById(userId: $userId) {\n            listings {\n                ...ListingSummary\n            }\n        }\n    }\n':
         types.GetUserListingsDocument,
     '\n    subscription OnNewListing($userId: Int!) {\n        onNewListing(userId: $userId) {\n            listingId\n        }\n    }\n':
@@ -61,7 +67,7 @@ const documents = {
         types.GetPlatformsDocument,
     '\n    mutation RegisterUser($input: AddUserInput!) {\n        addUser(input: $input) {\n            user {\n                ...UserContextInfo\n            }\n            token\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.RegisterUserDocument,
-    '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n    }\n':
+    '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n        flairs {\n            userId\n            flairTitle\n        }\n    }\n':
         types.UserProfileFragmentDoc,
     '\n    query GetUserById($userId: Int!) {\n        userById(userId: $userId) {\n            ...UserProfile\n        }\n    }\n':
         types.GetUserByIdDocument,
@@ -169,6 +175,24 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+    source: '\n    query GetFlairs($userId: Int!) {\n        flairs(userId: $userId) {\n            userId\n            flairTitle\n        }\n    }\n',
+): (typeof documents)['\n    query GetFlairs($userId: Int!) {\n        flairs(userId: $userId) {\n            userId\n            flairTitle\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    mutation AddFlair($input: AddFlairInput!) {\n        addFlair(input: $input) {\n            flair {\n                userId\n                flairTitle\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    mutation AddFlair($input: AddFlairInput!) {\n        addFlair(input: $input) {\n            flair {\n                userId\n                flairTitle\n            }\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    mutation DeleteFlair($input: DeleteFlairInput!) {\n        deleteFlair(input: $input) {\n            flair {\n                userId\n                flairTitle\n            }\n        }\n    }\n',
+): (typeof documents)['\n    mutation DeleteFlair($input: DeleteFlairInput!) {\n        deleteFlair(input: $input) {\n            flair {\n                userId\n                flairTitle\n            }\n        }\n    }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
     source: '\n    query GetUserListings($userId: Int!) {\n        userById(userId: $userId) {\n            listings {\n                ...ListingSummary\n            }\n        }\n    }\n',
 ): (typeof documents)['\n    query GetUserListings($userId: Int!) {\n        userById(userId: $userId) {\n            listings {\n                ...ListingSummary\n            }\n        }\n    }\n']
 /**
@@ -229,8 +253,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n    }\n',
-): (typeof documents)['\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n    }\n']
+    source: '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n        flairs {\n            userId\n            flairTitle\n        }\n    }\n',
+): (typeof documents)['\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n        flairs {\n            userId\n            flairTitle\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
