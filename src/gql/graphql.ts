@@ -1339,6 +1339,7 @@ export type UserProfileFragment = {
             ' $fragmentRefs'?: {ListingSummaryFragment: ListingSummaryFragment}
         }
     >
+    flairs: Array<{__typename?: 'Flair'; userId: number; flairTitle: string}>
 } & {' $fragmentName'?: 'UserProfileFragment'}
 
 export type GetUserByIdQueryVariables = Exact<{
@@ -1595,6 +1596,17 @@ export const UserProfileFragmentDoc = {
                                     kind: 'FragmentSpread',
                                     name: {kind: 'Name', value: 'ListingSummary'},
                                 },
+                            ],
+                        },
+                    },
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'flairs'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'flairTitle'}},
                             ],
                         },
                     },
@@ -3548,6 +3560,17 @@ export const GetUserByIdDocument = {
                                     kind: 'FragmentSpread',
                                     name: {kind: 'Name', value: 'ListingSummary'},
                                 },
+                            ],
+                        },
+                    },
+                    {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'flairs'},
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {kind: 'Field', name: {kind: 'Name', value: 'userId'}},
+                                {kind: 'Field', name: {kind: 'Name', value: 'flairTitle'}},
                             ],
                         },
                     },

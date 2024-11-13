@@ -67,7 +67,7 @@ const documents = {
         types.GetPlatformsDocument,
     '\n    mutation RegisterUser($input: AddUserInput!) {\n        addUser(input: $input) {\n            user {\n                ...UserContextInfo\n            }\n            token\n            errors {\n                ... on Error {\n                    message\n                }\n            }\n        }\n    }\n':
         types.RegisterUserDocument,
-    '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n    }\n':
+    '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n        flairs {\n            userId\n            flairTitle\n        }\n    }\n':
         types.UserProfileFragmentDoc,
     '\n    query GetUserById($userId: Int!) {\n        userById(userId: $userId) {\n            ...UserProfile\n        }\n    }\n':
         types.GetUserByIdDocument,
@@ -253,8 +253,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n    }\n',
-): (typeof documents)['\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n    }\n']
+    source: '\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n        flairs {\n            userId\n            flairTitle\n        }\n    }\n',
+): (typeof documents)['\n    fragment UserProfile on User {\n        userId\n        firstName\n        lastName\n        listings {\n            ...ListingSummary\n        }\n        flairs {\n            userId\n            flairTitle\n        }\n    }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

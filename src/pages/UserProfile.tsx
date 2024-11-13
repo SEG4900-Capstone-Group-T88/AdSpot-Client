@@ -14,6 +14,10 @@ export const UserProfileFragmentDocument = graphql(`
         listings {
             ...ListingSummary
         }
+        flairs {
+            userId
+            flairTitle
+        }
     }
 `)
 
@@ -52,8 +56,18 @@ function UserProfile() {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam Lorem ipsum
                         dolor sit amet, consectetur adipiscing elit. Nullam
                     </p>
+                    <h3 className="mt-4 mb-2">Influencer Flairs</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {user.flairs.map((flair) => {
+                            return (
+                                <div className="flex flex-col bg-purple text-white rounded p-2 outline">
+                                    <span>{flair.flairTitle}</span>
+                                </div>
+                            )
+                        })}
+                    </div>
                     <h3 className="mt-4 mb-2">Select a promotion type</h3>
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-2">
                         {user.listings.map((listing) => {
                             return (
                                 <Listing
