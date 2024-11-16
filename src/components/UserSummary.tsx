@@ -1,6 +1,8 @@
 import {useNavigate} from 'react-router-dom'
 import {FragmentType, graphql, useFragment} from '../gql'
 import Profile from '../images/profile.png'
+import {GetFlairsQuery} from './UserFlairs'
+import {useQuery} from 'urql'
 
 export const UserSummaryFragmentDocument = graphql(`
     fragment UserSummary on User {
@@ -27,6 +29,12 @@ function UserSummary(props: {user: FragmentType<typeof UserSummaryFragmentDocume
     const prices = user.listings.map((listing) => Number(listing.price))
     const navigate = useNavigate()
 
+    const [{data}] = useQuery({
+        query: GetFlairsQuery,
+        variables: {userId: user?.userId ?? -1},
+        pause: !user,
+    })
+
     return (
         <div
             className="bg-white rounded-lg shadow-md p-6 cursor-pointer"
@@ -35,11 +43,20 @@ function UserSummary(props: {user: FragmentType<typeof UserSummaryFragmentDocume
             <div className="flex items-center py-2">
                 <img
                     src={Profile}
-                    className="h-12 w-12 rounded-full mr-4"
+                    className="h-12 w-12 rounded-full mr-4 self-start"
                 />
-                <h4 className="text-xl font-semibold">
-                    {user.firstName} {user.lastName}
-                </h4>
+                <div>
+                    <h4 className="text-xl font-semibold">
+                        {user.firstName} {user.lastName}
+                    </h4>
+                    <div className="flex flex-wrap gap-2 py-2">
+                        {data?.flairs.map((flair) => (
+                            <span className="bg-purple text-white rounded px-2">
+                                {flair.flairTitle}
+                            </span>
+                        ))}
+                    </div>
+                </div>
             </div>
             <div className="flex flex-wrap gap-2 py-2">
                 {platformNames.map((platform, idx) => (

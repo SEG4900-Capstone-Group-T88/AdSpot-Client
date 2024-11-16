@@ -54,7 +54,8 @@ export const GetPlatformsQuery = graphql(`
 function Search() {
     const [selectedPlatformId, setSelectedPlatformId] = useState(-1)
     const [price, setPrice] = useState<number>(1000)
-    const [search, setSearch] = useState<string>('')
+    const [nameSearch, setNameSearch] = useState<string>('')
+    const [flairSearch, setFlairSearch] = useState<string>('')
     // const [selectedNiche, setSelectedNiche] = useState<string[]>([])
     // const [selectedFollowerRange, setSelectedFollowerRange] = useState<[number, number] | null>(
     //     null,
@@ -64,8 +65,8 @@ function Search() {
     const [{data: platformsData}] = useQuery({query: GetPlatformsQuery})
 
     let combinedFilter
-    if (search.length > 0) {
-        const [firstName, lastName] = search.split(' ')
+    if (nameSearch.length > 0) {
+        const [firstName, lastName] = nameSearch.split(' ')
         if (lastName === undefined) {
             // only one word
             combinedFilter = {
@@ -98,6 +99,16 @@ function Search() {
         const filters: UserFilterInput[] = [atLeastOneListingFilter, priceFilter]
         if (selectedPlatformId !== -1) {
             filters.push(platformFilter)
+        }
+        if (flairSearch.length > 0) {
+            const flairFilter = {
+                flairs: {
+                    some: {
+                        flairTitle: {startsWith: flairSearch},
+                    },
+                },
+            }
+            filters.push(flairFilter)
         }
 
         combinedFilter = {
@@ -141,28 +152,6 @@ function Search() {
         setSelectedPlatformId(parseInt(event.target.value)) // If "All" is selected, reset the filter
     }
 
-    // const handleNicheChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     if (event.target.checked) {
-    //         setSelectedNiche((prev) => [...prev, event.target.value])
-    //     } else {
-    //         setSelectedNiche((prev) => prev.filter((item) => item !== event.target.value))
-    //     }
-    // }
-    // const handleFollowerCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     const value = event.target.value
-    //     if (value === 'All') {
-    //         setSelectedFollowerRange(null) // Clear the filter
-    //     } else {
-    //         // Parse the selected range and set the state
-    //         const range = value.split('-').map((x) => parseInt(x.replace(/k/g, '000')))
-    //         setSelectedFollowerRange(range as [number, number])
-    //     }
-    // }
-
-    // const handleViewMore = () => {
-    //     setViewMore(!viewMore)
-    // }
-
     return (
         <div>
             <Navbar />
@@ -175,8 +164,18 @@ function Search() {
                             <Input
                                 type="text"
                                 size="lg"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
+                                value={nameSearch}
+                                onChange={(e) => setNameSearch(e.target.value)}
+                                crossOrigin={undefined}
+                            />
+                        </div>
+                        <div className="flair w-fit">
+                            <h4>Flair</h4>
+                            <Input
+                                type="text"
+                                size="lg"
+                                value={flairSearch}
+                                onChange={(e) => setFlairSearch(e.target.value)}
                                 crossOrigin={undefined}
                             />
                         </div>
@@ -219,63 +218,6 @@ function Search() {
                                 </div>
                             ))}
                         </div>
-                        {/* <div className="niche">
-                            <h4>Niche</h4>
-                            {[
-                                'Art',
-                                'Christianity',
-                                'Faith',
-                                'Health',
-                                'Motivational',
-                                'Politics',
-                            ].map((niche, index) => (
-                                <div key={index}>
-                                    <input
-                                        type="checkbox"
-                                        name="niche"
-                                        value={niche.toLowerCase()}
-                                        id={`niche-${niche.toLowerCase()}`}
-                                        // onChange={handleNicheChange}
-                                    />
-                                    <label htmlFor={`niche-${niche.toLowerCase()}`}>{niche}</label>
-                                </div>
-                            ))}
-                            <button
-                                onClick={handleViewMore}
-                                className="view-more"
-                            >
-                                {viewMore ? 'View Less' : 'View More'}
-                            </button>
-                        </div>
-                        <div className="follower-count">
-                            <h4>Follower count</h4>
-                            <input
-                                type="radio"
-                                name="followerCount"
-                                value="All" // Use "All" directly
-                                id="followerCount-All"
-                                // onChange={handleFollowerCountChange}
-                            />
-                            <label htmlFor="followerCount-All">All</label>
-                            {['1k - 10k', '10k - 50k', '50k - 200k', '200k - 1M', '1M +'].map(
-                                (range, index) => (
-                                    <div key={index}>
-                                        <input
-                                            type="radio"
-                                            name="followerCount"
-                                            value={range.replace(/\s/g, '')}
-                                            id={`followerCount-${range.replace(/\s/g, '')}`}
-                                            // onChange={handleFollowerCountChange}
-                                        />
-                                        <label
-                                            htmlFor={`followerCount-${range.replace(/\s/g, '')}`}
-                                        >
-                                            {range}
-                                        </label>
-                                    </div>
-                                ),
-                            )}
-                        </div> */}
                     </div>
                 </div>
                 <div className="col-span-3">
@@ -291,7 +233,7 @@ function Search() {
                     <div className="flex justify-between text-center mt-4">
                         <div className="flex gap-2">
                             <button
-                                disabled={!usersData?.users?.pageInfo.hasPreviousPage}
+                                className="rounded bg-purple text-white px-2 py-1"
                                 onClick={() => {
                                     setPagingVariables({
                                         first: pageSize,
@@ -305,6 +247,11 @@ function Search() {
                             </button>
                             <button
                                 disabled={!usersData?.users?.pageInfo.hasPreviousPage}
+                                className={
+                                    usersData?.users?.pageInfo.hasPreviousPage
+                                        ? 'rounded-full border-2 px-1 border-purple text-purple'
+                                        : 'rounded-full border-2 px-1 border-gray-500'
+                                }
                                 onClick={() => {
                                     setPagingVariables({
                                         first: null,
@@ -320,9 +267,17 @@ function Search() {
                                 />
                             </button>
                         </div>
+                        <span className="self-center">
+                            {usersData?.users?.totalCount} users found
+                        </span>
                         <div className="flex gap-2">
                             <button
                                 disabled={!usersData?.users?.pageInfo.hasNextPage}
+                                className={
+                                    usersData?.users?.pageInfo.hasNextPage
+                                        ? 'rounded-full border-2 px-1 border-purple text-purple'
+                                        : 'rounded-full border-2 px-1 border-gray-500'
+                                }
                                 onClick={() => {
                                     setPagingVariables({
                                         first: pageSize,
@@ -338,7 +293,7 @@ function Search() {
                                 />
                             </button>
                             <button
-                                disabled={!usersData?.users?.pageInfo.hasNextPage}
+                                className="rounded bg-purple text-white px-2 py-1"
                                 onClick={() => {
                                     setPagingVariables({
                                         first: null,
