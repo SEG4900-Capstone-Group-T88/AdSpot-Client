@@ -111,7 +111,7 @@ function Dashboard() {
 
             <h3>My Orders</h3>
             <Tabs value={tabs[0].value}>
-                <div className="flex mt-4 gap-4">
+                <div className="flex mt-4 gap-4 relative z-0">
                     <div className="grow">
                         <TabsHeader placeholder="">
                             {tabs.map(({label, value}) => (
@@ -173,7 +173,10 @@ function Dashboard() {
                             value={pov}
                         >
                             <Tabs value={orderStatuses[0].value}>
-                                <TabsHeader placeholder="">
+                                <TabsHeader
+                                    placeholder=""
+                                    className="relative z-0"
+                                >
                                     {orderStatuses.map(({value: status}) => (
                                         <Tab
                                             placeholder=""
