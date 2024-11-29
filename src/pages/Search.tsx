@@ -64,23 +64,36 @@ function Search() {
 
     const [{data: platformsData}] = useQuery({query: GetPlatformsQuery})
 
+    const atLeastOneListingFilter = {
+        listings: {any: true},
+    }
+
     let combinedFilter
     if (nameSearch.length > 0) {
         const [firstName, lastName] = nameSearch.split(' ')
         if (lastName === undefined) {
             // only one word
             combinedFilter = {
-                or: [{firstName: {startsWith: firstName}}, {lastName: {startsWith: firstName}}],
+                and: [
+                    atLeastOneListingFilter,
+                    {
+                        or: [
+                            {firstName: {startsWith: firstName}},
+                            {lastName: {startsWith: firstName}},
+                        ],
+                    },
+                ],
             }
         } else {
             combinedFilter = {
-                and: [{firstName: {startsWith: firstName}}, {lastName: {startsWith: lastName}}],
+                and: [
+                    atLeastOneListingFilter,
+                    {firstName: {startsWith: firstName}},
+                    {lastName: {startsWith: lastName}},
+                ],
             }
         }
     } else {
-        const atLeastOneListingFilter = {
-            listings: {any: true},
-        }
         const platformFilter = {
             listings: {
                 some: {
