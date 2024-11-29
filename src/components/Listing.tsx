@@ -71,8 +71,10 @@ function Listing(props: {
                     description: description,
                 },
             }).then((result) => {
-                console.log(result.data?.orderListing.order)
-                console.log(result.data?.orderListing.errors)
+                const errors = result.data?.orderListing.errors
+                if (errors) {
+                    alert(errors.map((error) => error.message).join('\n'))
+                }
             })
         } else {
             alert('You must be logged in to buy a listing.')
