@@ -138,6 +138,7 @@ function Search() {
             last: pagingVariables.last,
             before: pagingVariables.before,
         },
+        requestPolicy: 'network-only',
     })
     const users = useFragment(
         UserSummaryFragmentDocument,

@@ -106,6 +106,7 @@ function Orders(props: {
             before: pagingVariables.before,
             order: order,
         },
+        requestPolicy: 'network-only',
         pause: !user,
     })
     const count = data?.orders?.totalCount
