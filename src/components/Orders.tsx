@@ -106,11 +106,12 @@ function Orders(props: {
             before: pagingVariables.before,
             order: order,
         },
+        requestPolicy: 'network-only',
         pause: !user,
     })
     const count = data?.orders?.totalCount
     useEffect(() => {
-        if (count) {
+        if (count !== undefined) {
             props.onCountChange(props.pov, props.status, count)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,8 +123,6 @@ function Orders(props: {
     })
     useEffect(() => {
         if (subscriptionResult.data?.onNewOrder) {
-            const change = subscriptionResult.data.onNewOrder
-            console.log(change)
             reexecuteQuery({requestPolicy: 'network-only'})
         }
     }, [subscriptionResult, reexecuteQuery])
@@ -137,6 +136,7 @@ function Orders(props: {
                             key={edge.cursor}
                             order={edge.node}
                             pov={props.pov}
+                            onAction={() => reexecuteQuery({requestPolicy: 'network-only'})}
                         />
                     ))}
                     <div className="flex justify-between text-center">

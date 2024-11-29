@@ -110,6 +110,7 @@ function getOrderStatusBgColor(order: OrderSummaryFragment) {
 function OrderSummary(props: {
     order: FragmentType<typeof OrderSummaryFragmentDocument>
     pov: OrderPov
+    onAction: () => void
 }) {
     const {user} = useContext(UserContext)
 
@@ -183,6 +184,7 @@ function OrderSummary(props: {
                                                             orderId: order.orderId,
                                                         },
                                                     })
+                                                    props.onAction()
                                                 }
                                             }}
                                         >
@@ -201,6 +203,7 @@ function OrderSummary(props: {
                                                             orderId: order.orderId,
                                                         },
                                                     })
+                                                    props.onAction()
                                                 }
                                             }}
                                         >
@@ -264,6 +267,7 @@ function OrderSummary(props: {
                                                 console.log('ERROR WITH LISTING CREATION!')
                                             } else {
                                                 closeModal()
+                                                props.onAction()
                                             }
                                         })
                                     }
