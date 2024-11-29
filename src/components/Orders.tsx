@@ -119,6 +119,8 @@ function Orders(props: {
     const [subscriptionResult] = useSubscription({
         query: OnNewOrderSubscription,
         variables: {userId: user?.userId ?? -1},
+        // only subscribe on pending tab
+        pause: !(props.pov === OrderPov.Seller && props.status === OrderStatusEnum.Pending),
     })
     useEffect(() => {
         if (subscriptionResult.data?.onNewOrder) {
