@@ -111,8 +111,8 @@ function Dashboard() {
 
             <h3>My Orders</h3>
             <Tabs value={tabs[0].value}>
-                <div className="flex mt-4 gap-4 relative z-0">
-                    <div className="grow">
+                <div className="flex mt-4 gap-4">
+                    <div className="grow relative z-0">
                         <TabsHeader placeholder="">
                             {tabs.map(({label, value}) => (
                                 <Tab
