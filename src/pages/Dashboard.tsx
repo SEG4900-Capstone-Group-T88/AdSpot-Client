@@ -121,6 +121,11 @@ function Dashboard() {
                                     value={value}
                                 >
                                     {label}
+                                    {Object.values(tabCounts[value]).every(
+                                        (count) => count !== null,
+                                    )
+                                        ? ` (${Object.values(tabCounts[value]).reduce((acc, count) => acc + count!, 0)})`
+                                        : ''}
                                 </Tab>
                             ))}
                         </TabsHeader>

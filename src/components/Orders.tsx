@@ -106,11 +106,12 @@ function Orders(props: {
             before: pagingVariables.before,
             order: order,
         },
+        requestPolicy: 'network-only',
         pause: !user,
     })
     const count = data?.orders?.totalCount
     useEffect(() => {
-        if (count) {
+        if (count != undefined) {
             props.onCountChange(props.pov, props.status, count)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,13 +120,9 @@ function Orders(props: {
     const [subscriptionResult] = useSubscription({
         query: OnNewOrderSubscription,
         variables: {userId: user?.userId ?? -1},
-        // only subscribe on pending tab
-        pause: !(props.pov === OrderPov.Seller && props.status === OrderStatusEnum.Pending),
     })
     useEffect(() => {
         if (subscriptionResult.data?.onNewOrder) {
-            const change = subscriptionResult.data.onNewOrder
-            console.log(change)
             reexecuteQuery({requestPolicy: 'network-only'})
         }
     }, [subscriptionResult, reexecuteQuery])
